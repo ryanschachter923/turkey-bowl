@@ -75,6 +75,30 @@ input:focus,select:focus,textarea:focus{outline:2px solid rgba(242,140,40,.5);ou
 .pc .foot{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;font-weight:700;opacity:.85;gap:6px}
 .pc .foot span:first-child{white-space:nowrap;flex:none}.pc .foot span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cbadge{position:absolute;top:44px;right:10px;width:22px;height:22px;border-radius:50%;background:#111;color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:13px;border:2px solid var(--gold)}
+/* playbook */
+.pbctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:2px 0 12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:none;padding:7px 12px;font-weight:700;font-size:13px;color:var(--muted);white-space:nowrap}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--text);color:var(--bg)}
+.pbkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin:0 0 14px}
+.pbkey i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.pbkey i.dash{background:repeating-linear-gradient(90deg,#d9dee7 0 4px,transparent 4px 7px)!important}
+.pbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.pbcard{background:#16191e;border:1px solid #262b33;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .12s,border-color .12s}
+.pbcard:hover{transform:translateY(-2px);border-color:#3b4558}
+.pbcard.flat{cursor:default}.pbcard.flat:hover{transform:none;border-color:#262b33}
+.pbart svg{display:block;width:100%;height:auto}
+.pbbar{background:#1c1f25;border-top:4px solid #E8402F;padding:9px 10px;text-align:center;font-size:17px;font-weight:500;color:#f3f5f8}
+.pbmeta{display:flex;gap:8px;align-items:center;padding:0 10px 10px;background:#1c1f25;font-size:12px;min-width:0}
+.pbform{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pbcat{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;padding:2px 8px;border-radius:999px;white-space:nowrap;font-family:system-ui,sans-serif}
+.pbcat.short{background:#163a29;color:#4ade80}.pbcat.medium{background:#3b3113;color:#facc15}.pbcat.long{background:#401b1f;color:#f87171}.pbcat.zone{background:#14284a;color:#60a5fa}
+.pbtag{font-size:10.5px;font-weight:700;color:#9fb0c8;border:1px solid #33405a;border-radius:999px;padding:1px 7px;white-space:nowrap}
+.pbdetail{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:start}
+@media (max-width:760px){.pbdetail{grid-template-columns:1fr}}
+.pblist{margin:8px 0 0;padding-left:18px;font-size:14px}.pblist li{margin:4px 0}
+.pbnote{margin-top:12px;padding:9px 11px;border-radius:10px;background:#13233f;border:1px solid #274472;font-size:13px}
 /* modal */
 .scrim{position:fixed;inset:0;background:rgba(3,6,12,.72);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
 .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;width:min(860px,100%);padding:18px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.6)}
@@ -568,7 +592,467 @@ const Core = (() => {
   };
 })();
 </script>
-<script>(() => {
+<script>// Turkey Bowl playbook: published flag-football pass plays and zone coverages, drawn Madden-style.
+// Every play is transcribed from a published source (see PB.SOURCES). Coordinates are yards:
+// x = left/right from the ball (+ is right), y = depth from the line of scrimmage (+ is downfield).
+// Each play is drawn the way the source draws it. "add6"/"add7" are the source's own instructions
+// for adding the 6th / 7th player; plays without a 7-on-7 version say so instead of inventing one.
+const PB = (() => {
+  const SOURCES = {
+    ffp: { short: 'FlagFootballPractice.com', name: 'FlagFootballPractice.com: Complete Flag Football Playbook (Knowledge Spot Inc.)', url: 'https://s3.amazonaws.com/footballtutorials/complete/CompleteFlagFootballPlaybook1118.pdf' },
+    fa: { short: 'Football Advantage', name: 'Football Advantage: 6 on 6 Flag Football Plays (Coach Martin)', url: 'https://footballadvantage.com/6-on-6-flag-football-plays/' },
+    fd: { short: 'FirstDown PlayBook', name: 'FirstDown PlayBook: 6v6 Bunch man beater ("Yes 6v6 Flag Football Too")', url: 'https://firstdown.playbooktech.com/coaches-community/yes-6v6-flag-football-too' },
+    nfl: { short: 'NFL FLAG', name: 'NFL FLAG: Official 5 on 5 Flag Football Playbook', url: 'https://nflflag.com/coaches/flag-football-rules/5-on-5-flag-football-playbook' },
+    nfldef: { short: 'NFL FLAG', name: 'NFL FLAG: 5 on 5 Flag Football Defense Guide', url: 'https://nflflag.com/coaches/default/flag-football-rules/5-on-5-flag-football-defense' },
+    fd7: { short: 'FirstDown PlayBook', name: 'FirstDown PlayBook: 9 Important 7v7 Flag Football Defenses', url: 'https://firstdown.playbooktech.com/coaches-community/9-important-7v7-flag-football-defenses' },
+    fd6: { short: 'FirstDown PlayBook', name: 'FirstDown PlayBook: Overload 6v6 Flag Football Zone Coverage (4-2 zone)', url: 'https://firstdown.playbooktech.com/coaches-community/overload-6v6-flag-football-zone-coverage' },
+  };
+
+  // ---------- shorthand ----------
+  const pl = (id, x, y, o = {}) => ({ id, x, y, ...o });
+  const rt = (p, pts, o = {}) => ({ p, pts, ...o });
+  const QB = (y = -5) => pl('QB', 0, y);
+  const C0 = () => pl('C', 0, 0);
+  // FlagFootballPractice's standard add-on for 6-on-6 / 7-on-7 (a back who flares to the flat).
+  const flare = (x, y, dir) => [[x, y], [x + dir * 2.4, y - 0.3], [x + dir * 6.4, y + 3.2], [x + dir * 8.6, y + 5.4]];
+  const STD6 = (x, y, dir) => ({ players: [pl('RB', x, y, { add: 1 })], routes: [rt('RB', flare(x, y, dir), { c: 1, role: 'add' })],
+    text: 'RB flares to the flat. NFL FLAG plays are 5-on-5, so this uses FlagFootballPractice.com\'s standard 6-on-6 add-on.' });
+  const STD7 = (a, b) => ({ players: [...a.players, pl('RB2', b[0], b[1], { add: 1 })], routes: [...a.routes, rt('RB2', flare(b[0], b[1], b[2]), { c: 1, role: 'add' })],
+    text: 'Two backs flare to the flat, one toward each sideline (FlagFootballPractice.com\'s standard 7-on-7 add-on).' });
+  const NO7 = 'The source only draws this play 6-on-6, so the 7th player sits out or subs in.';
+
+  // Formations used by the FlagFootballPractice.com plays (drawn to the left, as in the book).
+  const SPREAD_L = () => [pl('Z', -12, 0), pl('Y', -8.4, 0), C0(), QB(), pl('X', 11, 0)];
+  const TRIPS_L = () => [pl('Z', -12, 0), pl('Y', -8.6, 0), pl('X', -5.2, 0), C0(), QB()];
+  const STACK_L = () => [pl('Y', -8.5, 0), pl('Z', -8.5, -2.5), C0(), QB(), pl('X', 11, 0)];
+  const I_FORM = (a = 'Z', b = 'X') => [pl(a, -10, 0), C0(), QB(-2.3), pl('RB', 0, -6.2), pl(b, 10, 0)];
+
+  const OFFENSE = [
+    // ===================== SHORT =====================
+    { id: 'ffp-double-slant', cat: 'short', name: 'Spread Double Slant', src: 'ffp', ref: 'Play 2, p. 6', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 15.5], [-6, 15.5]]), rt('Y', [[-8.4, 0], [-8.2, 1], [-4.4, 5.6]], { role: 'primary' }),
+        rt('C', [[0, 0], [0, 13], [6.5, 13]]), rt('X', [[11, 0], [10.8, 1], [6.8, 5.2]], { role: 'primary' })],
+      assign: ['X: slant', 'Y: slant', 'Z: in', 'C: snaps, then runs an out'],
+      tip: 'The quick slant builds QB and receiver confidence. If it isn\'t there, hold the ball a beat and look at the longer routes.',
+      add6: { players: [pl('RB', -2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-8.4, 0.4]], { role: 'add' })], text: 'RB runs an arrow out to where Y lined up.' },
+      add7: { players: [pl('RB', -2.6, -5, { add: 1 }), pl('RB2', 2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-8.4, 0.4]], { role: 'add' }), rt('RB2', [[2.6, -5], [8.8, 0.6]], { role: 'add' })], text: 'Two backs run arrow (or in) routes underneath the receivers.' } },
+
+    { id: 'ffp-levels', cat: 'short', name: 'Trips Levels', src: 'ffp', ref: 'Play 9, p. 14', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('X', [[-5.2, 0], [-5.2, 1], [-2, 6]], { role: 'primary' }), rt('Y', [[-8.6, 0], [-8.6, 8.2], [-7.7, 8.6], [-7.4, 6.4]], { c: 1 }),
+        rt('Z', [[-12, 0], [-12, 22]]), rt('C', [], { k: 'stay' })],
+      assign: ['X: slant', 'Y: hook', 'Z: go', 'C: snaps and stays home'],
+      tip: 'Look short first (X). If that\'s covered, work to the hook and then the go.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'RB flares toward the right sideline.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' }), rt('OL', [[2.6, 0], [2.7, 4.5], [3.6, 3.6]], { role: 'add' })], text: 'Add a lineman right of the center who runs a hitch toward the right sideline, plus the RB.' } },
+
+    { id: 'ffp-west-coast', cat: 'short', name: 'Trips West Coast', src: 'ffp', ref: 'Play 10, p. 15', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('X', [[-5.2, 0], [-5.3, 0.6], [-7.9, 4]]), rt('Y', [[-8.6, 0], [-8.6, 8.5], [-5.5, 12.8]]),
+        rt('Z', [[-12, 0], [-12, 6], [-3.4, 6]]), rt('C', [[0, 0], [0, 7.6], [0.7, 7.9], [0.8, 5.8]], { c: 1 })],
+      assign: ['X: slant toward the sideline', 'Y: post', 'Z: in, across the field', 'C: curl down the middle'],
+      tip: 'Several short throws to choose from. Routes have to be precise and well-timed so receivers don\'t run into each other.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [6.6, -3.2], [10.4, 0.6], [11, 8], [11, 16]], { c: 1, role: 'add' })], text: 'RB runs a replace route down the right sideline.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [6.6, -3.2], [10.4, 0.6], [11, 8], [11, 16]], { c: 1, role: 'add' }), rt('OL', [[2.6, 0], [2.6, 5], [7.4, 5]], { role: 'add' })], text: 'Add a lineman right of the center who runs a 5-yard out, plus the RB.' } },
+
+    { id: 'ffp-screen-cross', cat: 'short', name: 'Trips Screen Cross', src: 'ffp', ref: 'Play 12, p. 17', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('Z', [[-12, 0], [-7, 4.6]]), rt('Y', [[-8.6, 0], [-12.6, 4.6]]),
+        rt('X', [[-5.2, 0], [-6, -1.6], [-8.4, -2.6], [-11, -2.4]], { c: 1 }), rt('C', [[0, 0], [0, 4.6], [2.4, 8.8]])],
+      assign: ['Y and Z: crossing slants', 'X: screen behind the other two', 'C: corner (the center goes deep)'],
+      tip: 'Z and Y try to lose their defenders on the cross while X takes the screen behind them. With three receivers bunched, don\'t forget to look at the center.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 5], [7, 5]], { role: 'add' })], text: 'RB runs a 5-yard out.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 5], [7, 5]], { role: 'add' }), rt('OL', [[2.6, 0], [4.6, 1.4], [9, 2]], { role: 'add' })], text: 'Add a lineman right of the center who runs to the flat, plus the RB.' } },
+
+    { id: 'ffp-stacked-slants', cat: 'short', name: 'Stack Stacked Slants', src: 'ffp', ref: 'Play 17, p. 23', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [10.4, 5], [13.6, 13.6]]), rt('Y', [[-8.5, 0], [-11.8, 4.6]]),
+        rt('Z', [[-8.5, -2.2], [-3.4, 5.2]]), rt('C', [[0, 0], [0, 5], [5, 5]])],
+      assign: ['X: corner', 'Y: slant to the sideline', 'Z: slant to the middle', 'C: 5-yard out'],
+      tip: 'Receivers in space have to beat their man with fast, precise cuts. QB scans left to right.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9, 0.6]], { role: 'add' })], text: 'RB runs a flare or arrow into the right flat.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9, 0.6]], { role: 'add' }), rt('OL', [[2.6, 0], [2.7, 1], [6.2, 4.6]], { role: 'add' })], text: 'Add a lineman right of the center who slants to the sideline, plus the RB.' } },
+
+    { id: 'ffp-yz-split', cat: 'short', name: 'Stack YZ Split', src: 'ffp', ref: 'Play 18, p. 24', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [11, 22]], { role: 'primary' }), rt('Y', [[-8.5, 0], [-8.5, 5.2], [-12.4, 5.2]]),
+        rt('Z', [[-8.5, -2.2], [-8.1, 5.6], [-3.6, 5.6]]), rt('C', [[0, 0], [3, 7], [3.9, 7.3], [3.5, 5.6]], { c: 1 })],
+      assign: ['X: go', 'Y: 5-yard out', 'Z: 5-yard in', 'C: hook toward the sideline'],
+      tip: 'Y and Z break sharply off the stack. Give X a quick look first, before he gets out of range.',
+      add6: { players: [pl('RB', 0, -7.6, { add: 1 })], routes: [rt('RB', [[0, -7.6], [0, 5], [-3.6, 5]], { role: 'add' })], text: 'RB runs a 5-yard in up the middle, breaking opposite the center.' },
+      add7: { players: [pl('RB', 0, -7.6, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[0, -7.6], [0, 5], [-3.6, 5]], { role: 'add' }), rt('OL', [[2.6, 0], [2.7, 1], [6.2, 4.6]], { role: 'add' })], text: 'Add a lineman right of the center who slants toward the sideline, plus the RB.' } },
+
+    { id: 'fa-rb-screen', cat: 'short', name: 'Trips Right RB Screen', src: 'fa', ref: 'Play #3', form: 'Trips Right',
+      players: [pl('C', 0, 0), pl('QB', 0.2, -4.4), pl('RB', -3.6, -4.8), pl('X', 5.5, -1.9), pl('Y', 8.3, 0), pl('Z', 10.9, -1.3)],
+      routes: [rt('RB', [[-3.6, -4.8], [-3.6, -3.2], [-9.2, -2.5]], { role: 'primary' }),
+        rt('C', [[0, 0], [-1.2, 0.2], [-6, 0.3], [-8.2, 2.8], [-8.9, 12]], { c: 1, role: 'decoy' }),
+        rt('X', [[5.5, -1.9], [1.6, 4.3], [2.1, 3.4]]), rt('Y', [[8.3, 0], [6.8, 11], [1.8, 18]], { role: 'decoy' }), rt('Z', [[10.9, -1.3], [10.6, 22]], { role: 'decoy' })],
+      assign: ['RB: screen to the left (the target)', 'C (snapper): runs flat to the left sideline, then upfield ahead of the RB', 'X: quick hitch toward the middle', 'Y: deep slant-and-go', 'Z: go down the right sideline'],
+      tip: 'Everyone on the right pulls their defenders away from the left side. No blocking in flag, so the snapper just leads the way and clears space.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-v-snapper', cat: 'short', name: 'V Snapper Comeback', src: 'fa', ref: 'Play #7', form: 'V (X motions left)',
+      players: [pl('C', 0, 0), pl('QB', -0.1, -4.6), pl('X', -5.4, -1.9), pl('Y', -2.25, -1.75), pl('Z', 3.4, -2), pl('RB', 5.9, -1.65)],
+      routes: [rt('X', [[-5.4, -1.9], [-10.9, -1.6]], { k: 'motion' }), rt('X', [[-10.9, -1.6], [-10.9, 6], [-12.1, 4]]),
+        rt('Y', [[-2.25, -1.75], [-4.1, 0], [-4, 6.5], [-2, 5.2]]), rt('Z', [[3.4, -2], [2.9, 12], [6.5, 19]]),
+        rt('RB', [[5.9, -1.65], [5.75, 5.6], [-1.6, 14.8]]),
+        rt('C', [], { role: 'primary', parts: [{ pts: [[0, 0], [0.2, 2.2], [3, 3.6], [5.6, 3.4], [7.9, 6.6]], c: 1 }, { pts: [[7.9, 6.6], [9, 4.9]] }] })],
+      assign: ['C (snapper): shallow drag right, gets depth, then a comeback to the right sideline (the short target)', 'X: motions out left, then a quick comeback', 'Y: fakes a quick slant left, then a hitch toward the middle', 'Z: deep post toward the right', 'RB: deep slant to the left'],
+      tip: 'The snapper is the short throw, but if a deep route opens, take it.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-quads-flood', cat: 'short', name: 'Quads Left Flood Right', src: 'fa', ref: 'Play #10', form: 'Quads Left (Y motions right)',
+      players: [pl('C', 0, 0), pl('QB', 0, -2.5), pl('RB', -12.1, 0), pl('X', -7.9, 0), pl('Z', -9.85, -2.1), pl('Y', -5.5, -1.9)],
+      routes: [rt('Y', [[-5.5, -1.9], [-5.4, -5], [5.7, -4.8]], { k: 'motion' }), rt('Y', [[5.7, -4.8], [4.8, 4.4], [9.3, 4.6]]),
+        rt('C', [[0, 0], [-0.4, 6], [8.8, 6.2]]), rt('X', [[-7.9, 0], [-8, 13], [-5.2, 19]]),
+        rt('RB', [[-12.1, 0], [-11.6, 2.6], [-9.5, 4], [-2.7, 4.4]], { c: 1 }), rt('Z', [[-9.85, -2.1], [-10.2, 22]])],
+      assign: ['Y: motions right, then a quick out', 'C (snapper): quick out right, a little deeper than Y', 'X: deep post to the right', 'RB: drag to the right', 'Z: go (the only route not heading right)'],
+      tip: 'Everything floods right, so defenders have to run the width of the field to stay with their man.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fd-bunch', cat: 'short', name: '6v6 Bunch Man Beater', src: 'fd', ref: 'Bunch formation', form: 'Bunch Right',
+      drawn: 'FirstDown\'s diagram is an image, so this is drawn from the written assignments (bunch to the right, X alone on the left).',
+      players: [pl('X', -11, 0), C0(), QB(), pl('Z', 5.4, -1.3), pl('F', 7, 0), pl('H', 8.6, -1.3)],
+      routes: [rt('Z', [[5.4, -1.3], [6.2, 0.8], [2.2, 4]], { role: 'primary' }), rt('H', [[8.6, -1.3], [7.4, 0.8], [9.5, 2], [13.2, 2.4]], { c: 1 }),
+        rt('F', [[7, 0], [7.4, 22]]), rt('C', [[0, 0], [0, 10], [-3.8, 14]]), rt('X', [[-11, 0], [-11, 1.4]], { k: 'now' })],
+      assign: ['Z: dart, sprints off the back of H and expects the ball early', 'H: sprints at Z\'s defender to make him go over the top, then the flat (vs zone, turn up the sideline late)', 'F: go, clears the area', 'C: 10 yards, then a corner', 'X: "now" route: one hard step, then turn and show the QB your numbers'],
+      tip: 'Read Z, then H. Get it out fast, in front of the receiver toward the sideline. If everyone\'s covered, scramble. Bunch makes man coverage defenders fight through traffic.',
+      add6: null, add7: { none: NO7 } },
+
+    // ===================== MEDIUM =====================
+    { id: 'ffp-double-hook', cat: 'medium', name: 'Spread Double Hook', src: 'ffp', ref: 'Play 1, p. 5', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 14], [-11.2, 15.6], [-6.5, 16.2]], { c: 1 }), rt('Y', [[-8.4, 0], [-8.4, 9], [-7.7, 9.3], [-7.5, 7]], { c: 1, role: 'primary' }),
+        rt('C', [[0, 0], [0, 10], [1.4, 13.3], [7.5, 14.6]], { c: 1 }), rt('X', [[11, 0], [11, 9], [10.3, 9.3], [10.2, 7]], { c: 1, role: 'primary' })],
+      assign: ['X: 5-10 yard hook', 'Y: 5-10 yard hook', 'Z: post', 'C: snaps, runs up the middle, then angles off to the corner'],
+      tip: 'Look at one of the two hooks first, then the deep routes if there\'s time. Under pressure, the QB can roll either way and throw to that side.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'RB flares out to the flat.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('RB2', -2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' }), rt('RB2', flare(-2.6, -5, -1), { c: 1, role: 'add' })], text: 'Two backs flare to the flat, one toward each sideline.' } },
+
+    { id: 'ffp-corners-in', cat: 'medium', name: 'Spread Corners In', src: 'ffp', ref: 'Play 4, p. 8', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 13.5], [-14.6, 17]]), rt('Y', [[-8.4, 0], [-8.4, 8.6], [-3.6, 8.6]]),
+        rt('C', [[0, 0], [0, 4.4], [5.6, 4.4]]), rt('X', [[11, 0], [11, 13.5], [13.8, 17]])],
+      assign: ['X: corner', 'Z: corner', 'Y: short in', 'C: snaps, waits two seconds, then a short out'],
+      tip: 'Pick outside (the corners) or inside (the in). The QB can roll out for more on the deep throw, but shouldn\'t throw back across the field.',
+      add6: { players: [pl('RB', -2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-5, -4.6], [-7.6, -2], [-8.4, 0.4]], { c: 1, role: 'add' })], text: 'RB flares toward where Y lined up.' },
+      add7: { players: [pl('RB', -2.6, -5, { add: 1 }), pl('RB2', 2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-5, -4.6], [-7.6, -2], [-8.4, 0.4]], { c: 1, role: 'add' }), rt('RB2', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'A second back flares toward the right sideline.' } },
+
+    { id: 'ffp-crossover', cat: 'medium', name: 'Trips Crossover', src: 'ffp', ref: 'Play 11, p. 16', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('X', [[-5.2, 0], [-5.2, 5], [-4.6, 3.9]]), rt('Y', [[-8.6, 0], [-11, 5], [-7.4, 12.6]]),
+        rt('Z', [[-12, 0], [-8.3, 3.1], [2.6, 8.4], [6.6, 9.6]], { role: 'primary' }), rt('C', [[0, 0], [0, 20]])],
+      assign: ['Z: across the field, then to the corner (look here first)', 'Y: out, then to the post', 'X: 5-yard hitch (safety valve)', 'C: go, straight up the field'],
+      tip: 'Look for Z first. If he\'s not open crossing the field, check down to C and Y going deep. X is the safety valve.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9.6, 0.6]], { role: 'add' })], text: 'RB runs an arrow to the right flat.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9.6, 0.6]], { role: 'add' }), rt('OL', [[2.6, 0], [2.6, 5], [7, 5]], { role: 'add' })], text: 'Add a lineman right of the center who runs a 5-yard out, plus the RB.' } },
+
+    { id: 'ffp-high-low', cat: 'medium', name: 'Stack High Low', src: 'ffp', ref: 'Play 20, p. 26', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [11, 22]]), rt('Y', [[-8.5, 0], [-8.5, 7.5], [-5.4, 13.8]]),
+        rt('Z', [[-8.5, -2.2], [-8.1, 3.6], [-5.2, 8.8]]), rt('C', [[0, 0], [0, 5], [5, 5]])],
+      assign: ['X: go', 'Y: post', 'Z: post (3-5 yards under Y)', 'C: 5-yard out toward the right sideline'],
+      tip: 'Everything flows to the right side of the field. Scan right to left, and keep a 3-5 yard gap between the two posts.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'RB runs a flare (or circle) toward the right sideline.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' }), rt('OL', [[2.6, 0], [2.7, 1], [6.2, 4.6]], { role: 'add' })], text: 'Add a lineman right of the center who slants toward the sideline, plus the RB.' } },
+
+    { id: 'fa-trips-comeback', cat: 'medium', name: 'Trips Right Comeback', src: 'fa', ref: 'Play #1', form: 'Trips Right',
+      players: [pl('C', 0, 0), pl('QB', 0, -4.85), pl('RB', -4.7, -4.85), pl('X', 5.9, -1.6), pl('Y', 9.25, -0.45), pl('Z', 11.75, -1.6)],
+      routes: [rt('X', [[5.9, -1.6], [5.6, 22]]), rt('Y', [[9.25, -0.45], [9.1, 4], [2.2, 13]]), rt('Z', [[11.75, -1.6], [12.6, 12], [13.8, 9.8]]),
+        rt('C', [[0, 0], [-0.2, 4], [-1.1, 3]]), rt('RB', [[-4.7, -4.85], [-6.6, -3.6], [-8.8, 0], [-10, 6.5]], { c: 1 })],
+      assign: ['X: go', 'Y: deep slant (crosses X)', 'Z: deep comeback', 'C (snapper): quick hitch', 'RB: swing left, then upfield'],
+      tip: 'Two crossing routes on the right, with the outside receiver running a deep comeback.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-spread-combos', cat: 'medium', name: 'Spread Combos', src: 'fa', ref: 'Play #8', form: 'Spread',
+      players: [pl('C', 0, 0), pl('QB', -0.5, -4.75), pl('Z', -10, -0.3), pl('Y', -5.4, -2.2), pl('RB', 5.9, -2.05), pl('X', 9.8, -0.3)],
+      routes: [rt('Z', [[-10, -0.3], [-8.4, 3.5], [-8.1, 15], [-10.1, 11]]), rt('X', [[9.8, -0.3], [9.4, 12.3], [8.3, 8.6]]),
+        rt('Y', [[-5.4, -2.2], [-5.2, 8], [-4, 12], [-0.7, 17.5]], { c: 1 }), rt('RB', [[5.9, -2.05], [5.2, 14.5], [8.1, 19.8]]),
+        rt('C', [[0, 0], [-1.6, 3], [11, 3.4]])],
+      assign: ['Z: deep comeback, fakes a slant first', 'X: deep comeback', 'Y: deep post (rounded)', 'RB: deep post', 'C (snapper): zag that ends shallow to the right'],
+      tip: 'Outside receivers run the same route, and so do the inside receivers. Spread the defense out first, then hit the open combo.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'nfl-trips-2', cat: 'medium', name: 'Trips Formation: Play 2', src: 'nfl', ref: 'Trips, play 2', form: 'Trips Right',
+      players: [C0(), QB(-4.6), pl('X', 1.6, 0), pl('Y', 4.5, 0), pl('Z', 7.8, 0)],
+      routes: [rt('Z', [[7.8, 0], [8.2, 1.5], [8.2, 22]]), rt('Y', [[4.5, 0], [4.5, 7.5], [8.6, 12.6]]),
+        rt('X', [[1.6, 0], [1.6, 2.3], [-2.8, 2.3]], { role: 'primary' }), rt('C', [[0, 0], [0, 5], [3, 5]])],
+      assign: ['Z: fly', 'Y: corner at 7 yards', 'X: out (to the left)', 'C: in'],
+      tip: 'Receivers end up at staggered depths, and the routes cross. With the defense pulled toward the deep routes on the right, the inside receiver breaking left should come open.',
+      add6: STD6(-2.6, -4.6, -1), add7: STD7(STD6(-2.6, -4.6, -1), [2.6, -4.6, 1]) },
+
+    { id: 'nfl-bunch-3', cat: 'medium', name: 'Bunch Formation: Play 3', src: 'nfl', ref: 'Bunch, play 3', form: 'Bunch',
+      players: [pl('X', -1.7, 0), C0(), pl('Y', 1.7, 0), pl('Z', 3.4, 0), QB(-4.3)],
+      routes: [rt('X', [[-1.7, 0], [-1.7, 7.5], [-4.8, 11.4]]), rt('Y', [[1.7, 0], [1.7, 7.5], [4.8, 11.4]]),
+        rt('Z', [[3.4, 0], [3.4, 5], [8.2, 5]]), rt('C', [[0, 0], [0, 5], [-6.4, 5]])],
+      assign: ['X: 7 yards, then a corner (long yardage)', 'Y: 7 yards, then a corner (long yardage)', 'Z: 5 yards and out', 'C: 5 yards and out'],
+      tip: 'Get the defense tangled up in the middle, then spread out. The 5-yard outs open up as defenders chase the corners.',
+      add6: STD6(-2.6, -4.3, -1), add7: STD7(STD6(-2.6, -4.3, -1), [2.6, -4.3, 1]) },
+
+    { id: 'nfl-trips-stack-3', cat: 'medium', name: 'Trips Stack: Play 3', src: 'nfl', ref: 'Trips Stack, play 3', form: 'Trips Stack Right',
+      drawn: 'NFL FLAG\'s diagram for this play shows only the alignment, so the routes are drawn from its written description.',
+      players: [C0(), QB(-4.3), pl('X', 4.6, 0), pl('Y', 4.6, -2.4), pl('Z', 4.6, -4.8)],
+      routes: [rt('X', [[4.6, 0], [4.6, 7], [0.2, 7]]), rt('Y', [[4.6, -2.4], [6.4, 4], [10.2, 10.4]]),
+        rt('Z', [[4.6, -4.8], [5.6, 2.2], [1.6, 4.6]]), rt('C', [[0, 0], [0, 9], [6.2, 15.6]])],
+      assign: ['X: 7 yards, then in', 'Y: angled corner', 'Z: angled in', 'C: deep corner'],
+      tip: 'Attacks the right side with two cuts toward the middle. Good against a team that\'s weak on its right side.',
+      add6: STD6(-2.6, -4.3, -1), add7: STD7(STD6(-2.6, -4.3, -1), [2.6, -6.2, 1]) },
+
+    { id: 'nfl-twins-stack-3', cat: 'medium', name: 'Twins Stack: Play 3', src: 'nfl', ref: 'Twins Stack, play 3', form: 'Twins Stack Right',
+      players: [pl('X', -1.9, 0), C0(), QB(-4.2), pl('Y', 4.4, 0), pl('Z', 5.2, -2.5)],
+      routes: [rt('Y', [[4.4, 0], [4.4, 8.2], [1.2, 8.2]]), rt('Z', [[5.2, -2.5], [6.3, 0], [6.3, 9], [3.4, 15.2]]),
+        rt('X', [[-1.9, 0], [-1.9, 2], [-3, 2.6], [1.8, 3.9]]), rt('C', [[0, 0], [0, 4.6], [-4, 4.6]])],
+      assign: ['Y: 8-yard in', 'Z: deep post', 'X: shallow option route across the center', 'C: 5 yards and out'],
+      tip: 'Y and Z go deep for big yardage. X (shallow option across the center) and the center (5 and out) are the short options.',
+      add6: STD6(-2.6, -4.2, -1), add7: STD7(STD6(-2.6, -4.2, -1), [2.6, -4.2, 1]) },
+
+    // ===================== LONG =====================
+    { id: 'ffp-y-post', cat: 'long', name: 'Spread Y Post', src: 'ffp', ref: 'Play 3, p. 7', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 12], [-15, 12]]), rt('Y', [[-8.4, 0], [-8.4, 9.5], [-4.4, 18]], { role: 'primary' }),
+        rt('C', [[0, 0], [0, 4], [6.4, 4]]), rt('X', [[11, 0], [11, 22]])],
+      assign: ['Y: deep post', 'Z: out', 'X: go', 'C: short out (check-down)'],
+      tip: 'Stretches the field, with the center as a short dump-off. Lead receivers so they catch it on the run.',
+      add6: { players: [pl('RB', -2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-2.8, 5], [0.8, 5]], { role: 'add' })], text: 'RB runs a 5-yard in to the left of the center.' },
+      add7: { players: [pl('RB', -2.6, -5, { add: 1 }), pl('RB2', -5.2, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-2.8, 5], [0.8, 5]], { role: 'add' }), rt('RB2', [[-5.2, -5], [-7.6, -4.4], [-9.6, -1.4], [-9, 1.8], [-7.2, 2.6]], { c: 1, role: 'add' })], text: 'Second back runs a circle route to the left.' } },
+
+    { id: 'ffp-stop-go', cat: 'long', name: 'Stack Stop & Go', src: 'ffp', ref: 'Play 19, p. 25', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [10.8, 1], [7, 5.2]], { role: 'primary' }), rt('Y', [[-8.5, 0], [-8.5, 5.4], [-7.8, 4.3]]),
+        rt('Z', [[-8.5, -2.2], [-8.5, 22]]), rt('C', [[0, 0], [0, 7], [3.6, 12.4]])],
+      assign: ['X: slant (first look)', 'Y: 5-yard hitch', 'Z: go', 'C: corner'],
+      tip: 'First look is X on the slant, then work left. If defenders jump Y\'s short route, air it out to Z.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 15]], { role: 'add' })], text: 'RB runs a replace route straight up the field.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('RB2', -2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 15]], { role: 'add' }), rt('RB2', [[-2.6, -5], [-2.6, 5], [-7, 5]], { role: 'add' })], text: 'Second back runs a 5-yard out toward the left sideline.' } },
+
+    { id: 'ffp-dump-go', cat: 'long', name: 'I Formation Dump & Go', src: 'ffp', ref: 'Play 25, p. 32', form: 'I Formation',
+      players: I_FORM(),
+      routes: [rt('X', [[10, 0], [10, 22]]), rt('Z', [[-10, 0], [-10, 22]]),
+        rt('RB', [[0, -6.2], [1.8, -3.8], [1.6, 2], [0.4, 7]], { c: 1 }), rt('C', [[0, 0], [3.2, 2.6], [7.2, 4]])],
+      assign: ['X: go', 'Z: go', 'RB: delays, then releases to the middle for a short dump pass', 'C: snaps, then clears toward the sideline'],
+      tip: 'Go over the top to X or Z, or underneath to the RB or center. Faking a handoff to the RB draws the defense in. The center should look back in case the QB needs to check down.',
+      add6: { players: [pl('SL', -5.5, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 4], [-9.6, 4]], { role: 'add' })], text: 'Add a third receiver who runs a short out to the left sideline, away from the center.' },
+      add7: { players: [pl('SL', -5.5, 0, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 4], [-9.6, 4]], { role: 'add' }), rt('OL', [], { k: 'stay', role: 'add' })], text: 'Same third receiver, plus a lineman who stays home.' } },
+
+    { id: 'ffp-flea-flicker', cat: 'long', name: 'I Formation Flea Flicker', src: 'ffp', ref: 'Play 41, p. 51', form: 'I Formation',
+      players: I_FORM('WR', 'WR2'),
+      routes: [rt('RB', [[0, -6.2], [0.6, -4.4], [1.4, -2.4]]), rt('QB', [[0, -2.3], [-2.2, -4], [-2, -7.4], [1.6, -8.8]], { c: 1, k: 'qb' }),
+        rt('RB', [[1.6, -2.6], [1.8, -8]], { k: 'pitch' }),
+        rt('C', [[0, 0], [0, 5], [4, 5]]), rt('WR', [[-10, 0], [-10, 5], [-5.4, 11.4]], { role: 'primary' }), rt('WR2', [[10, 0], [9, 5], [12.2, 12.4]], { role: 'primary' })],
+      assign: ['QB: hands off to the RB, then drops back', 'RB: takes the handoff, stays behind the line, and pitches it back to the QB', 'Left WR: post', 'Right WR: corner', 'C: 5-yard out'],
+      tip: 'Looks like a run, then becomes a deep pass. The RB has to stay behind the line of scrimmage before pitching it back.',
+      add6: { players: [pl('SL', -5.5, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 5], [-8.8, 11]], { role: 'add' })], text: 'Add a slot receiver on the left who runs a corner.' },
+      add7: { players: [pl('SL', -5.5, 0, { add: 1 }), pl('SR', 5.5, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 5], [-8.8, 11]], { role: 'add' }), rt('SR', [[5.5, 0], [5.5, 5], [9, 5]], { role: 'add' })], text: 'Slot receivers on both sides: left runs a corner, right runs an out.' } },
+
+    { id: 'fa-motion-out-up', cat: 'long', name: 'Trips Motion Out & Up', src: 'fa', ref: 'Play #2', form: 'Trips Right (Y motions left)',
+      players: [pl('C', 0, 0), pl('QB', 0, -2.3), pl('RB', -0.25, -5.6), pl('X', 5.6, 0), pl('Y', 8.25, -1.3), pl('Z', 11.6, 0)],
+      routes: [rt('Y', [[8.25, -1.3], [8.25, -3.4], [-7.6, -3.4]], { k: 'motion' }), rt('Y', [[-7.6, -3.4], [-7.9, 22]]),
+        rt('RB', [[-0.25, -5.6], [-3.2, -2.4], [-4.7, 2.6], [-4.3, 4.6], [-3.3, 2.8]], { c: 1 }), rt('C', [[0, 0], [0.3, 2], [1.6, 3.3], [4.5, 3.5]], { c: 1 }),
+        rt('X', [[5.6, 0], [5.6, 5], [12.2, 5], [12.2, 22]], { role: 'primary' }), rt('Z', [[11.6, 0], [11.5, 4.5], [9.8, 7.6], [2.1, 14]], { c: 1 })],
+      assign: ['X: out, then turns up the sideline (out-and-up, the primary target)', 'Y: motions right to left, then a go down the left sideline', 'Z: deep slant (rounded), crossing up the right-side defenders', 'RB: rounded hitch to the left', 'C (snapper): rounded short out to the right'],
+      tip: 'X is the target: sell the out, then turn it up the sideline.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-crossing-post', cat: 'long', name: 'Slot Right Crossing Post', src: 'fa', ref: 'Play #4', form: 'Slot Right (QB under center)',
+      players: [pl('C', 0, 0), pl('QB', 0, -2.3), pl('RB', 0.1, -5.6), pl('X', -10.4, 0), pl('Y', 5.9, -1.85), pl('Z', 10.6, 0)],
+      routes: [rt('X', [[-10.4, 0], [-10.1, 9.9], [-0.7, 18.2]]), rt('C', [[0, 0], [-0.4, 9.1], [-8.7, 18.7]]),
+        rt('Y', [[5.9, -1.85], [5.6, 4], [-3.5, 8]]), rt('Z', [[10.6, 0], [10.5, 8.8], [-0.4, 12.8]]), rt('RB', [], { k: 'stay' })],
+      assign: ['X: deep slant', 'C (snapper): deep post', 'Y: in, angled slightly downfield', 'Z: in, angled slightly downfield (deeper than Y)', 'RB: stays in, no route'],
+      tip: 'Every route crosses another, so defenders have to run across the field and may bump into each other.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-slot-out-up', cat: 'long', name: 'Slot Right Out & Up', src: 'fa', ref: 'Play #5', form: 'Slot Right (QB under center)',
+      players: [pl('C', 0, 0), pl('QB', -0.2, -2.3), pl('RB', 0.25, -5.6), pl('X', -11.5, 0), pl('Y', 5.9, -1.65), pl('Z', 9.4, 0)],
+      routes: [rt('X', [[-11.5, 0], [-11.5, 10.3], [-6.3, 18.9]]), rt('C', [[0, 0], [-0.4, 4], [-2.4, 7.4], [-6.1, 8.4]], { c: 1 }),
+        rt('Z', [[9.4, 0], [9, 4.5], [4, 10]]), rt('Y', [[5.9, -1.65], [5.5, 3], [6.8, 6.4], [10.2, 8.8], [10.4, 20]], { c: 1, role: 'primary' }),
+        rt('RB', [[0.25, -5.6], [4, -5.8], [7.6, -5.1], [9.6, -3.2]], { c: 1 })],
+      assign: ['Y: out-and-up to the right, rounded double move (the shot)', 'X: deep slant to the middle', 'C (snapper): rounded slant to the left', 'Z: quick slant left, deeper than usual', 'RB: swing right (safety valve)'],
+      tip: 'Crossing routes underneath confuse defenders while Y gets deep. If nobody\'s open, dump it to the RB.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-v-corner-posts', cat: 'long', name: 'V Corner Posts', src: 'fa', ref: 'Play #6', form: 'V',
+      players: [pl('C', 0, 0), pl('QB', 0, -4.5), pl('X', -4.4, -2), pl('Y', -1.9, -1.65), pl('Z', 2.4, -1.8), pl('RB', 5.6, -1.8)],
+      routes: [rt('C', [[0, 0], [0.3, 4], [-5.9, 4.3]]), rt('Z', [[2.4, -1.8], [2.1, 7.7], [-9.2, 7.9]]),
+        rt('X', [[-4.4, -2], [-4.2, 7.4], [-6.7, 12.1], [-2.9, 19.1]]), rt('Y', [[-1.9, -1.65], [-2.3, 9.2], [1.8, 16.5]]),
+        rt('RB', [[5.6, -1.8], [5.6, 8], [7.4, 6]])],
+      assign: ['X: triple move: go, slant, then post', 'Y: deep post to the right', 'Z: out to the left (deeper)', 'C (snapper): out to the left (shallower)', 'RB: comeback to the right (short option)'],
+      tip: 'Tight formation, and every route crosses another. Defenders playing man lose their guy in the traffic.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-quads-go', cat: 'long', name: 'Quads Left Go', src: 'fa', ref: 'Play #9', form: 'Quads Left (QB under center)',
+      players: [pl('C', 0, 0), pl('QB', -0.4, -2.55), pl('RB', -11.8, 0), pl('X', -7.15, 0), pl('Z', -9.35, -1.9), pl('Y', -4.8, -1.75)],
+      routes: [rt('RB', [[-11.8, 0], [-12.2, 14], [-10.6, 18.7]]), rt('X', [[-7.15, 0], [-7.7, 22]]),
+        rt('Z', [[-9.35, -1.9], [-10.3, 13], [-1.8, 14]]), rt('Y', [[-4.8, -1.75], [-3.3, 4], [-11.4, 4.6]]),
+        rt('C', [[0, 0], [3.6, 3.6], [8.6, 3.6]])],
+      assign: ['X: go, straight downfield', 'RB: deep skinny slant', 'Z: in', 'Y: shallow out', 'C (snapper): shallow out, angling first (the QB\'s safety valve)'],
+      tip: 'Four receivers bunched left, with routes crossing at different depths. The snapper\'s shallow out is the safety valve.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'nfl-single-set-3', cat: 'long', name: 'Single Set: Play 3', src: 'nfl', ref: 'Single Set, play 3', form: 'Single Set',
+      players: [C0(), pl('QB', 0, -2.3), pl('X', 0, -5.6), pl('Y', 1.6, 0), pl('Z', 5.3, 0)],
+      routes: [rt('Z', [[5.3, 0], [5.3, 8], [1, 16.2]]), rt('Y', [[1.6, 0], [1.6, 8], [7.2, 15.2]]),
+        rt('X', [[0, -5.6], [-2.2, 0.2], [-2.2, 22]]), rt('C', [[0, 0], [0, 4.9], [-4, 4.9]])],
+      assign: ['Z: deep post', 'Y: deep corner', 'X: angled fly to the left', 'C: 5 yards and out to the left'],
+      tip: 'Two deep routes cross. X\'s fly to the left clears out the shallow left side for the center.',
+      add6: STD6(2.6, -4, 1), add7: STD7(STD6(2.6, -4, 1), [-2.6, -4, -1]) },
+  ];
+
+  // ---------- zone coverages ----------
+  // zone: [type, cx, cy, rx, ry] in yards. Types: deep, hook, flat, curl (curl/flat). r: rusher.
+  const dz = (id, x, y, zone, o = {}) => ({ id, x, y, zone, ...o });
+  const DEFENSE = [
+    { id: 'c2-6', n: 6, name: 'Cover 2', src: 'nfldef', also: 'fd7', ref: 'Cover 2',
+      d: [dz('CB', -12, 5, ['flat', -12.6, 4.6, 3.4, 2.6]), dz('CB', 12, 5, ['flat', 12.6, 4.6, 3.4, 2.6]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2]),
+        dz('M', 0, 5, ['hook', 0, 7.4, 4, 2.6]), dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Two corners line up about 5 yards off, near the sidelines, and guard the outside.', 'Two safeties start at 10 yards and drop to split the deep field in halves.', 'One rusher goes after the QB.', '6th defender: drops to the middle hook, as the middle LB does in FirstDown\'s 7v7 Cover 2.'],
+      pro: 'Covers both sidelines and the deep ball.', con: 'Short throws over the middle. The rusher can peel back to help on the center.' },
+    { id: 'c3-6', n: 6, name: 'Cover 3', src: 'nfldef', also: 'fd7', ref: 'Cover 3',
+      d: [dz('U', -6, 5, ['hook', -6.4, 7.5, 4.6, 2.7]), dz('U', 6, 5, ['hook', 6.4, 7.5, 4.6, 2.7]),
+        dz('S', -10, 10, ['deep', -10.8, 17.5, 5.2, 5]), dz('S', 0, 10.5, ['deep', 0, 18.5, 5.2, 5]), dz('S', 10, 10, ['deep', 10.8, 17.5, 5.2, 5]),
+        dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Two defenders start 5 yards off and sink into the middle of each half, from about 5 to 10 yards (slants, ins, outs).', 'Three defenders start around 10 yards and each take a deep third.', 'NFL FLAG plays this 5-on-5 with no rusher. Our 6th defender rushes, as in FirstDown\'s 7v7 Cover 3.'],
+      pro: 'Good for keeping the offense from getting a first down. Safeties keep everyone in front of them.', con: null },
+    { id: 'c4-6', n: 6, name: 'Cover 4', src: 'nfldef', ref: 'Cover 4',
+      d: [dz('S', -12, 10, ['deep', -12.4, 16.5, 3.8, 5.2]), dz('S', -4.2, 10, ['deep', -4.2, 17.5, 3.8, 5.2]), dz('S', 4.2, 10, ['deep', 4.2, 17.5, 3.8, 5.2]), dz('S', 12, 10, ['deep', 12.4, 16.5, 3.8, 5.2]),
+        dz('M', 0, 5, ['hook', 0, 6.8, 4.4, 2.6]), dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Four defenders line up 10 yards off and each take a deep quarter of the field.', 'One rusher goes after the QB and can help underneath.', '6th defender: plays the middle hook underneath.'],
+      pro: 'Excellent against deep throws, or when the offense needs a big play late.', con: 'Short yardage near the line of scrimmage is open.' },
+    { id: 'z42-6', n: 6, name: '4-2 Zone', src: 'fd6', ref: '4-2 zone',
+      d: [dz('F', -12, 4, ['flat', -12.6, 4.4, 3.4, 2.6]), dz('H', -4.5, 5, ['hook', -4.8, 6.8, 3.6, 2.6]), dz('H', 4.5, 5, ['hook', 4.8, 6.8, 3.6, 2.6]), dz('F', 12, 4, ['flat', 12.6, 4.4, 3.4, 2.6]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2])],
+      text: ['A 6v6 zone with four underneath defenders and two deep safeties, and no rusher.', 'FirstDown PlayBook\'s answers to it are worth knowing: three verticals against the two safeties, or five receivers flooding underneath.'],
+      pro: null, con: null },
+    { id: 'c2-7', n: 7, name: 'Cover 2 (1-4-2)', src: 'fd7', also: 'nfldef', ref: '1-4-2 Base',
+      d: [dz('LB', -10.5, 4, ['curl', -11, 5.6, 3.8, 2.8]), dz('LB', 10.5, 4, ['curl', 11, 5.6, 3.8, 2.8]),
+        dz('M', -1.4, 5, ['hook', -4.6, 7.6, 3.4, 2.6]), dz('D', 2.8, 2.4, ['hook', 4.6, 7.6, 3.4, 2.6]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2]), dz('R', -2.8, 2.4, null, { rush: 1 })],
+      text: ['Outside linebackers take the curl/flat on each side.', 'Middle linebacker and one dropping rusher take the hook/curl zones.', 'Two safeties split the deep field in halves, and one defender rushes.'],
+      pro: 'One of the simplest, most effective 7v7 defenses. A good first zone because it teaches zone responsibilities.', con: null },
+    { id: 'c3-7', n: 7, name: 'Cover 3 (1-3-3)', src: 'fd7', also: 'nfldef', ref: '1-3-3 (2 deep disguise)',
+      d: [dz('LB', -10.5, 4, ['curl', -11, 5.6, 3.8, 2.8]), dz('LB', 10.5, 4, ['curl', 11, 5.6, 3.8, 2.8]),
+        dz('D', 2.8, 2.4, ['hook', 0, 7.4, 4, 2.6]),
+        dz('S', -9.5, 10, ['deep', -10.8, 17.5, 5.2, 5]), dz('M', 0, 9, ['deep', 0, 18.5, 5.2, 5]), dz('S', 9.5, 10, ['deep', 10.8, 17.5, 5.2, 5]),
+        dz('R', -2.8, 2.4, null, { rush: 1 })],
+      text: ['Shows two deep before the snap. At the snap, the middle defender opens to the deep middle third.', 'Safeties play the outside thirds.', 'One rusher, and one dropping rusher takes the middle hook. Outside linebackers take the curl/flat.'],
+      pro: null, con: null },
+    { id: 'c4-7', n: 7, name: 'Cover 4', src: 'nfldef', ref: 'Cover 4',
+      d: [dz('S', -12, 10, ['deep', -12.4, 16.5, 3.8, 5.2]), dz('S', -4.2, 10, ['deep', -4.2, 17.5, 3.8, 5.2]), dz('S', 4.2, 10, ['deep', 4.2, 17.5, 3.8, 5.2]), dz('S', 12, 10, ['deep', 12.4, 16.5, 3.8, 5.2]),
+        dz('H', -4.5, 5, ['hook', -4.8, 6.8, 3.6, 2.6]), dz('H', 4.5, 5, ['hook', 4.8, 6.8, 3.6, 2.6]), dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Four defenders line up 10 yards off and each take a deep quarter.', 'One rusher goes after the QB.', 'Extra defenders (6th and 7th): split the underneath hooks.'],
+      pro: 'Excellent against deep throws, or when the offense needs a big play late.', con: 'Short yardage near the line of scrimmage is open.' },
+    { id: 'z232-7', n: 7, name: '2-3-2 Pressure Zone', src: 'fd7', ref: '2-3-2 Pressure (2 shell)',
+      d: [dz('R', -2.8, 2.4, null, { rush: 1 }), dz('R', 2.8, 2.4, null, { rush: 1 }),
+        dz('LB', -10.5, 4, ['curl', -11, 5.4, 3.8, 2.8]), dz('M', 0, 5, ['hook', 0, 7.2, 4, 2.6]), dz('LB', 10.5, 4, ['curl', 11, 5.4, 3.8, 2.8]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2])],
+      text: ['Two rushers, one off each edge.', 'Three underneath zone defenders.', 'Two deep safeties split the field in halves.'],
+      pro: null, con: null },
+  ];
+
+  // ---------- drawing ----------
+  const W = 480, H = 330, LOS = 236;
+  const sx = (x) => 240 + x * 14;
+  const sy = (y) => (y >= 0 ? (y <= 10 ? LOS - y * 11 : LOS - 110 - (y - 10) * 7) : LOS - y * 10);
+  const r1 = (v) => Math.round(v * 10) / 10;
+  const COL = { norm: '#E3C04F', primary: '#EF4D5E', add: '#4C8DF6', decoy: '#8C8250', motion: '#D9DEE7', zone: { deep: '#3B82F6', hook: '#FACC15', flat: '#22D3EE', curl: '#A855F7' } };
+
+  function seg(P, curve) {
+    if (!curve || P.length < 3) return { d: 'L' + P.slice(1).map((p) => `${r1(p[0])} ${r1(p[1])}`).join(' L'), tail: P[P.length - 2] };
+    let d = ''; let tail = P[P.length - 2];
+    for (let i = 0; i < P.length - 1; i++) {
+      const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+      const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += ` C${r1(c1[0])} ${r1(c1[1])} ${r1(c2[0])} ${r1(c2[1])} ${r1(p2[0])} ${r1(p2[1])}`;
+      if (i === P.length - 2 && Math.hypot(p2[0] - c2[0], p2[1] - c2[1]) > 0.5) tail = c2;
+    }
+    return { d, tail };
+  }
+  function arrow(tail, tip, color, s = 9) {
+    const a = Math.atan2(tip[1] - tail[1], tip[0] - tail[0]);
+    const b = [tip[0] - Math.cos(a) * s, tip[1] - Math.sin(a) * s];
+    const w = s * 0.55, n = [-Math.sin(a) * w, Math.cos(a) * w];
+    return `<path d="M${r1(tip[0] + Math.cos(a) * 2)} ${r1(tip[1] + Math.sin(a) * 2)} L${r1(b[0] + n[0])} ${r1(b[1] + n[1])} L${r1(b[0] - n[0])} ${r1(b[1] - n[1])} Z" fill="${color}"/>`;
+  }
+  function drawRoute(r, byId) {
+    const kind = r.k || 'route';
+    const color = kind === 'motion' || kind === 'pitch' || kind === 'qb' ? COL.motion : COL[r.role] || COL.norm;
+    const who = byId[r.p];
+    if (kind === 'stay') {
+      if (!who) return '';
+      const x = sx(who.x), y = sy(who.y) - 13;
+      return `<path d="M${r1(x)} ${r1(y + 2)} L${r1(x)} ${r1(y - 7)} M${r1(x - 6)} ${r1(y - 7)} L${r1(x + 6)} ${r1(y - 7)}" stroke="${color}" stroke-width="3" stroke-linecap="round" fill="none"/>`;
+    }
+    const parts = r.parts || [{ pts: r.pts, c: r.c }];
+    let d = '', tail = null, tip = null;
+    parts.forEach((pt, i) => {
+      const P = pt.pts.map(([x, y]) => [sx(x), sy(y)]);
+      if (i === 0) d += `M${r1(P[0][0])} ${r1(P[0][1])}`;
+      const s = seg(P, pt.c); d += ' ' + s.d; tail = s.tail; tip = P[P.length - 1];
+    });
+    const dash = kind === 'motion' ? ' stroke-dasharray="6 5"' : kind === 'pitch' || kind === 'qb' ? ' stroke-dasharray="3 4"' : '';
+    const sw = kind === 'route' || kind === 'now' ? 3.2 : 2.2;
+    let out = `<path d="${d}" stroke="${color}" stroke-width="${sw}" fill="none" stroke-linecap="round" stroke-linejoin="round"${dash}/>`;
+    if (kind === 'now') {
+      out += `<path d="M${r1(tip[0] - 6)} ${r1(tip[1])} L${r1(tip[0] + 6)} ${r1(tip[1])}" stroke="${color}" stroke-width="3.2" stroke-linecap="round"/>`;
+    } else if (kind !== 'motion') out += arrow(tail, tip, color, kind === 'route' ? 10 : 8);
+    return out;
+  }
+  function drawPlayer(p) {
+    const x = r1(sx(p.x)), y = r1(sy(p.y));
+    const ring = p.add ? ` stroke="${COL.add}" stroke-width="3"` : ' stroke="#0f1318" stroke-width="1.5"';
+    const lab = p.id === 'WR2' ? 'WR' : p.id;
+    const fs = lab.length >= 3 ? 7.8 : lab.length === 2 ? 9.2 : 12;
+    const shape = p.id === 'C' ? `<rect x="${r1(x - 10)}" y="${r1(y - 10)}" width="20" height="20" rx="2.5" fill="#fff"${ring}/>` : `<circle cx="${x}" cy="${y}" r="11" fill="#fff"${ring}/>`;
+    return `${shape}<text x="${x}" y="${r1(y + fs * 0.36)}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="#11161d" font-family="system-ui,sans-serif">${lab}</text>`;
+  }
+  function field(inner, label) {
+    const marks = [5, 10, 15, 20].map((yd) => `<line x1="10" x2="${W - 10}" y1="${r1(sy(yd))}" y2="${r1(sy(yd))}" stroke="#ffffff" stroke-opacity="${yd === 10 || yd === 20 ? 0.09 : 0.05}"/><text x="${W - 12}" y="${r1(sy(yd) - 3)}" text-anchor="end" font-size="9" fill="#ffffff" fill-opacity=".28" font-family="system-ui,sans-serif">${yd}</text>`).join('');
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label}"><rect width="${W}" height="${H}" fill="#16191e"/>${marks}<line x1="10" x2="${W - 10}" y1="${LOS}" y2="${LOS}" stroke="#ffffff" stroke-opacity=".16" stroke-dasharray="2 5"/>${inner}</svg>`;
+  }
+  // Players and routes for an offense on the field: 5 / 6 / 7 players depending on the play's source.
+  function offenseFor(play, n) {
+    const base = { players: play.players.slice(), routes: play.routes.slice(), note: '', size: play.players.length };
+    const add = n >= 7 ? play.add7 : n >= 6 ? play.add6 : null;
+    if (n >= 6 && play.players.length === 6) { base.note = n >= 7 ? (play.add7 && play.add7.none) || '' : ''; return base; }
+    if (add && add.players) { base.players.push(...add.players); base.routes.push(...add.routes); base.note = add.text; }
+    else if (add && add.none) base.note = add.none;
+    base.size = base.players.length;
+    return base;
+  }
+  function offenseSVG(play, n = 6) {
+    const o = offenseFor(play, n); const byId = Object.fromEntries(o.players.map((p) => [p.id, p]));
+    const body = o.routes.map((r) => drawRoute(r, byId)).join('') + o.players.map(drawPlayer).join('');
+    return field(body, play.name);
+  }
+  function zoneShape(z) {
+    const [type, cx, cy, rx, ry] = z; const c = COL.zone[type];
+    const px = sx(cx), py = sy(cy), prx = rx * 14, pry = Math.abs(sy(cy - ry) - sy(cy + ry)) / 2;
+    return `<ellipse cx="${r1(px)}" cy="${r1(py)}" rx="${r1(prx)}" ry="${r1(pry)}" fill="${c}" fill-opacity=".22" stroke="${c}" stroke-opacity=".85" stroke-width="1.6"/>`;
+  }
+  function defenseSVG(cov) {
+    const ghost = [[-12, 0], [-6, -1], [6, -1], [12, 0]].map(([x, y]) => `<circle cx="${r1(sx(x))}" cy="${r1(sy(y))}" r="7" fill="#fff" fill-opacity=".12"/>`).join('') +
+      `<rect x="${r1(sx(0) - 6.5)}" y="${r1(sy(0) - 6.5)}" width="13" height="13" rx="2" fill="#fff" fill-opacity=".18"/><circle cx="${r1(sx(0))}" cy="${r1(sy(-5))}" r="7" fill="#fff" fill-opacity=".18"/>`;
+    let zones = '', lines = '', marks = '';
+    for (const d of cov.d) {
+      const x = sx(d.x), y = sy(d.y);
+      if (d.rush) {
+        const tip = [sx(0) + (d.x > 0 ? 9 : -9) * 0.5, sy(-5) - 10];
+        lines += `<path d="M${r1(x)} ${r1(y)} L${r1(tip[0])} ${r1(tip[1])}" stroke="${COL.primary}" stroke-width="3" fill="none" stroke-linecap="round"/>` + arrow([x, y], tip, COL.primary, 10);
+      } else if (d.zone) {
+        zones += zoneShape(d.zone);
+        lines += `<line x1="${r1(x)}" y1="${r1(y)}" x2="${r1(sx(d.zone[1]))}" y2="${r1(sy(d.zone[2]))}" stroke="${COL.zone[d.zone[0]]}" stroke-width="1.8" stroke-opacity=".9"/>`;
+      }
+      marks += `<path d="M${r1(x)} ${r1(y + 14)} L${r1(x - 14)} ${r1(y - 9)} L${r1(x + 14)} ${r1(y - 9)} Z" fill="${d.rush ? '#ffd5d9' : '#fff'}" stroke="#0f1318" stroke-width="1.4" stroke-linejoin="round"/><text x="${r1(x)}" y="${r1(y + 1.6)}" text-anchor="middle" font-size="${d.id.length > 1 ? 9.4 : 12}" font-weight="800" fill="#11161d" font-family="system-ui,sans-serif">${d.id}</text>`;
+    }
+    return field(ghost + zones + lines + marks, cov.name);
+  }
+  return { SOURCES, OFFENSE, DEFENSE, offenseFor, offenseSVG, defenseSVG, COL };
+})();
+if (typeof module !== 'undefined') module.exports = PB;
+
+(() => {
   const C = Core;
   const $ = (s, el = document) => el.querySelector(s);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -581,7 +1065,7 @@ const Core = (() => {
     del(k) { try { localStorage.removeItem(k); } catch { mem.delete(k); } },
   };
   const TEAM_COLORS = [['Pumpkin', '#F28C28'], ['Cranberry', '#C0392B'], ['Teal', '#2EC4B6'], ['Royal', '#3B6FD8'], ['Forest', '#2E8B57'], ['Gold', '#E6B325'], ['Plum', '#8E44AD'], ['Slate', '#7F8C8D']];
-  const TABS = [['players', 'Players'], ['draft', 'Draft'], ['teams', 'Teams'], ['book', 'Sportsbook'], ['score', 'Scoreboard']];
+  const TABS = [['players', 'Players'], ['draft', 'Draft'], ['teams', 'Teams'], ['plays', 'Playbook'], ['book', 'Sportsbook'], ['score', 'Scoreboard']];
 
   // ---------- backend ----------
   class LocalStore {
@@ -612,7 +1096,7 @@ const Core = (() => {
 
   // ---------- state ----------
   const S = {
-    snap: null, etag: null, hasCommish: false, offline: false, tab: LS.get('tb-tab') || 'players', pin: LS.get('tb-pin'), me: LS.get('tb-me'),
+    snap: null, etag: null, hasCommish: false, offline: false, tab: LS.get('tb-tab') || 'players', pb: Object.assign({ side: 'off', cat: 'all', n: 6 }, LS.get('tb-pb') || {}), pin: LS.get('tb-pin'), me: LS.get('tb-me'),
     filter: 'All', sort: 'ovr', slip: null, modal: null, evq: LS.get('tb-evq') || 1, ev: { type: 'catchTD', playerId: '', team: 'A', pts: '' },
     draftTeam: null, linesDraft: null, dirty: false, booted: false,
   };
@@ -658,7 +1142,7 @@ const Core = (() => {
     if (S.booted && ae && ae.closest && ae.closest('#app, #slip-root') && /INPUT|SELECT|TEXTAREA/.test(ae.tagName)) { S.dirty = true; renderHeader(); return; }
     S.dirty = false;
     renderHeader();
-    const views = { players: renderPlayers, draft: renderDraft, teams: renderTeams, book: renderBook, score: renderScore };
+    const views = { players: renderPlayers, draft: renderDraft, teams: renderTeams, plays: renderPlays, book: renderBook, score: renderScore };
     $('#app').innerHTML = (S.offline ? '<div class="banner err">Connection lost. Showing the last update; retrying…</div>' : '') + (window.TB_DEMO ? '<div class="banner">Demo mode: everything saves on this device only. Deploy to Netlify for the shared version.</div>' : '') + (views[S.tab] || renderPlayers)();
     renderSlip();
   }
@@ -739,6 +1223,59 @@ const Core = (() => {
     }
     openModal(body);
   }
+
+  // ----- playbook (plays and coverages come from src/plays.js) -----
+  const pbSeg = (act, cur, opts, extra = '') => `<div class="seg">${opts.map(([v, l]) => `<button class="${String(cur) === String(v) ? 'on' : ''}" data-act="${act}" data-v="${v}"${extra}>${l}</button>`).join('')}</div>`;
+  const pbSrc = (k) => PB.SOURCES[k];
+  function pbPlayCard(p, n) {
+    const o = PB.offenseFor(p, n);
+    const tag = n === 7 && o.size < 7 ? '<span class="pbtag">6v6 only</span>' : '';
+    return `<div class="pbcard" role="button" tabindex="0" data-act="open-play" data-id="${p.id}"><div class="pbart">${PB.offenseSVG(p, n)}</div><div class="pbbar">${esc(p.name)}</div>
+      <div class="pbmeta"><span class="pbcat ${p.cat}">${p.cat}</span>${tag}<span class="muted pbform">${esc(p.form)}</span><span class="grow"></span><span class="muted">${esc(pbSrc(p.src).short)}</span></div></div>`;
+  }
+  function pbCovCard(d) {
+    const rush = d.d.filter((x) => x.rush).length;
+    return `<div class="pbcard" role="button" tabindex="0" data-act="open-cov" data-id="${d.id}"><div class="pbart">${PB.defenseSVG(d)}</div><div class="pbbar">${esc(d.name)}</div>
+      <div class="pbmeta"><span class="pbcat zone">Zone</span><span class="muted">${d.n} defenders · ${rush ? rush + ' rusher' + (rush > 1 ? 's' : '') : 'no rusher'}</span><span class="grow"></span><span class="muted">${esc(pbSrc(d.src).short)}</span></div></div>`;
+  }
+  function renderPlays() {
+    const pb = S.pb; const off = pb.side !== 'def';
+    const cnt = (c) => PB.OFFENSE.filter((p) => c === 'all' || p.cat === c).length;
+    const list = off ? PB.OFFENSE.filter((p) => pb.cat === 'all' || p.cat === pb.cat) : PB.DEFENSE.filter((d) => d.n === pb.n);
+    const key = (c, l, cls = '') => `<span><i class="${cls}" style="background:${c}"></i>${l}</span>`;
+    const legend = off
+      ? key(PB.COL.norm, 'Route') + key(PB.COL.primary, 'First read / target') + key(PB.COL.decoy, 'Decoy / clear-out') + key(PB.COL.add, pb.n === 7 ? '6th & 7th players' : '6th player') + key('transparent', 'Motion, pitch, QB path', 'dash')
+      : key(PB.COL.zone.deep, 'Deep zone') + key(PB.COL.zone.hook, 'Hook / curl') + key(PB.COL.zone.flat, 'Flat') + key(PB.COL.zone.curl, 'Curl / flat') + key(PB.COL.primary, 'Rusher');
+    const used = off ? ['ffp', 'fa', 'fd', 'nfl'] : ['nfldef', 'fd7', 'fd6'];
+    return `<h2 class="sec">Playbook <span class="sub">${off ? 'Pass plays from published flag football playbooks. Tap a play for every assignment.' : 'Zone coverages from NFL FLAG and FirstDown PlayBook. Tap one for each defender\'s job.'}</span></h2>
+      <div class="pbctl">${pbSeg('pb-side', off ? 'off' : 'def', [['off', 'Offense'], ['def', 'Defense']])}
+        ${off ? pbSeg('pb-cat', pb.cat, [['all', `All ${cnt('all')}`], ['short', `Short ${cnt('short')}`], ['medium', `Medium ${cnt('medium')}`], ['long', `Long ${cnt('long')}`]]) : ''}
+        ${pbSeg('pb-n', pb.n, [[6, '6 per side'], [7, '7 per side']])}</div>
+      <div class="pbkey">${legend}</div>
+      <div class="pbgrid">${list.map((x) => (off ? pbPlayCard(x, pb.n) : pbCovCard(x))).join('')}</div>
+      <p class="tiny muted" style="margin-top:16px">Sources: ${used.map((k) => `<a href="${pbSrc(k).url}" target="_blank" rel="noopener">${esc(pbSrc(k).name)}</a>`).join(' · ')}</p>`;
+  }
+  function playModal(id) {
+    const p = PB.OFFENSE.find((x) => x.id === id); if (!p) return;
+    const n = S.pb.n; const o = PB.offenseFor(p, n); const src = pbSrc(p.src);
+    openModal(`<div class="pbdetail"><div><div class="pbcard flat"><div class="pbart">${PB.offenseSVG(p, n)}</div><div class="pbbar">${esc(p.name)}</div></div>
+        <div class="row" style="margin-top:10px">${pbSeg('pb-n-modal', n, [[6, '6 per side'], [7, '7 per side']], ` data-id="${p.id}"`)}<span class="small muted">${o.size} players on offense</span></div></div>
+      <div><h3 style="margin-top:4px">${esc(p.form)} &nbsp;<span class="pbcat ${p.cat}">${p.cat}</span></h3>
+        <ul class="pblist">${p.assign.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
+        ${o.note ? `<div class="pbnote"><b>${n} on ${n}:</b> ${esc(o.note)}</div>` : ''}
+        <p class="small" style="margin:12px 0">${esc(p.tip)}</p>
+        <p class="tiny muted">Source: <a href="${src.url}" target="_blank" rel="noopener">${esc(src.name)}</a> (${esc(p.ref)}). ${p.drawn ? esc(p.drawn) : 'Drawn in the source\'s alignment.'}</p></div></div>`);
+  }
+  function covModal(id) {
+    const d = PB.DEFENSE.find((x) => x.id === id); if (!d) return;
+    const src = pbSrc(d.src), also = d.also ? pbSrc(d.also) : null;
+    openModal(`<div class="pbdetail"><div><div class="pbcard flat"><div class="pbart">${PB.defenseSVG(d)}</div><div class="pbbar">${esc(d.name)}</div></div></div>
+      <div><h3 style="margin-top:4px">${d.n} defenders &nbsp;<span class="pbcat zone">Zone</span></h3>
+        <ul class="pblist">${d.text.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+        ${d.pro ? `<p class="small"><b style="color:var(--green)">Strength:</b> ${esc(d.pro)}</p>` : ''}${d.con ? `<p class="small"><b style="color:var(--red)">Weak spot:</b> ${esc(d.con)}</p>` : ''}
+        <p class="tiny muted">Source: <a href="${src.url}" target="_blank" rel="noopener">${esc(src.name)}</a> (${esc(d.ref)})${also ? `; extra defenders follow <a href="${also.url}" target="_blank" rel="noopener">${esc(also.name)}</a>` : ''}.</p></div></div>`);
+  }
+
   function openModal(html, narrow) {
     $('#modal-root').innerHTML = `<div class="scrim" data-act="close-modal-bg"><div class="modal ${narrow ? 'narrow' : ''}"><button class="xbtn" data-act="close-modal" aria-label="Close">×</button>${html}</div></div>`;
     document.body.style.overflow = 'hidden';
@@ -925,6 +1462,12 @@ const Core = (() => {
   // ---------- actions ----------
   const A = {
     tab(el) { S.tab = el.dataset.tab; LS.set('tb-tab', S.tab); S.dirty = false; render(); window.scrollTo(0, 0); },
+    'pb-side'(el) { S.pb.side = el.dataset.v; LS.set('tb-pb', S.pb); render(); },
+    'pb-cat'(el) { S.pb.cat = el.dataset.v; LS.set('tb-pb', S.pb); render(); },
+    'pb-n'(el) { S.pb.n = Number(el.dataset.v); LS.set('tb-pb', S.pb); render(); },
+    'pb-n-modal'(el) { S.pb.n = Number(el.dataset.v); LS.set('tb-pb', S.pb); render(); playModal(el.dataset.id); },
+    'open-play'(el) { playModal(el.dataset.id); },
+    'open-cov'(el) { covModal(el.dataset.id); },
     filter(el) { S.filter = el.dataset.f; render(); },
     'open-player'(el) { playerModal(el.dataset.id); },
     noop() {},
