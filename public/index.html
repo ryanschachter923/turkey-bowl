@@ -176,6 +176,7 @@ table.box th,table.box td{padding:6px 5px;font-size:13px}table.box th{font-size:
 .empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
 .kbd{font-family:ui-monospace,monospace;background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12px}
 .hide{display:none!important}
+.rules{columns:330px;column-gap:14px}.rules .panel{display:inline-block;width:100%;margin:0 0 14px;break-inside:avoid}.rules h3{color:var(--gold)}.rules ul{margin:0;padding-left:18px}.rules li{margin:6px 0}.rules li::marker{color:var(--accent)}.rules b{color:#fff}
 </style>
 </head>
 <body>
@@ -1065,7 +1066,7 @@ if (typeof module !== 'undefined') module.exports = PB;
     del(k) { try { localStorage.removeItem(k); } catch { mem.delete(k); } },
   };
   const TEAM_COLORS = [['Pumpkin', '#F28C28'], ['Cranberry', '#C0392B'], ['Teal', '#2EC4B6'], ['Royal', '#3B6FD8'], ['Forest', '#2E8B57'], ['Gold', '#E6B325'], ['Plum', '#8E44AD'], ['Slate', '#7F8C8D']];
-  const TABS = [['players', 'Players'], ['draft', 'Draft'], ['teams', 'Teams'], ['plays', 'Playbook'], ['book', 'Sportsbook'], ['score', 'Scoreboard']];
+  const TABS = [['players', 'Players'], ['draft', 'Draft'], ['teams', 'Teams'], ['plays', 'Playbook'], ['rules', 'Rules'], ['book', 'Sportsbook'], ['score', 'Scoreboard']];
 
   // ---------- backend ----------
   class LocalStore {
@@ -1142,7 +1143,7 @@ if (typeof module !== 'undefined') module.exports = PB;
     if (S.booted && ae && ae.closest && ae.closest('#app, #slip-root') && /INPUT|SELECT|TEXTAREA/.test(ae.tagName)) { S.dirty = true; renderHeader(); return; }
     S.dirty = false;
     renderHeader();
-    const views = { players: renderPlayers, draft: renderDraft, teams: renderTeams, plays: renderPlays, book: renderBook, score: renderScore };
+    const views = { players: renderPlayers, draft: renderDraft, teams: renderTeams, plays: renderPlays, rules: renderRules, book: renderBook, score: renderScore };
     $('#app').innerHTML = (S.offline ? '<div class="banner err">Connection lost. Showing the last update; retrying…</div>' : '') + (window.TB_DEMO ? '<div class="banner">Demo mode: everything saves on this device only. Deploy to Netlify for the shared version.</div>' : '') + (views[S.tab] || renderPlayers)();
     renderSlip();
   }
@@ -1319,6 +1320,14 @@ if (typeof module !== 'undefined') module.exports = PB;
     openModal(`<h3 style="font-size:20px">Draft ${esc(p.name)}?</h3><div class="muted small" style="margin:4px 0 12px">${esc(p.pos || 'No position')} · ${C.ovr(p)} OVR</div>
       <div class="pills">${opt('A')}${opt('B')}</div>
       <div class="row" style="margin-top:16px"><button class="btn pri" data-act="confirm-pick" data-id="${esc(id)}" data-team="${t}">Draft to ${esc(tname(t))}</button><button class="btn ghost" data-act="close-modal">Cancel</button></div>`, true);
+  }
+
+  // ----- rules -----
+  const RULES = [["The basics", ["Even numbers on the field. If one team has an extra player, he rotates in.", "Snapper optional: take a snap, or let the QB start with the ball and yell hike. Everyone is an eligible receiver.", "No kickoffs or punts. Every drive starts at your own 5.", "Coin toss winner picks ball or end. The other team gets the ball to start the 2nd half.", "Four <b>12-minute quarters</b>, running clock. Switch ends at halftime. One timeout per team per half."]], ["Scoring", ["Touchdown: <b>6</b>", "Extra point: <b>1</b> from the 5 (pass only) or <b>2</b> from the 10 (run or pass). Call it before the snap.", "Defense picks off an extra point and takes it back: <b>2</b>.", "Safety: <b>2</b>, and the defense gets the ball."]], ["Downs", ["<b>4 downs</b> to cross midfield, then <b>4 downs</b> to score.", "Come up short and the other team takes over at its own 5."]], ["Rushing the passer", ["Rushers start <b>7 yards</b> off the ball (mark it with a cone) and raise a hand before the snap. Send as many as you want.", "Defenders who aren't rushing stay on their side of the line until a handoff, fake or throw.", "Go for the flag, never the QB. Jumping to block a pass is fine.", "QB clock: the defense counts to <b>7</b> out loud. No throw or handoff by 7 = dead ball, loss of down.", "Sack: the QB's flag is pulled behind the line. Throwing it away is legal."]], ["QB runs & handoffs", ["The QB <b>can't run past the line unless he's rushed</b>. Once a rusher crosses, he can take off.", "Handoffs and pitches are fine behind the line. No laterals past it.", "One forward pass per play, thrown from behind the line. Anyone can throw it.", "<b>No-run zones:</b> inside 5 yards of midfield or the goal line, it's pass only. No scrambles either."]], ["Ball or knee on the ground", ["The play is dead when the flag comes off, the runner steps out, or his knee, elbow, butt or back hits the ground.", "Ball hits the ground = dead. No fumbles: the offense keeps it where the runner was.", "Spot the ball where it was when the flag came off.", "No diving forward with the ball.", "Flag fell off on its own? You're down on a one-hand touch.", "Catches need one foot in bounds."]], ["Blocking & contact", ["<b>No blocking.</b> No screens, no picks, no escorting the runner.", "Bumping on a route happens. Running into a defender on purpose doesn't.", "Defense: no holding, pushing, jamming or hitting receivers, and no stripping the ball. Pull flags, don't tackle."]], ["Flags & flag guarding", ["Flags on both hips, outside your clothes. Tuck in the hoodie: a covered flag counts as flag guarding.", "<b>Flag guarding</b> is a hand, arm or the ball over your flag, a stiff arm, or a lowered shoulder. Spin and juke all you want.", "Only the ball carrier's flag can be pulled. Pull one early or grab a shirt: 5 yards, and that player is down on a one-hand touch instead."]], ["Interceptions", ["Picks can be returned. No score? Your offense starts where you're downed.", "Picked off and downed in your own end zone: start at your own 5."]], ["Penalties", ["<b>Offense</b> (flag guarding, blocking, illegal QB run, running in a no-run zone, offensive PI): 5 yards and loss of down.", "<b>Defense</b> (illegal rush, offside, illegal flag pull): 5 yards.", "Holding or roughing the QB: 10 yards and a first down.", "Pass interference: ball at the spot of the foul and a first down.", "The team that was fouled can always decline and take the play."]], ["Overtime", ["Coin toss, then teams trade 1-point tries from the 5 (pass only).", "The first round where one team scores and the other doesn't ends it. The winner gets 1 point added."]], ["Disputes", ["Captains settle it. Can't agree? Replay the down.", "The commish has the final say, including on stats and bets."]]];
+  function renderRules() {
+    return `<h2 class="sec">Rules <span class="sub">House rules. Not that serious, still binding.</span></h2>
+      <div class="rules">${RULES.map(([t, items]) => `<div class="panel"><h3>${t}</h3><ul>${items.map((i) => `<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>
+      <p class="tiny muted" style="margin-top:4px">Adapted from the <a href="https://static.www.nfl.com/image/upload/league/gxtdqh8hcquhezyzssfo.pdf" target="_blank" rel="noopener">NFL FLAG rulebook</a>, simplified for a game with no refs.</p>`;
   }
 
   // ----- teams -----
