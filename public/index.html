@@ -177,6 +177,24 @@ table.box th,table.box td{padding:6px 5px;font-size:13px}table.box th{font-size:
 .kbd{font-family:ui-monospace,monospace;background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12px}
 .hide{display:none!important}
 .rules{columns:330px;column-gap:14px}.rules .panel{display:inline-block;width:100%;margin:0 0 14px;break-inside:avoid}.rules h3{color:var(--gold)}.rules ul{margin:0;padding-left:18px}.rules li{margin:6px 0}.rules li::marker{color:var(--accent)}.rules b{color:#fff}
+/* post-game: rating changes, ratings editor, box score entry */
+.dl{display:inline-block;font-family:system-ui,sans-serif;font-size:11px;font-weight:800;line-height:1;letter-spacing:0;padding:3px 5px;border-radius:6px;color:#fff;vertical-align:top;margin:3px 0 0 4px;white-space:nowrap}
+.dl.up{background:#1d8f4e}.dl.dn{background:#cc3d3d}
+.dlt{font-size:12px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}.dlt.up{color:var(--green)}.dlt.dn{color:var(--red)}
+.attrrow.d4{grid-template-columns:120px 1fr 32px 34px}
+table.t th.g{text-align:center;color:var(--gold);border-bottom:0;padding-bottom:0}
+table.ed{border-collapse:separate;border-spacing:0}
+table.ed th,table.ed td{padding:4px 3px;text-align:center}
+table.ed th:first-child,table.ed td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);text-align:left;padding-left:12px;padding-right:8px;white-space:nowrap}
+table.ed td.out{font-family:var(--display);font-weight:800;font-size:17px;min-width:46px}
+table.ed input{width:46px;padding:7px 2px;text-align:center;font-size:16px;font-variant-numeric:tabular-nums}
+table.ed input.fin{width:58px;font-weight:800;border-color:#41506f}
+table.ed input.chg{border-color:rgba(245,184,61,.8);color:var(--gold)}
+table.ed input.bad{border-color:var(--red);background:rgba(240,100,100,.14)}
+.rsub{font-size:12px;color:var(--muted);margin-top:1px}.rsub b{color:var(--text);font-family:var(--display);font-size:15px}
+.chk{font-size:12.5px;line-height:1.5;padding:9px 14px;border-top:1px solid var(--line);color:var(--muted)}
+.warn{color:#f8d98a}.chk .ok{color:var(--green)}
+.savebar{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:40;width:min(640px,calc(100% - 20px));background:#1b2438;border:1px solid var(--accent);border-radius:16px;padding:12px 14px;box-shadow:0 18px 50px rgba(0,0,0,.6);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -210,8 +228,10 @@ const Core = (() => {
   const STRETCH = 1.5, PIVOT = 70;
   const STATS = {
     passTD: 'Pass TDs', comp: 'Completions', intThrown: 'INTs thrown', rec: 'Receptions', recTD: 'Rec TDs',
-    rushTD: 'Rush TDs', totalTD: 'Total TDs', defINT: 'Def INTs', sacks: 'Sacks', pat: 'PATs made',
+    rushTD: 'Rush TDs', totalTD: 'Total TDs', defINT: 'Def INTs', defTD: 'Def TDs', sacks: 'Sacks', pat: 'PATs made',
   };
+  // Stats the commish types into a box score. totalTD is worked out from rec + rush + def TDs.
+  const BOX_STATS = ['comp', 'passTD', 'intThrown', 'rec', 'recTD', 'rushTD', 'defINT', 'defTD', 'sacks', 'pat'];
   const EVENTS = {
     catch: { label: 'Catch', pts: 0, needs: 'player' },
     catchTD: { label: 'TD catch', pts: 6, needs: 'player' },
@@ -337,7 +357,7 @@ const Core = (() => {
   // ---------- stats & settlement ----------
   function sortEvents(evs) { return [...(evs || [])].sort((x, y) => (x.q - y.q) || (x.ts - y.ts)); }
   function computeStats(snap) {
-    const cfg = snap.config; const pl = {}; const blank = () => ({ passTD: 0, comp: 0, intThrown: 0, rec: 0, recTD: 0, rushTD: 0, totalTD: 0, defINT: 0, sacks: 0, pat: 0 });
+    const cfg = snap.config; const pl = {}; const blank = () => ({ passTD: 0, comp: 0, intThrown: 0, rec: 0, recTD: 0, rushTD: 0, totalTD: 0, defINT: 0, defTD: 0, sacks: 0, pat: 0 });
     for (const p of cfg.players || []) pl[p.id] = blank();
     const teams = { A: { pts: 0, byQ: {} }, B: { pts: 0, byQ: {} } };
     const add = (t, q, n) => { if (!teams[t] || !n) return; teams[t].pts += n; teams[t].byQ[q] = (teams[t].byQ[q] || 0) + n; };
@@ -352,7 +372,7 @@ const Core = (() => {
       if (e.type === 'rushTD' && s) { s.rushTD++; s.totalTD++; firstTD = firstTD || e.playerId; }
       if (['int', 'pick6'].includes(e.type) && s) {
         s.defINT++; const qb = t && teamQB(cfg, other(t)); if (qb && pl[qb.id]) pl[qb.id].intThrown++;
-        if (e.type === 'pick6') { s.totalTD++; firstTD = firstTD || e.playerId; }
+        if (e.type === 'pick6') { s.defTD++; s.totalTD++; firstTD = firstTD || e.playerId; }
       }
       if (e.type === 'sack' && s) s.sacks++;
       if (['pat1', 'pat2'].includes(e.type) && e.playerId && pl[e.playerId]) pl[e.playerId].pat++;
@@ -361,7 +381,26 @@ const Core = (() => {
       if (scoringTeam) add(scoringTeam, e.q, pts);
       log.push({ ...e, team: scoringTeam, pts });
     }
-    return { players: pl, teams, firstTD, log };
+    // A box score typed in by the commish (config.box) replaces the play-by-play totals.
+    // Only the page's copy of core needs this: the Function only checks bankrolls while betting is open.
+    const box = cfg.box;
+    if (box) {
+      const n = (v) => (v === '' || v == null || !Number.isFinite(Number(v)) ? null : Math.max(0, Math.round(Number(v))));
+      for (const [id, m] of Object.entries(box.players || {})) {
+        if (!pl[id]) continue;
+        const s = blank(); for (const k of BOX_STATS) s[k] = n(m?.[k]) || 0;
+        s.totalTD = s.recTD + s.rushTD + s.defTD; pl[id] = s;
+      }
+      for (const t of ['A', 'B']) {
+        const sc = box.score?.[t]; if (!sc) continue;
+        const byQ = {}; for (const q of QUARTERS) { const v = n(sc.q?.[q]); if (v !== null) byQ[q] = v; }
+        const fin = n(sc.final); const qs = Object.values(byQ);
+        if (fin === null && !qs.length) continue;
+        teams[t] = { pts: fin !== null ? fin : qs.reduce((a, b) => a + b, 0), byQ };
+      }
+      if (box.firstTD) firstTD = box.firstTD === 'none' ? null : box.firstTD;
+    }
+    return { players: pl, teams, firstTD, log, manual: !!box };
   }
   function lineFor(bet) { return bet.line; }
   function settle(bet, snap, st) {
@@ -586,7 +625,7 @@ const Core = (() => {
   }
 
   return {
-    ATTRS, ATTR_NAMES, POSITIONS, WEIGHTS, DEF_WEIGHTS, STATS, EVENTS, QUARTERS, qLabel, STRETCH, PIVOT,
+    ATTRS, ATTR_NAMES, POSITIONS, WEIGHTS, DEF_WEIGHTS, STATS, BOX_STATS, EVENTS, QUARTERS, qLabel, STRETCH, PIVOT,
     ovr, def, tier, rosters, teamOf, player, teamName, teamQB, nextPickTeam, draftable, teamRatings, other,
     profit, fmtOdds, probToOdds, projection, suggestLines, computeStats, settle, ledger, describe, quote,
     seedConfig, slug, round, handle,
@@ -1099,7 +1138,7 @@ if (typeof module !== 'undefined') module.exports = PB;
   const S = {
     snap: null, etag: null, hasCommish: false, offline: false, tab: LS.get('tb-tab') || 'players', pb: Object.assign({ side: 'off', cat: 'all', n: 6 }, LS.get('tb-pb') || {}), pin: LS.get('tb-pin'), me: LS.get('tb-me'),
     filter: 'All', sort: 'ovr', slip: null, modal: null, evq: LS.get('tb-evq') || 1, ev: { type: 'catchTD', playerId: '', team: 'A', pts: '' },
-    draftTeam: null, linesDraft: null, dirty: false, booted: false,
+    draftTeam: null, linesDraft: null, rDraft: null, bDraft: null, bDraft0: null, dirty: false, booted: false,
   };
   let stats = null, ledger = {};
   function derive() {
@@ -1155,12 +1194,16 @@ if (typeof module !== 'undefined') module.exports = PB;
       (isCommish() ? `<button class="chip on" data-act="commish-menu">Commish</button>` : `<button class="chip" data-act="commish">${S.hasCommish ? 'Commish' : 'Set commish PIN'}</button>`);
   }
 
+  // The first ratings update saves everyone's pregame ratings, so cards can show ▲▼ changes.
+  const preOf = (p) => cfg().pregame?.players?.[p.id] || null;
+  const dOvr = (p) => { const b = preOf(p); return b ? C.ovr(p) - b.ovr : 0; };
+  const arrow = (d, cls = 'dlt') => (d ? `<span class="${cls} ${d > 0 ? 'up' : 'dn'}" title="Change since pregame">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</span>` : '');
   function card(p, o = {}) {
     const c = cfg(); const ov = C.ovr(p); const t = C.teamOf(c, p.id); const cap = t && c.teams[t].captainId === p.id;
     const attrs = C.ATTRS.map((a) => `<div class="at"><span>${a}</span><span class="${p.ratings[a] >= 90 ? 'hi' : ''}">${p.ratings[a]}</span></div>`).join('');
     const base = p.comps?.base?.name;
     return `<div class="pc ${C.tier(ov)}" role="button" tabindex="0" data-act="${o.act || 'open-player'}" data-id="${esc(p.id)}" style="--tc:${t ? tcol(t) : '#2a3550'}">
-      <div class="top"><div class="ovr">${ov}<small>OVR</small></div><div class="pos">${esc(p.pos || '—')}</div><div class="num">${p.num !== '' && p.num != null ? '#' + esc(p.num) : ''}</div></div>
+      <div class="top"><div class="ovr">${ov}${arrow(dOvr(p), 'dl')}<small>OVR</small></div><div class="pos">${esc(p.pos || '—')}</div><div class="num">${p.num !== '' && p.num != null ? '#' + esc(p.num) : ''}</div></div>
       ${cap ? '<div class="cbadge" title="Captain">C</div>' : ''}
       <div class="av">${esc(initials(p.name))}</div>
       <div class="nm">${esc(p.name)}</div>
@@ -1172,6 +1215,7 @@ if (typeof module !== 'undefined') module.exports = PB;
 
   // ----- players -----
   function renderPlayers() {
+    if (S.rDraft && isCommish()) return ratingsEditor();
     const c = cfg(); const R = C.rosters(c); const onTeam = new Set([...R.A, ...R.B]);
     let ps = c.players.filter((p) => S.filter === 'All' || (S.filter === 'Undrafted' ? !onTeam.has(p.id) : p.pos === S.filter));
     const key = S.sort;
@@ -1181,7 +1225,7 @@ if (typeof module !== 'undefined') module.exports = PB;
     if (isCommish() && (qbs !== 2 || nopos)) warn = `<div class="banner">${nopos ? nopos + ' player' + (nopos > 1 ? 's' : '') + ' still need a position. ' : ''}${qbs !== 2 ? 'There ' + (qbs === 1 ? 'is 1 QB' : 'are ' + qbs + ' QBs') + '; each team needs exactly one.' : ''}</div>`;
     const capSel = (t) => `<label class="fl">${t === 'A' ? 'Team 1' : 'Team 2'} captain<select data-change="captain" data-team="${t}"><option value="">Not set</option>${c.players.map((p) => `<option value="${esc(p.id)}" ${c.teams[t].captainId === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select></label>`;
     return `${warn}
-      ${isCommish() ? `<div class="panel" style="margin-top:14px"><div class="row" style="align-items:flex-end">${capSel('A')}${capSel('B')}<span class="grow"></span><button class="btn sm" data-act="add-player">Add player</button></div><div class="tiny muted" style="margin-top:8px">Captains start on their team and don't get drafted. Tap any card to edit position, number, ratings and comps.</div></div>` : ''}
+      ${isCommish() ? `<div class="panel" style="margin-top:14px"><div class="row" style="align-items:flex-end">${capSel('A')}${capSel('B')}<span class="grow"></span><button class="btn sm gold" data-act="rate-open">Update ratings</button><button class="btn sm" data-act="add-player">Add player</button></div><div class="tiny muted" style="margin-top:8px">Captains start on their team and don't get drafted. Update ratings puts every player's attributes on one screen; tap a card to edit one player's position, number, ratings and comps.</div></div>` : ''}
       <h2 class="sec">Players <span class="sub">Tap a card for full ratings and NFL comps</span></h2>
       <div class="row" style="margin-bottom:14px">
         <div class="pills">${['All', 'QB', 'WR', 'TE', 'Undrafted'].map((f) => `<button class="pill ${S.filter === f ? 'on' : ''}" data-act="filter" data-f="${f}">${f}</button>`).join('')}</div>
@@ -1193,7 +1237,7 @@ if (typeof module !== 'undefined') module.exports = PB;
 
   function playerModal(id, edit) {
     const c = cfg(); const p = C.player(c, id); if (!p) return;
-    const w = C.WEIGHTS[p.pos];
+    const w = C.WEIGHTS[p.pos]; const pre = preOf(p); const dO = dOvr(p);
     const fmla = w ? Object.entries(w).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${Math.round(v * 100)}% ${k}`).join(', ') : 'Set a position to use the position formula';
     const barColor = (v) => (v >= 85 ? 'var(--green)' : v >= 75 ? 'var(--gold)' : v >= 65 ? 'var(--accent)' : 'var(--red)');
     let body;
@@ -1201,8 +1245,8 @@ if (typeof module !== 'undefined') module.exports = PB;
       const comp = (k, l) => { const x = p.comps?.[k] || {}; return `<div class="comp ${k}"><div class="lbl">${l}</div><b>${esc(x.name || 'TBD')}</b><div class="small muted">${esc(x.note || '')}</div></div>`; };
       body = `<div class="mgrid"><div>${card(p, { act: 'noop' })}</div><div>
         <h3 style="font-size:22px;margin-bottom:2px">${esc(p.name)}</h3>
-        <div class="muted small">${esc(p.pos || 'No position')} ${p.num !== '' ? '· #' + esc(p.num) : ''} · OVR ${C.ovr(p)}${p.ovrOverride ? ' (set by commish)' : ''} · DEF ${C.def(p)}</div>
-        <div style="margin-top:10px">${C.ATTRS.map((a) => `<div class="attrrow"><span>${C.ATTR_NAMES[a]} <span class="muted tiny">${a}</span></span><div class="bar"><i style="width:${p.ratings[a]}%;background:${barColor(p.ratings[a])}"></i></div><b>${p.ratings[a]}</b></div>`).join('')}</div>
+        <div class="muted small">${esc(p.pos || 'No position')} ${p.num !== '' ? '· #' + esc(p.num) : ''} · OVR ${C.ovr(p)}${p.ovrOverride ? ' (set by commish)' : ''}${pre ? ` (pregame ${pre.ovr}${dO ? ' ' + arrow(dO) : ''})` : ''} · DEF ${C.def(p)}</div>
+        <div style="margin-top:10px">${C.ATTRS.map((a) => { const da = pre ? p.ratings[a] - (pre.ratings?.[a] ?? p.ratings[a]) : 0; return `<div class="attrrow${pre ? ' d4' : ''}"><span>${C.ATTR_NAMES[a]} <span class="muted tiny">${a}</span></span><div class="bar"><i style="width:${p.ratings[a]}%;background:${barColor(p.ratings[a])}"></i></div><b>${p.ratings[a]}</b>${pre ? `<span class="dlt ${da > 0 ? 'up' : 'dn'}">${da ? (da > 0 ? '+' : '−') + Math.abs(da) : ''}</span>` : ''}</div>`; }).join('')}</div>
         <div class="tiny muted" style="margin-top:6px">OVR (Madden-style): ${esc(fmla)}, then stretched ${C.STRETCH}× around ${C.PIVOT}. DEF: 45% COV, 18% SPD, 15% AGI, 12% ACC, 10% PWR.</div>
         <h3 style="margin-top:14px">NFL comps</h3>
         <div class="comps">${comp('worst', 'Worst case')}${comp('base', 'Base case')}${comp('best', 'Best case')}</div>
@@ -1433,6 +1477,7 @@ if (typeof module !== 'undefined') module.exports = PB;
 
   // ----- scoreboard -----
   function renderScore() {
+    if (S.bDraft && isCommish()) return boxEditor();
     const c = cfg(); const g = game(); const st = stats; const A = st.teams.A, B = st.teams.B;
     const qs = [1, 2, 3, 4].concat([A, B].some((t) => t.byQ[5]) ? [5] : []);
     const statusTxt = g.status === 'final' ? '<div class="small" style="font-weight:800;letter-spacing:.12em">FINAL</div>' : g.status === 'live' ? `<div class="live">LIVE · ${C.qLabel(g.quarter || 1)}</div>` : '<div class="small muted" style="font-weight:800;letter-spacing:.12em">PREGAME</div>';
@@ -1441,22 +1486,25 @@ if (typeof module !== 'undefined') module.exports = PB;
       <div class="mid">${statusTxt}<div class="tiny muted" style="margin-top:6px">vs</div></div>
       <div class="side" style="--tc:${tcol('B')}"><span class="dot" style="width:14px;height:14px"></span><div class="nm">${esc(tname('B'))}</div><div class="pts">${B.pts}</div></div></div>
       <div class="panel scroll-x" style="margin-top:10px"><table class="t"><tr><th>Team</th>${qs.map((q) => `<th class="n">${C.qLabel(q)}</th>`).join('')}<th class="n">T</th></tr>
-      ${['A', 'B'].map((t) => `<tr><td><span class="dot" style="--tc:${tcol(t)};width:9px;height:9px"></span> <b>${esc(tname(t))}</b></td>${qs.map((q) => `<td class="n">${st.teams[t].byQ[q] ?? '–'}</td>`).join('')}<td class="n"><b>${st.teams[t].pts}</b></td></tr>`).join('')}</table></div>`;
+      ${['A', 'B'].map((t) => `<tr><td><span class="dot" style="--tc:${tcol(t)};width:9px;height:9px"></span> <b>${esc(tname(t))}</b></td>${qs.map((q) => `<td class="n">${st.teams[t].byQ[q] ?? '–'}</td>`).join('')}<td class="n"><b>${st.teams[t].pts}</b></td></tr>`).join('')}</table>${st.firstTD && C.player(c, st.firstTD) ? `<div class="small muted" style="margin:8px 0 2px">First TD: <b style="color:var(--text)">${esc(C.player(c, st.firstTD).name)}</b></div>` : ''}</div>`;
     if (isCommish()) h += statEntry();
     const log = [...st.log].sort((x, y) => (y.q - x.q) || (y.ts - x.ts));
     let ra = 0, rb = 0; const running = {}; for (const e of [...st.log]) { if (e.team === 'A') ra += e.pts || 0; if (e.team === 'B') rb += e.pts || 0; running[e.id] = ra + '-' + rb; }
-    h += `<h2 class="sec">Play-by-play <span class="sub">${log.length} plays</span></h2>`;
-    h += log.length ? `<div class="panel"><ul class="picks">${log.map((e) => { const p = e.playerId && C.player(c, e.playerId); const t = e.team; const ev = C.EVENTS[e.type];
+    const showLog = log.length || !st.manual;
+    if (showLog) h += `<h2 class="sec">Play-by-play <span class="sub">${log.length} plays${st.manual && log.length ? ' · the box score sets the totals' : ''}</span></h2>`;
+    if (showLog) h += log.length ? `<div class="panel"><ul class="picks">${log.map((e) => { const p = e.playerId && C.player(c, e.playerId); const t = e.team; const ev = C.EVENTS[e.type];
       return `<li><span class="kbd">${C.qLabel(e.q)}</span>${t ? `<span class="dot" style="--tc:${tcol(t)}"></span>` : ''}<span class="grow">${p ? '<b>' + esc(p.name) + '</b> · ' : ''}${esc(ev?.label || e.type)}${e.type === 'points' ? ' (' + sgn(e.pts) + ')' : ''}${t ? ' · ' + esc(tname(t)) : ''}${e.note ? ' <span class="muted small">' + esc(e.note) + '</span>' : ''}</span>${e.pts ? `<span class="small muted">${running[e.id]}</span>` : ''}${isCommish() ? `<button class="btn sm ghost" data-act="del-event" data-id="${esc(e.id)}" aria-label="Delete">Delete</button>` : ''}</li>`; }).join('')}</ul></div>` : '<div class="empty">No plays logged yet.</div>';
-    const cols = [['rec', 'REC'], ['recTD', 'REC TD'], ['rushTD', 'RUSH TD'], ['passTD', 'PASS TD'], ['comp', 'COMP'], ['intThrown', 'INT THR'], ['defINT', 'DEF INT'], ['sacks', 'SACK'], ['totalTD', 'TD']];
-    h += `<h2 class="sec">Box score</h2><div class="teams2">${['A', 'B'].map((t) => { const R = C.rosters(c)[t].map((id) => C.player(c, id)).filter(Boolean);
-      return `<div class="tpanel" style="--tc:${tcol(t)}"><div class="thead"><span class="dot"></span><span class="tn">${esc(tname(t))}</span></div><div class="scroll-x"><table class="t box"><tr><th>Player</th>${cols.map(([, l]) => `<th class="n">${l.replace(' ', '<br>')}</th>`).join('')}</tr>${R.map((p) => `<tr><td><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '')}</span></td>${cols.map(([k]) => `<td class="n">${st.players[p.id]?.[k] || ''}</td>`).join('')}</tr>`).join('') || `<tr><td class="muted" colspan="${cols.length + 1}">No roster yet</td></tr>`}</table></div></div>`; }).join('')}</div>`;
+    const cols = BOXCOLS.flatMap(([, cs]) => cs).concat([['totalTD', 'TDs']]);
+    const ghead = `<tr><th></th>${BOXCOLS.map(([gn, cs]) => `<th class="g" colspan="${cs.length}">${gn}</th>`).join('')}<th></th></tr>`;
+    h += `<h2 class="sec">Box score</h2><div class="teams2">${['A', 'B'].map((t) => { const R = roster(t);
+      return `<div class="tpanel" style="--tc:${tcol(t)}"><div class="thead"><span class="dot"></span><span class="tn">${esc(tname(t))}</span></div><div class="scroll-x"><table class="t box">${ghead}<tr><th>Player</th>${cols.map(([, l]) => `<th class="n">${l}</th>`).join('')}</tr>${R.map((p) => `<tr><td><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '')}</span></td>${cols.map(([k]) => `<td class="n">${st.players[p.id]?.[k] || ''}</td>`).join('')}</tr>`).join('') || `<tr><td class="muted" colspan="${cols.length + 1}">No roster yet</td></tr>`}</table></div></div>`; }).join('')}</div>`;
     return h;
   }
   function statEntry() {
     const c = cfg(); const g = game(); const ev = S.ev; const def = C.EVENTS[ev.type]; const R = C.rosters(c);
     const popts = ['A', 'B'].map((t) => `<optgroup label="${esc(tname(t))}">${R[t].map((id) => { const p = C.player(c, id); return `<option value="${esc(id)}" ${ev.playerId === id ? 'selected' : ''}>${esc(p.name)} (${esc(p.pos || '—')})</option>`; }).join('')}</optgroup>`).join('');
     return `<h2 class="sec">Commissioner: game and stats</h2><div class="panel">
+      <div class="row" style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)"><button class="btn gold" data-act="box-open">${c.box ? 'Edit box score' : 'Enter box score'}</button><span class="small muted grow">${c.box ? `The score and box score come from the stats you typed in, not logged plays.` : `Game already played? Type the final score and everyone's stats on one screen instead of logging plays.`}</span></div>
       <div class="row"><span class="small muted">Game status</span><div class="pills">${[['pre', 'Pregame'], ['live', 'Live'], ['final', 'Final']].map(([k, l]) => `<button class="pill ${g.status === k ? 'on' : ''}" data-act="game-status" data-s="${k}">${l}</button>`).join('')}</div>
       <span class="grow"></span><span class="tiny muted">Final settles every bet. Switch back to Live to fix a stat and bets re-settle when you go Final again.</span></div>
       <div class="row" style="margin-top:14px;align-items:flex-end">
@@ -1464,8 +1512,117 @@ if (typeof module !== 'undefined') module.exports = PB;
         <label class="fl">Play<select data-change="evtype">${Object.entries(C.EVENTS).map(([k, v]) => `<option value="${k}" ${ev.type === k ? 'selected' : ''}>${v.label}</option>`).join('')}</select></label>
         ${def.needs === 'player' ? `<label class="fl grow">${['int', 'pick6', 'sack'].includes(ev.type) ? 'Defender' : ev.type === 'rushTD' ? 'Runner' : 'Receiver'}<select data-change="evplayer"><option value="">Pick a player</option>${popts}</select></label>` : `<label class="fl">Team<select data-change="evteam">${['A', 'B'].map((t) => `<option value="${t}" ${ev.team === t ? 'selected' : ''}>${esc(tname(t))}</option>`).join('')}</select></label>${['pat1', 'pat2'].includes(ev.type) ? `<label class="fl grow">Scored by (optional)<select data-change="evplayer"><option value="">—</option>${R[ev.team].map((id) => `<option value="${esc(id)}" ${ev.playerId === id ? 'selected' : ''}>${esc(C.player(c, id).name)}</option>`).join('')}</select></label>` : ''}${ev.type === 'points' ? `<label class="fl">Points (+/-)<input data-input="evpts" type="number" step="1" value="${esc(ev.pts)}" style="width:90px"></label>` : ''}`}
         <button class="btn pri" data-act="add-event">Add play</button></div>
-      <div class="tiny muted" style="margin-top:8px">Catches and TD catches credit the team's QB with a completion and pass TD. INTs and pick-sixes charge the other team's QB. Plays can be logged live or after the game; set the quarter first.</div>
-      <div class="row" style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px"><span class="small muted grow">Danger zone</span><button class="btn sm danger" data-act="reset-game">Clear all plays and reset game</button></div></div>`;
+      <div class="tiny muted" style="margin-top:8px">Catches and TD catches credit the team's QB with a completion and pass TD. INTs and pick-sixes charge the other team's QB. Plays can be logged live or after the game; set the quarter first.${c.box ? ` <b class="warn">A box score is entered, so logged plays won't change the totals.</b>` : ''}</div>
+      <div class="row" style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px"><span class="small muted grow">Danger zone</span>${c.box ? '<button class="btn sm danger" data-act="box-clear">Clear box score</button>' : ''}<button class="btn sm danger" data-act="reset-game">Clear all plays and reset game</button></div></div>`;
+  }
+
+  // ----- post-game: ratings editor and box score entry (commish only) -----
+  const BOXCOLS = [['Passing', [['comp', 'CMP'], ['passTD', 'TD'], ['intThrown', 'INT']]], ['Receiving', [['rec', 'REC'], ['recTD', 'TD']]], ['Rushing', [['rushTD', 'TD']]], ['Defense', [['defINT', 'INT'], ['defTD', 'TD'], ['sacks', 'SACK']]], ['', [['pat', 'PAT']]]];
+  const digits = (v) => String(v ?? '').replace(/\D/g, '');
+  const n0 = (v) => Number(digits(v)) || 0;
+  const numIn = (attrs, val, label, max = 2, cls = '') => `<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="${max}" autocomplete="off" class="${cls}" ${attrs} value="${esc(val)}" aria-label="${esc(label)}">`;
+  const savebar = (info, btns) => `<div class="savebar"><span class="small grow" id="sb-info">${info}</span>${btns}</div>`;
+  function roster(t) { const c = cfg(); return C.rosters(c)[t].map((id) => C.player(c, id)).filter(Boolean).sort((a, b) => (a.pos === 'QB' ? -1 : b.pos === 'QB' ? 1 : C.ovr(b) - C.ovr(a))); }
+
+  // ratings
+  const rOk = (v) => { const n = Number(v); return digits(v) !== '' && n >= 1 && n <= 99; };
+  function rPreview(p) {
+    const D = S.rDraft[p.id] || {}; const r = {};
+    for (const a of C.ATTRS) r[a] = rOk(D[a]) ? Number(D[a]) : p.ratings[a];
+    const q = { ...p, ratings: r }; const ov = C.ovr(q); const b = preOf(p);
+    return { ovr: ov, def: C.def(q), d: ov - (b ? b.ovr : C.ovr(p)) };
+  }
+  const rCls = (p, a) => { const v = S.rDraft[p.id][a]; return !rOk(v) ? 'bad' : Number(v) !== p.ratings[a] ? 'chg' : ''; };
+  const rChanged = () => cfg().players.filter((p) => S.rDraft[p.id] && C.ATTRS.some((a) => Number(S.rDraft[p.id][a]) !== p.ratings[a]));
+  const rInfo = () => { const n = rChanged().length; return n ? `<b>${n}</b> player${n > 1 ? 's' : ''} changed` : '<span class="muted">No changes yet</span>'; };
+  function rateRow(p) {
+    const pv = rPreview(p);
+    return `<tr><td><div><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '—')}</span></div><div class="rsub"><b class="rovr">${pv.ovr}${p.ovrOverride ? '*' : ''}</b> OVR <span class="rdl">${arrow(pv.d)}</span> · DEF <span class="rdef">${pv.def}</span></div></td>${C.ATTRS.map((a) => `<td>${numIn(`data-r="${esc(p.id)}" data-a="${a}"`, S.rDraft[p.id][a], p.name + ' ' + C.ATTR_NAMES[a], 2, rCls(p, a))}</td>`).join('')}</tr>`;
+  }
+  function ratingsEditor() {
+    const c = cfg(); const pg = c.pregame;
+    for (const p of c.players) if (!S.rDraft[p.id]) S.rDraft[p.id] = { ...p.ratings };
+    const R = C.rosters(c); const on = new Set([...R.A, ...R.B]);
+    const groups = [[tname('A'), tcol('A'), roster('A')], [tname('B'), tcol('B'), roster('B')], ['Not on a team', '#2a3550', c.players.filter((p) => !on.has(p.id))]].filter((g) => g[2].length);
+    const head = `<tr><th>Player</th>${C.ATTRS.map((a) => `<th title="${C.ATTR_NAMES[a]}">${a}</th>`).join('')}</tr>`;
+    const when = pg ? new Date(pg.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    return `<h2 class="sec">Update ratings <span class="sub">Type each player's new ratings, 1 to 99. OVR and DEF update as you type.</span></h2>
+      <div class="banner" style="margin:0 0 14px">${pg ? `▲▼ show changes from the pregame ratings, saved ${esc(when)}. <button class="btn sm ghost" data-act="rate-clear-base" style="margin-left:4px">Clear arrows</button>` : `When you save, the current ratings are kept as the pregame ratings so player cards can show ▲▼ changes.`}</div>
+      ${groups.map(([name, col, ps]) => `<div class="tpanel" style="--tc:${col};margin-bottom:14px"><div class="thead"><span class="dot"></span><span class="tn">${esc(name)}</span></div><div class="scroll-x"><table class="t ed">${head}${ps.map(rateRow).join('')}</table></div></div>`).join('')}
+      <div class="tiny muted">${C.ATTRS.map((a) => `${a} ${C.ATTR_NAMES[a].toLowerCase()}`).join(' · ')}${c.players.some((p) => p.ovrOverride) ? ' · * OVR is locked by an override (edit that player to clear it)' : ''}</div>
+      ${savebar(rInfo(), `<button class="btn ghost" data-act="rate-cancel">Cancel</button><button class="btn pri" data-act="rate-save">Save ratings</button>`)}`;
+  }
+
+  // box score
+  function boxDraft() {
+    const c = cfg(); const st = stats; const bx = c.box; const s = (v) => (v === '' || v == null || v === 0 ? '' : String(v));
+    const D = { score: {}, firstTD: bx ? bx.firstTD || '' : st.firstTD || '', players: {} };
+    for (const t of ['A', 'B']) {
+      const sc = bx?.score?.[t]; const byQ = sc ? sc.q || {} : st.teams[t].byQ;
+      const fin = sc ? sc.final : (st.teams[t].pts || Object.keys(byQ).length ? st.teams[t].pts : '');
+      D.score[t] = { final: fin === '' || fin == null ? '' : String(fin), q: Object.fromEntries(C.QUARTERS.map((q) => [q, byQ[q] == null ? '' : String(byQ[q])])) };
+      for (const p of roster(t)) { const m = bx?.players?.[p.id] || st.players[p.id] || {}; D.players[p.id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, s(m[k])])); }
+    }
+    return D;
+  }
+  const bSum = (t, k) => roster(t).reduce((s, p) => s + n0(S.bDraft.players[p.id]?.[k]), 0);
+  function bTot(id) { const m = S.bDraft.players[id] || {}; return n0(m.recTD) + n0(m.rushTD) + n0(m.defTD) || ''; }
+  function bPts(t) { const s = S.bDraft.score[t]; if (digits(s.final) !== '') return n0(s.final); const qs = C.QUARTERS.filter((q) => digits(s.q[q]) !== ''); return qs.length ? qs.reduce((a, q) => a + n0(s.q[q]), 0) : null; }
+  function bScoreChk() {
+    const w = ['A', 'B'].map((t) => { const s = S.bDraft.score[t]; const qs = C.QUARTERS.filter((q) => digits(s.q[q]) !== ''); if (!qs.length || digits(s.final) === '') return ''; const sum = qs.reduce((a, q) => a + n0(s.q[q]), 0); return sum === n0(s.final) ? '' : `${esc(tname(t))}: quarters add to ${sum}, but the final says ${n0(s.final)}.`; }).filter(Boolean);
+    return w.length ? `<span class="warn">${w.join(' ')}</span>` : 'Quarters are optional. If you fill them in, they should add up to the final.';
+  }
+  function bTeamChk(t) {
+    const o = C.other(t); const sum = (k, x = t) => bSum(x, k); const td = sum('recTD') + sum('rushTD') + sum('defTD'); const pat = sum('pat'); const pts = bPts(t); const w = [];
+    if (sum('passTD') !== sum('recTD')) w.push(`pass TDs (${sum('passTD')}) vs receiving TDs (${sum('recTD')})`);
+    if (sum('comp') !== sum('rec')) w.push(`completions (${sum('comp')}) vs catches (${sum('rec')})`);
+    if (sum('intThrown') !== sum('defINT', o)) w.push(`INTs thrown (${sum('intThrown')}) vs ${esc(tname(o))} INTs (${sum('defINT', o)})`);
+    if (pts !== null && pts < td * 6) w.push(`${td} TDs is ${td * 6} points, more than the final (${pts})`);
+    return `${td} TD${td === 1 ? '' : 's'} (${td * 6} pts) · ${pat} PAT${pat === 1 ? '' : 's'}${pts !== null ? ` · final ${pts}` : ''}<br>${w.length ? `<span class="warn">Double-check: ${w.join('; ')}.</span>` : '<span class="ok">✓ Passing, catches and INTs line up</span>'}`;
+  }
+  function bRefresh() {
+    for (const td of document.querySelectorAll('[data-tot]')) td.textContent = bTot(td.dataset.tot);
+    const s = $('#bchk-score'); if (s) s.innerHTML = bScoreChk();
+    for (const t of ['A', 'B']) { const x = $('#bchk-' + t); if (x) x.innerHTML = bTeamChk(t); }
+  }
+  function boxEditor() {
+    const g = game(); const D = S.bDraft; const fin = g.status === 'final';
+    for (const t of ['A', 'B']) for (const p of roster(t)) if (!D.players[p.id]) D.players[p.id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, '']));
+    const scoreRow = (t) => `<tr><td><span class="dot" style="--tc:${tcol(t)};width:9px;height:9px"></span> <b>${esc(tname(t))}</b></td><td>${numIn(`data-b="final" data-t="${t}"`, D.score[t].final, tname(t) + ' final score', 3, 'fin')}</td>${C.QUARTERS.map((q) => `<td>${numIn(`data-b="q" data-t="${t}" data-q="${q}"`, D.score[t].q[q], tname(t) + ' ' + C.qLabel(q))}</td>`).join('')}</tr>`;
+    const opts = ['A', 'B'].map((t) => `<optgroup label="${esc(tname(t))}">${roster(t).map((p) => `<option value="${esc(p.id)}" ${D.firstTD === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</optgroup>`).join('');
+    const ghead = `<tr><th></th>${BOXCOLS.map(([gn, cs]) => `<th class="g" colspan="${cs.length}">${gn}</th>`).join('')}<th></th></tr>`;
+    const chead = `<tr><th>Player</th>${BOXCOLS.flatMap(([, cs]) => cs).map(([k, l]) => `<th title="${esc(C.STATS[k])}">${l}</th>`).join('')}<th>TDs</th></tr>`;
+    const prow = (p) => `<tr><td><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '—')}</span></td>${C.BOX_STATS.map((k) => `<td>${numIn(`data-b="p" data-pid="${esc(p.id)}" data-k="${k}"`, D.players[p.id][k], p.name + ' ' + C.STATS[k])}</td>`).join('')}<td class="out" data-tot="${esc(p.id)}">${bTot(p.id)}</td></tr>`;
+    return `<h2 class="sec">Box score entry <span class="sub">Blank counts as 0. Bets settle from these numbers once the game is final.</span></h2>
+      <div class="panel"><h3>Score</h3><div class="scroll-x"><table class="t ed"><tr><th></th><th></th><th class="g" colspan="${C.QUARTERS.length}">By quarter (optional)</th></tr><tr><th>Team</th><th>Final</th>${C.QUARTERS.map((q) => `<th>${C.qLabel(q)}</th>`).join('')}</tr>${scoreRow('A')}${scoreRow('B')}</table></div>
+        <div class="tiny muted" id="bchk-score" style="margin-top:8px">${bScoreChk()}</div>
+        <label class="fl" style="margin-top:12px;max-width:340px">First TD scored by<select data-change="b-ftd" style="font-size:16px"><option value="">Pick a player</option>${opts}<option value="none" ${D.firstTD === 'none' ? 'selected' : ''}>No one scored a TD</option></select></label></div>
+      ${['A', 'B'].map((t) => `<div class="tpanel" style="--tc:${tcol(t)};margin-top:14px"><div class="thead"><span class="dot"></span><span class="tn">${esc(tname(t))}</span></div><div class="scroll-x"><table class="t ed">${ghead}${chead}${roster(t).map(prow).join('') || '<tr><td class="muted">No roster yet</td></tr>'}</table></div><div class="chk" id="bchk-${t}">${bTeamChk(t)}</div></div>`).join('')}
+      <div class="tiny muted" style="margin-top:10px">Passing INT = interceptions thrown. Defense INT = picks caught, Defense TD = pick-six or fumble return, SACK = QB's flag pulled behind the line, PAT = extra points scored. TDs adds up receiving, rushing and defense TDs.</div>
+      ${savebar(fin ? 'Game is final: saving re-settles every bet.' : 'Saving locks betting. Go final when the numbers are right.', `<button class="btn ghost" data-act="box-cancel">Cancel</button>${fin ? '<button class="btn pri" data-act="box-save">Save</button>' : '<button class="btn" data-act="box-save">Save</button><button class="btn pri" data-act="box-final">Save &amp; go final</button>'}`)}`;
+  }
+  function boxFromDraft() {
+    const D = S.bDraft; const out = { ts: Date.now(), firstTD: D.firstTD || '', score: {}, players: {} };
+    for (const t of ['A', 'B']) out.score[t] = { final: digits(D.score[t].final) === '' ? '' : n0(D.score[t].final), q: Object.fromEntries(C.QUARTERS.filter((q) => digits(D.score[t].q[q]) !== '').map((q) => [q, n0(D.score[t].q[q])])) };
+    for (const [id, m] of Object.entries(D.players)) out.players[id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, n0(m[k])]));
+    return out;
+  }
+  async function saveBox(el, goFinal) {
+    const g = game(); const box = boxFromDraft();
+    const pts = (t) => { const s = box.score[t]; const qs = Object.values(s.q); return s.final !== '' ? s.final : qs.length ? qs.reduce((a, b) => a + b, 0) : null; };
+    if (goFinal) {
+      if (pts('A') === null || pts('B') === null) return toast('Enter both final scores first', 'err');
+      const ftd = (S.snap.bets || []).some((b) => b.market === 'ftd' && !(S.snap.voids || []).includes(b.id));
+      if (ftd && !box.firstTD) return toast('Pick who scored the first TD so those bets can settle', 'err');
+      if (!(await ask(`${tname('A')} ${pts('A')}, ${tname('B')} ${pts('B')}. Save the box score, make it final and settle every bet?`, 'Go final'))) return;
+    }
+    const ok = await act(el, async () => {
+      await saveConfig((c) => { c.box = box; });
+      if (goFinal) await setGame({ status: 'final', betsLocked: true });
+      else if (g.status === 'pre' && !g.betsLocked) await setGame({ betsLocked: true });
+      return true;
+    });
+    if (ok) { S.bDraft = null; render(); window.scrollTo(0, 0); toast(goFinal ? 'Final. Bets settled.' : 'Box score saved. Betting is locked.', 'ok'); }
   }
 
   // ---------- actions ----------
@@ -1499,11 +1656,30 @@ if (typeof module !== 'undefined') module.exports = PB;
       const id = C.slug(name) + (cfg().players.some((p) => p.id === C.slug(name)) ? '-' + Date.now().toString(36).slice(-3) : '');
       if (await act(null, () => saveConfig((c) => { c.players.push({ id, name: name.trim(), num: '', pos: '', ratings: Object.fromEntries(C.ATTRS.map((a) => [a, 70])), ovrOverride: null, comps: { worst: { name: '', note: '' }, base: { name: '', note: '' }, best: { name: '', note: '' } } }); }, 'Added'))) playerModal(id, true);
     },
+    // post-game editors
+    'rate-open'() { S.rDraft = Object.fromEntries(cfg().players.map((p) => [p.id, { ...p.ratings }])); render(); window.scrollTo(0, 0); },
+    async 'rate-cancel'() { if (rChanged().length && !(await ask('Discard your rating changes?', 'Discard', false, true))) return; S.rDraft = null; render(); window.scrollTo(0, 0); },
+    async 'rate-save'(el) {
+      const c = cfg(); const D = S.rDraft;
+      for (const p of c.players) for (const a of C.ATTRS) if (D[p.id] && !rOk(D[p.id][a])) return toast(`${p.name}: ${C.ATTR_NAMES[a]} must be 1 to 99`, 'err');
+      const n = rChanged().length; if (!n) { S.rDraft = null; render(); return toast('No rating changes to save'); }
+      const ok = await act(el, () => saveConfig((x) => {
+        if (!x.pregame) x.pregame = { ts: Date.now(), players: Object.fromEntries(x.players.map((p) => [p.id, { ratings: { ...p.ratings }, ovr: C.ovr(p), def: C.def(p) }])) };
+        for (const p of x.players) if (D[p.id]) for (const a of C.ATTRS) p.ratings[a] = Number(digits(D[p.id][a]));
+      }, `Ratings saved for ${n} player${n > 1 ? 's' : ''}`));
+      if (ok) { S.rDraft = null; render(); window.scrollTo(0, 0); }
+    },
+    async 'rate-clear-base'(el) { if (!(await ask('Clear the ▲▼ arrows from every player card?', 'Clear arrows', false, true))) return; await act(el, () => saveConfig((c) => { delete c.pregame; }, 'Arrows cleared')); },
+    'box-open'() { S.bDraft = boxDraft(); S.bDraft0 = JSON.stringify(S.bDraft); render(); window.scrollTo(0, 0); },
+    async 'box-cancel'() { if (JSON.stringify(S.bDraft) !== S.bDraft0 && !(await ask('Discard your box score changes?', 'Discard', false, true))) return; S.bDraft = null; render(); window.scrollTo(0, 0); },
+    async 'box-save'(el) { await saveBox(el, false); },
+    async 'box-final'(el) { await saveBox(el, true); },
+    async 'box-clear'(el) { if (!(await ask('Clear the box score? The score and stats go back to the logged plays.', 'Clear box score', false, true))) return; await act(el, () => saveConfig((c) => { delete c.box; }, 'Box score cleared')); },
     commish() { pinModal(); },
     'commish-menu'() {
       openModal(`<h3 style="font-size:20px">Commissioner</h3><div class="small muted" style="margin:6px 0 14px">You're signed in as commissioner on this device.</div><div class="row"><button class="btn" data-act="commish-out">Sign out on this device</button></div>`, true);
     },
-    'commish-out'() { S.pin = null; LS.del('tb-pin'); closeModal(); render(); toast('Signed out'); },
+    'commish-out'() { S.pin = null; S.rDraft = null; S.bDraft = null; LS.del('tb-pin'); closeModal(); render(); toast('Signed out'); },
     async 'pin-submit'(el) {
       const pin = $('#pin-in').value.trim(); if (!/^\d{4}$/.test(pin)) return toast('PIN must be 4 digits', 'err');
       await act(el, async () => { await call('POST', S.hasCommish ? '/commish/check' : '/commish/claim', { pin }); S.pin = pin; LS.set('tb-pin', pin); S.hasCommish = true; closeModal(); render(); toast('Commissioner tools unlocked', 'ok'); });
@@ -1563,7 +1739,7 @@ if (typeof module !== 'undefined') module.exports = PB;
       await act(el, async () => { await call('POST', '/event', { pin: S.pin, event: { type: ev.type, q: S.evq, playerId: def.needs === 'player' || ['pat1', 'pat2'].includes(ev.type) ? ev.playerId || null : null, team: ev.team, pts: ev.pts } }); S.ev = { ...S.ev, playerId: def.needs === 'player' ? '' : S.ev.playerId, pts: '' }; await refresh(true); toast(def.label + ' added', 'ok'); });
     },
     async 'del-event'(el) { await act(el, async () => { await call('POST', '/event/delete', { pin: S.pin, id: el.dataset.id }); await refresh(true); toast('Play deleted'); }); },
-    async 'reset-game'(el) { if (!(await ask('Delete every play and reset the game to pregame?', 'Reset game', false, true))) return; await act(el, async () => { await call('POST', '/reset', { pin: S.pin, what: 'game' }); await refresh(true); toast('Game reset', 'ok'); }); },
+    async 'reset-game'(el) { if (!(await ask('Delete every play and the box score, and reset the game to pregame?', 'Reset game', false, true))) return; await act(el, async () => { await call('POST', '/reset', { pin: S.pin, what: 'game' }); await refresh(true); if (cfg().box) await saveConfig((c) => { delete c.box; }); toast('Game reset', 'ok'); }); },
   };
   const CH = {
     sort(el) { S.sort = el.value; S.dirty = false; el.blur(); render(); },
@@ -1575,6 +1751,7 @@ if (typeof module !== 'undefined') module.exports = PB;
     async 'draft-first'(el) { await act(el, () => saveConfig((c) => { c.draft.first = el.value; })); },
     async 'team-name'(el) { await act(el, () => saveConfig((c) => { c.teams[el.dataset.team].name = el.value.trim().slice(0, 30); }, 'Team name saved')); },
     async 'team-color'(el) { await act(el, () => saveConfig((c) => { c.teams[el.dataset.team].color = el.value; })); },
+    'b-ftd'(el) { if (S.bDraft) S.bDraft.firstTD = el.value; },
     'join-who'(el) { $('#join-name').classList.toggle('hide', !!el.value); },
     async evq(el) { S.evq = Number(el.value); LS.set('tb-evq', S.evq); el.blur(); render(); if (game().status === 'live') await act(null, () => setGame({ quarter: S.evq })); },
     evtype(el) { S.ev.type = el.value; S.ev.playerId = ''; el.blur(); render(); },
@@ -1602,6 +1779,24 @@ if (typeof module !== 'undefined') module.exports = PB;
     const el = e.target;
     if (el.dataset.input === 'stake' && S.slip) { S.slip.stake = el.value; const q = C.quote(cfg(), S.slip.market, S.slip.sel, S.slip.propId); const me = ledger[S.me?.id]; const t = $('#towin'); if (t && typeof q !== 'string') t.textContent = `To win ${money(C.profit(Number(el.value) || 0, q.odds))} · available ${money(me?.available || 0)}`; }
     if (el.dataset.input === 'evpts') S.ev.pts = el.value;
+    if (el.dataset.r && S.rDraft) {
+      const v = digits(el.value).slice(0, 2); if (v !== el.value) el.value = v;
+      const p = C.player(cfg(), el.dataset.r);
+      if (p && S.rDraft[p.id]) {
+        S.rDraft[p.id][el.dataset.a] = v; el.className = rCls(p, el.dataset.a);
+        const tr = el.closest('tr'); const pv = rPreview(p);
+        tr.querySelector('.rovr').textContent = pv.ovr + (p.ovrOverride ? '*' : ''); tr.querySelector('.rdl').innerHTML = arrow(pv.d); tr.querySelector('.rdef').textContent = pv.def;
+        const info = $('#sb-info'); if (info) info.innerHTML = rInfo();
+      }
+    }
+    if (el.dataset.b && S.bDraft) {
+      const v = digits(el.value).slice(0, el.dataset.b === 'final' ? 3 : 2); if (v !== el.value) el.value = v;
+      const D = S.bDraft; const t = el.dataset.t;
+      if (el.dataset.b === 'final') D.score[t].final = v;
+      else if (el.dataset.b === 'q') D.score[t].q[el.dataset.q] = v;
+      else if (D.players[el.dataset.pid]) D.players[el.dataset.pid][el.dataset.k] = v;
+      bRefresh();
+    }
     if (el.dataset.lines && S.linesDraft) {
       const parts = el.dataset.lines.split('.'); let o = S.linesDraft; for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
       const k = parts[parts.length - 1]; o[k] = el.tagName === 'SELECT' ? el.value : Number(el.value);
