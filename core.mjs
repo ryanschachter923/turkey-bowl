@@ -15,8 +15,10 @@ const Core = (() => {
   const STRETCH = 1.5, PIVOT = 70;
   const STATS = {
     passTD: 'Pass TDs', comp: 'Completions', intThrown: 'INTs thrown', rec: 'Receptions', recTD: 'Rec TDs',
-    rushTD: 'Rush TDs', totalTD: 'Total TDs', defINT: 'Def INTs', sacks: 'Sacks', pat: 'PATs made',
+    rushTD: 'Rush TDs', totalTD: 'Total TDs', defINT: 'Def INTs', defTD: 'Def TDs', sacks: 'Sacks', pat: 'PATs made',
   };
+  // Stats the commish types into a box score. totalTD is worked out from rec + rush + def TDs.
+  const BOX_STATS = ['comp', 'passTD', 'intThrown', 'rec', 'recTD', 'rushTD', 'defINT', 'defTD', 'sacks', 'pat'];
   const EVENTS = {
     catch: { label: 'Catch', pts: 0, needs: 'player' },
     catchTD: { label: 'TD catch', pts: 6, needs: 'player' },
@@ -142,7 +144,7 @@ const Core = (() => {
   // ---------- stats & settlement ----------
   function sortEvents(evs) { return [...(evs || [])].sort((x, y) => (x.q - y.q) || (x.ts - y.ts)); }
   function computeStats(snap) {
-    const cfg = snap.config; const pl = {}; const blank = () => ({ passTD: 0, comp: 0, intThrown: 0, rec: 0, recTD: 0, rushTD: 0, totalTD: 0, defINT: 0, sacks: 0, pat: 0 });
+    const cfg = snap.config; const pl = {}; const blank = () => ({ passTD: 0, comp: 0, intThrown: 0, rec: 0, recTD: 0, rushTD: 0, totalTD: 0, defINT: 0, defTD: 0, sacks: 0, pat: 0 });
     for (const p of cfg.players || []) pl[p.id] = blank();
     const teams = { A: { pts: 0, byQ: {} }, B: { pts: 0, byQ: {} } };
     const add = (t, q, n) => { if (!teams[t] || !n) return; teams[t].pts += n; teams[t].byQ[q] = (teams[t].byQ[q] || 0) + n; };
@@ -157,7 +159,7 @@ const Core = (() => {
       if (e.type === 'rushTD' && s) { s.rushTD++; s.totalTD++; firstTD = firstTD || e.playerId; }
       if (['int', 'pick6'].includes(e.type) && s) {
         s.defINT++; const qb = t && teamQB(cfg, other(t)); if (qb && pl[qb.id]) pl[qb.id].intThrown++;
-        if (e.type === 'pick6') { s.totalTD++; firstTD = firstTD || e.playerId; }
+        if (e.type === 'pick6') { s.defTD++; s.totalTD++; firstTD = firstTD || e.playerId; }
       }
       if (e.type === 'sack' && s) s.sacks++;
       if (['pat1', 'pat2'].includes(e.type) && e.playerId && pl[e.playerId]) pl[e.playerId].pat++;
@@ -166,7 +168,29 @@ const Core = (() => {
       if (scoringTeam) add(scoringTeam, e.q, pts);
       log.push({ ...e, team: scoringTeam, pts });
     }
-    return { players: pl, teams, firstTD, log };
+    // Typed-in stat lines replace play-by-play totals for those players: a player's own report or the commish's
+    // fix ('stats/' blobs), or a line saved inside config.box by the first box-score version (newest wins).
+    // The commish's box score (config.box) also sets the team score and the first TD scorer.
+    const box = cfg.box; const src = {}; const lines = {};
+    const n = (v) => (v === '' || v == null || !Number.isFinite(Number(v)) ? null : Math.max(0, Math.round(Number(v))));
+    for (const [id, m] of Object.entries(box?.players || {})) lines[id] = { stats: m, by: 'Commish', self: false, ts: box.ts || 0, legacy: true };
+    for (const L of snap.stats || []) if (L?.pid && (!lines[L.pid] || (L.ts || 0) >= lines[L.pid].ts)) lines[L.pid] = L;
+    for (const [id, L] of Object.entries(lines)) {
+      if (!pl[id]) continue;
+      const s = blank(); for (const k of BOX_STATS) s[k] = n(L.stats?.[k]) || 0;
+      s.totalTD = s.recTD + s.rushTD + s.defTD; pl[id] = s; src[id] = { by: L.by || '', self: !!L.self, ts: L.ts || 0, legacy: !!L.legacy };
+    }
+    if (box) {
+      for (const t of ['A', 'B']) {
+        const sc = box.score?.[t]; if (!sc) continue;
+        const byQ = {}; for (const q of QUARTERS) { const v = n(sc.q?.[q]); if (v !== null) byQ[q] = v; }
+        const fin = n(sc.final); const qs = Object.values(byQ);
+        if (fin === null && !qs.length) continue;
+        teams[t] = { pts: fin !== null ? fin : qs.reduce((a, b) => a + b, 0), byQ };
+      }
+      if (box.firstTD) firstTD = box.firstTD === 'none' ? null : box.firstTD;
+    }
+    return { players: pl, teams, firstTD, log, src, manual: !!box || Object.keys(src).length > 0 };
   }
   function lineFor(bet) { return bet.line; }
   function settle(bet, snap, st) {
@@ -247,6 +271,12 @@ const Core = (() => {
   const err = (msg, status = 400) => json({ error: msg }, status);
   const validPin = (p) => /^\d{4}$/.test(String(p || ''));
 
+  // A stat line from a form: every BOX_STATS key as a whole number from 0 to 99 (blank = 0). Null if anything is off.
+  function cleanLine(m) {
+    const out = {};
+    for (const k of BOX_STATS) { const v = m?.[k]; const x = v === '' || v == null ? 0 : Number(v); if (!Number.isInteger(x) || x < 0 || x > 99) return null; out[k] = x; }
+    return out;
+  }
   async function loadAll(store, prefix) {
     const { blobs } = await store.list({ prefix });
     const out = []; const keys = blobs.map((b) => b.key);
@@ -264,13 +294,13 @@ const Core = (() => {
   async function rebuild(store) {
     for (let attempt = 0; attempt < 6; attempt++) {
       const cur = await store.getWithMetadata('snapshot', { type: 'json' });
-      const [cfg, game, bettors, bets, voids, events] = await Promise.all([
-        getConfig(store), store.get('game', { type: 'json' }), loadAll(store, 'bettors/'), loadAll(store, 'bets/'), loadAll(store, 'voids/'), loadAll(store, 'events/'),
+      const [cfg, game, bettors, bets, voids, events, stats] = await Promise.all([
+        getConfig(store), store.get('game', { type: 'json' }), loadAll(store, 'bettors/'), loadAll(store, 'bets/'), loadAll(store, 'voids/'), loadAll(store, 'events/'), loadAll(store, 'stats/'),
       ]);
       const snap = {
         builtAt: Date.now(), config: cfg.data, configEtag: cfg.etag, game: game || { status: 'pre', linesPosted: false, betsLocked: false },
         bettors: bettors.map((b) => ({ id: b.id, name: b.name, playerId: b.playerId || null, ts: b.ts })),
-        bets, voids: voids.map((v) => v.betId), events,
+        bets, voids: voids.map((v) => v.betId), events, stats,
       };
       const res = await store.setJSON('snapshot', snap, cur ? { onlyIfMatch: cur.etag } : { onlyIfNew: true });
       if (res.modified) return snap;
@@ -375,11 +405,32 @@ const Core = (() => {
         const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
         await store.setJSON('voids/' + body.betId, { betId: body.betId, ts: Date.now() }); return ok();
       }
+      if (path === '/stats/me') { // a player saves his own stat line (sportsbook login), until the game is final
+        const b = await store.get('bettors/' + slug(body.bettorId || ''), { type: 'json' });
+        if (!b || !(await checkPin(body.pin, b.pin))) return err('Log in again', 403);
+        const snap = await readSnap(store);
+        if (!b.playerId || !player(snap.config, b.playerId)) return err("Your account isn't linked to a player");
+        const g = (await store.get('game', { type: 'json' })) || { status: 'pre', linesPosted: false, betsLocked: false };
+        if (g.status === 'final') return err('The game is final. Ask the commish to fix your stats.', 409);
+        const stats = cleanLine(body.stats); if (!stats) return err('Stats must be whole numbers from 0 to 99');
+        await store.setJSON('stats/' + b.playerId, { pid: b.playerId, stats, by: b.name, self: true, ts: Date.now() });
+        if (!g.betsLocked) await store.setJSON('game', { ...g, betsLocked: true }); // stats are coming in, so the game's been played
+        return ok();
+      }
+      if (path === '/stats/set') { // the commish fixes any players' lines
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        const snap = await readSnap(store); const lines = Object.entries(body.lines || {}); const clean = [];
+        if (lines.length > 60) return err('Too many players');
+        for (const [pid, m] of lines) { if (!player(snap.config, pid)) return err('Unknown player'); const s = cleanLine(m); if (!s) return err('Stats must be whole numbers from 0 to 99'); clean.push([pid, s]); }
+        const ts = Date.now();
+        for (const [pid, s] of clean) await store.setJSON('stats/' + pid, { pid, stats: s, by: 'Commish', self: false, ts });
+        return ok();
+      }
       if (path === '/reset') {
         const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
         const what = body.what;
         const wipe = async (prefix) => { const { blobs } = await store.list({ prefix }); for (const x of blobs) await store.delete(x.key); };
-        if (what === 'game') { await wipe('events/'); await store.setJSON('game', { status: 'pre', linesPosted: false, betsLocked: false }); }
+        if (what === 'game') { await wipe('events/'); await wipe('stats/'); await store.setJSON('game', { status: 'pre', linesPosted: false, betsLocked: false }); }
         else if (what === 'book') { await wipe('bets/'); await wipe('voids/'); await wipe('bettors/'); }
         else return err('Unknown reset');
         return ok();
@@ -391,7 +442,7 @@ const Core = (() => {
   }
 
   return {
-    ATTRS, ATTR_NAMES, POSITIONS, WEIGHTS, DEF_WEIGHTS, STATS, EVENTS, QUARTERS, qLabel, STRETCH, PIVOT,
+    ATTRS, ATTR_NAMES, POSITIONS, WEIGHTS, DEF_WEIGHTS, STATS, BOX_STATS, EVENTS, QUARTERS, qLabel, STRETCH, PIVOT,
     ovr, def, tier, rosters, teamOf, player, teamName, teamQB, nextPickTeam, draftable, teamRatings, other,
     profit, fmtOdds, probToOdds, projection, suggestLines, computeStats, settle, ledger, describe, quote,
     seedConfig, slug, round, handle,
