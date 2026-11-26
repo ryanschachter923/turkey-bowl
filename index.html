@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c111d">
+<title>Turkey Bowl 2026</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='32' rx='28' ry='17' transform='rotate(-35 32 32)' fill='%23F28C28'/%3E%3Cpath d='M24 40 40 24M27 33l4 4M31 29l4 4M35 25l4 4' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0b101b;--panel:#131a29;--panel2:#1a2336;--line:#27324a;--text:#eaf0f8;--muted:#93a1b8;--accent:#f28c28;--gold:#f5b83d;--green:#3ccf7f;--red:#f06464;--a:#F28C28;--b:#2EC4B6;
+--display:"Bahnschrift","DIN Alternate","DIN Condensed","Avenir Next Condensed","Arial Narrow",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{min-height:100vh;background:radial-gradient(1200px 500px at 85% -10%,rgba(242,140,40,.13),transparent 60%),radial-gradient(900px 400px at -10% 0%,rgba(46,196,182,.08),transparent 60%),var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--gold)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 120px}
+header{position:sticky;top:0;z-index:20;background:rgba(11,16,27,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.stripe{height:4px;background:linear-gradient(90deg,#8b4513,#f28c28,#f5b83d,#c0392b,#8b4513)}
+.hbar{max-width:1180px;margin:0 auto;padding:10px 16px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;letter-spacing:.06em;font-size:22px;text-transform:uppercase}
+.brand small{display:block;font-size:11px;letter-spacing:.18em;color:var(--muted);font-weight:600}
+.brand .yr{color:var(--accent)}
+.hright{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;font-size:13px;white-space:nowrap}
+.chip.on{border-color:var(--gold);color:var(--gold)}
+nav.tabs{max-width:1180px;margin:0 auto;padding:8px 16px 0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;color:var(--muted);padding:9px 14px 11px;font-family:var(--display);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:14px;border-bottom:3px solid transparent;white-space:nowrap}
+.tab.on{color:var(--text);border-bottom-color:var(--accent)}
+.banner{margin:14px 0 0;padding:10px 14px;border-radius:10px;background:rgba(245,184,61,.1);border:1px solid rgba(245,184,61,.35);color:#f8d98a;font-size:14px}
+.banner.err{background:rgba(240,100,100,.1);border-color:rgba(240,100,100,.4);color:#ffb3b3}
+h2.sec{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:20px;margin:22px 0 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h2.sec .sub{font-family:system-ui;text-transform:none;letter-spacing:0;font-size:13px;color:var(--muted);font-weight:400}
+h3{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:15px;margin:0 0 8px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+.muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:12px}
+.btn{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px 13px;font-weight:600;font-size:14px;transition:transform .05s,border-color .15s}
+.btn:hover{border-color:#41506f}.btn:active{transform:scale(.98)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#1b0e02}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#1e1300}
+.btn.danger{border-color:rgba(240,100,100,.5);color:#ff9d9d}
+.btn.ghost{background:none}
+.btn.sm{padding:5px 9px;font-size:13px;border-radius:8px}
+input[type=text],input[type=number],input[type=password],input:not([type]),select,textarea{background:#0e1422;border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(242,140,40,.5);outline-offset:0;border-color:var(--accent)}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.pill.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px}
+/* player card */
+.pc{position:relative;border-radius:16px;padding:12px 12px 10px;cursor:pointer;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14);transition:transform .12s;text-align:left;width:100%}
+.pc:hover{transform:translateY(-2px)}
+.pc::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.22) 45%,transparent 60%);pointer-events:none}
+.pc.elite{background:linear-gradient(160deg,#3a2808,#120d06 55%,#4a330a);color:#f9dc86;border-color:#8a6a22}
+.pc.gold{background:linear-gradient(160deg,#ffe594,#e3ab3d 55%,#b8761b);color:#2b1a00}
+.pc.silver{background:linear-gradient(160deg,#f3f6fa,#bdc6d1 60%,#8d98a6);color:#141922}
+.pc.bronze{background:linear-gradient(160deg,#f2c697,#c8834a 60%,#8e5428);color:#2b1405}
+.pc .top{display:flex;align-items:flex-start;gap:8px}
+.pc .ovr{font-family:var(--display);font-weight:800;font-size:38px;line-height:.9}
+.pc .ovr small{display:block;font-size:11px;letter-spacing:.14em;opacity:.8;margin-top:3px}
+.pc .pos{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:.06em;margin-top:2px}
+.pc .num{margin-left:auto;font-family:var(--display);font-weight:800;font-size:20px;opacity:.85}
+.pc .av{width:62px;height:62px;border-radius:50%;margin:6px auto 6px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:.04em;color:#fff;background:var(--tc,#2a3550);border:3px solid rgba(255,255,255,.55);box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.pc .nm{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:19px;text-align:center;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .tm{font-size:11px;text-align:center;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.85;min-height:16px;margin-top:2px}
+.pc .attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 6px;margin-top:8px;padding-top:8px;border-top:1px solid currentColor;border-top-color:rgba(0,0,0,.18)}
+.pc.elite .attrs{border-top-color:rgba(249,220,134,.3)}
+.pc .at{display:flex;justify-content:space-between;font-size:12px;font-weight:700}
+.pc .at span:first-child{opacity:.7;font-weight:600}
+.pc .at .hi{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px}
+.pc .foot{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;font-weight:700;opacity:.85;gap:6px}
+.pc .foot span:first-child{white-space:nowrap;flex:none}.pc .foot span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbadge{position:absolute;top:44px;right:10px;width:22px;height:22px;border-radius:50%;background:#111;color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:13px;border:2px solid var(--gold)}
+/* playbook */
+.pbctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:2px 0 12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:none;padding:7px 12px;font-weight:700;font-size:13px;color:var(--muted);white-space:nowrap}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--text);color:var(--bg)}
+.pbkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin:0 0 14px}
+.pbkey i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.pbkey i.dash{background:repeating-linear-gradient(90deg,#d9dee7 0 4px,transparent 4px 7px)!important}
+.pbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.pbcard{background:#16191e;border:1px solid #262b33;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .12s,border-color .12s}
+.pbcard:hover{transform:translateY(-2px);border-color:#3b4558}
+.pbcard.flat{cursor:default}.pbcard.flat:hover{transform:none;border-color:#262b33}
+.pbart svg{display:block;width:100%;height:auto}
+.pbbar{background:#1c1f25;border-top:4px solid #E8402F;padding:9px 10px;text-align:center;font-size:17px;font-weight:500;color:#f3f5f8}
+.pbmeta{display:flex;gap:8px;align-items:center;padding:0 10px 10px;background:#1c1f25;font-size:12px;min-width:0}
+.pbform{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pbcat{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:10.5px;padding:2px 8px;border-radius:999px;white-space:nowrap;font-family:system-ui,sans-serif}
+.pbcat.short{background:#163a29;color:#4ade80}.pbcat.medium{background:#3b3113;color:#facc15}.pbcat.long{background:#401b1f;color:#f87171}.pbcat.zone{background:#14284a;color:#60a5fa}
+.pbtag{font-size:10.5px;font-weight:700;color:#9fb0c8;border:1px solid #33405a;border-radius:999px;padding:1px 7px;white-space:nowrap}
+.pbdetail{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;align-items:start}
+@media (max-width:760px){.pbdetail{grid-template-columns:1fr}}
+.pblist{margin:8px 0 0;padding-left:18px;font-size:14px}.pblist li{margin:4px 0}
+.pbnote{margin-top:12px;padding:9px 11px;border-radius:10px;background:#13233f;border:1px solid #274472;font-size:13px}
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(3,6,12,.72);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;width:min(860px,100%);padding:18px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal.narrow{width:min(440px,100%)}
+.xbtn{position:absolute;top:10px;right:10px;border:0;background:var(--panel2);border-radius:50%;width:32px;height:32px;font-size:18px;line-height:1}
+.mgrid{display:grid;grid-template-columns:230px 1fr;gap:18px}
+@media (max-width:700px){.mgrid{grid-template-columns:1fr}.mgrid .pc{max-width:240px;margin:0 auto}}
+.bar{height:8px;border-radius:5px;background:#0d1320;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:5px}
+.attrrow{display:grid;grid-template-columns:120px 1fr 32px;gap:10px;align-items:center;font-size:13px;margin:5px 0}
+.comps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+@media (max-width:640px){.comps{grid-template-columns:1fr}}
+.comp{border-radius:12px;padding:10px 12px;border:1px solid var(--line);background:var(--panel2)}
+.comp b{display:block;font-family:var(--display);letter-spacing:.04em;font-size:17px;margin:2px 0 4px}
+.comp .lbl{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.comp.worst .lbl{color:var(--red)}.comp.base .lbl{color:var(--gold)}.comp.best .lbl{color:var(--green)}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.form label,.fl{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:600}
+/* draft */
+.clock{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:14px;background:linear-gradient(90deg,rgba(242,140,40,.18),rgba(242,140,40,.04));border:1px solid rgba(242,140,40,.45)}
+.clock .big{font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;letter-spacing:.05em}
+.teams2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.teams2{grid-template-columns:1fr}}
+.tpanel{border-radius:14px;border:1px solid var(--line);background:var(--panel);overflow:hidden}
+.thead{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 30%,transparent),transparent)}
+.thead .tn{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.05em}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--tc);display:inline-block;flex:none}
+.rlist{list-style:none;margin:0;padding:6px 0}
+.rlist li{display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid rgba(255,255,255,.04)}
+.rlist li:last-child{border-bottom:0}
+.posb{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.06em;padding:2px 7px;border-radius:6px;background:#0d1320;border:1px solid var(--line);min-width:34px;text-align:center}
+.ovrb{font-family:var(--display);font-weight:800;font-size:18px;min-width:30px;text-align:right}
+.ratings3{display:flex;gap:18px;padding:12px 14px;border-top:1px solid var(--line)}
+.ratings3 div{text-align:center}.ratings3 b{display:block;font-family:var(--display);font-size:28px;line-height:1}.ratings3 span{font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.picks{list-style:none;padding:0;margin:0;counter-reset:pk}
+.picks li{display:flex;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+.tape{display:grid;grid-template-columns:40px 1fr 54px 1fr 40px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.tape .l{direction:rtl}
+/* book */
+.odds{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:6px;align-items:stretch}
+.odds .h{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:4px 0}
+.odds .tname{display:flex;align-items:center;gap:8px;font-weight:700}
+.ob{border:1px solid var(--line);background:#0e1524;border-radius:10px;padding:8px 6px;text-align:center;font-weight:700;font-size:14px;line-height:1.15}
+.ob small{display:block;color:var(--muted);font-weight:600;font-size:12px}
+.ob:hover{border-color:var(--accent)}
+.ob.sel{background:var(--accent);border-color:var(--accent);color:#1b0e02}.ob.sel small{color:#3b2006}
+.ob[disabled]{opacity:.45;cursor:not-allowed}
+.props{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.prow{display:grid;grid-template-columns:1fr 92px 92px;gap:6px;align-items:center;margin:6px 0;font-size:14px}
+.money{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.money div{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px}
+.money b{display:block;font-family:var(--display);font-size:24px}
+.money span{font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:800;text-transform:uppercase}
+.slip{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:40;width:min(560px,calc(100% - 20px));background:#1b2438;border:1px solid var(--accent);border-radius:16px;padding:14px;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.t td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.05)}
+table.t td.n,table.t th.n{text-align:right;font-variant-numeric:tabular-nums}
+.st{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--line)}
+.st.won{color:var(--green);border-color:rgba(60,207,127,.5)}.st.lost{color:var(--red);border-color:rgba(240,100,100,.5)}.st.open{color:var(--gold);border-color:rgba(245,184,61,.5)}.st.push,.st.void{color:var(--muted)}
+.scroll-x{overflow-x:auto}
+table.box th,table.box td{padding:6px 5px;font-size:13px}table.box th{font-size:10px;line-height:1.2;vertical-align:bottom}table.box td:first-child{white-space:nowrap}
+/* scoreboard */
+.sb{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;padding:18px;border-radius:16px;background:#070b13;border:1px solid var(--line)}
+.sb .side{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.sb .nm{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.06em}
+.sb .pts{font-family:var(--display);font-weight:800;font-size:68px;line-height:1;color:var(--gold);text-shadow:0 0 18px rgba(245,184,61,.35);font-variant-numeric:tabular-nums}
+.sb .mid{text-align:center}
+.live{color:var(--red);font-weight:800;letter-spacing:.12em;font-size:12px}
+.live::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:6px;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:90;background:#22304a;border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:92vw}
+.toast.err{border-color:var(--red);color:#ffc0c0}
+.toast.ok{border-color:var(--green)}
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+.kbd{font-family:ui-monospace,monospace;background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12px}
+.hide{display:none!important}
+.rules{columns:330px;column-gap:14px}.rules .panel{display:inline-block;width:100%;margin:0 0 14px;break-inside:avoid}.rules h3{color:var(--gold)}.rules ul{margin:0;padding-left:18px}.rules li{margin:6px 0}.rules li::marker{color:var(--accent)}.rules b{color:#fff}
+/* post-game: rating changes, ratings editor, box score entry */
+.dl{display:inline-block;font-family:system-ui,sans-serif;font-size:11px;font-weight:800;line-height:1;letter-spacing:0;padding:3px 5px;border-radius:6px;color:#fff;vertical-align:top;margin:3px 0 0 4px;white-space:nowrap}
+.dl.up{background:#1d8f4e}.dl.dn{background:#cc3d3d}
+.dlt{font-size:12px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}.dlt.up{color:var(--green)}.dlt.dn{color:var(--red)}
+.attrrow.d4{grid-template-columns:120px 1fr 32px 34px}
+table.t th.g{text-align:center;color:var(--gold);border-bottom:0;padding-bottom:0}
+table.ed{border-collapse:separate;border-spacing:0}
+table.ed th,table.ed td{padding:4px 3px;text-align:center}
+table.ed th:first-child,table.ed td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);text-align:left;padding-left:12px;padding-right:8px;white-space:nowrap}
+table.ed td.out{font-family:var(--display);font-weight:800;font-size:17px;min-width:46px}
+table.ed input{width:46px;padding:7px 2px;text-align:center;font-size:16px;font-variant-numeric:tabular-nums}
+table.ed input.fin{width:58px;font-weight:800;border-color:#41506f}
+table.ed input.chg{border-color:rgba(245,184,61,.8);color:var(--gold)}
+table.ed input.bad{border-color:var(--red);background:rgba(240,100,100,.14)}
+.rsub{font-size:12px;color:var(--muted);margin-top:1px}.rsub b{color:var(--text);font-family:var(--display);font-size:15px}
+.chk{font-size:12.5px;line-height:1.5;padding:9px 14px;border-top:1px solid var(--line);color:var(--muted)}
+.warn{color:#f8d98a}.chk .ok{color:var(--green)}
+.savebar{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:40;width:min(640px,calc(100% - 20px));background:#1b2438;border:1px solid var(--accent);border-radius:16px;padding:12px 14px;box-shadow:0 18px 50px rgba(0,0,0,.6);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header>
+  <div class="stripe"></div>
+  <div class="hbar">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="32" rx="28" ry="17" transform="rotate(-35 32 32)" fill="#F28C28"/><path d="M24 40 40 24M27 33l4 4M31 29l4 4M35 25l4 4" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+      <div>Turkey Bowl <span class="yr" id="yr">'26</span><small>Draft · Book · Box score</small></div>
+    </div>
+    <div class="hright" id="hright"></div>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+<main class="wrap" id="app"><div class="empty" style="margin-top:30px">Loading…</div></main>
+<div id="modal-root"></div><div id="slip-root"></div><div id="toast-root"></div>
+<script>window.TB_DEMO = false;</script>
+<script></script>
+<script>// Turkey Bowl core: shared by the browser app and the Netlify Function.
+const Core = (() => {
+  const ATTRS = ['SPD', 'ACC', 'AGI', 'PWR', 'CTH', 'RTE', 'THP', 'THA', 'COV'];
+  const ATTR_NAMES = { SPD: 'Speed', ACC: 'Acceleration', AGI: 'Agility', PWR: 'Power', CTH: 'Catching', RTE: 'Route running', THP: 'Throw power', THA: 'Throw accuracy', COV: 'Coverage' };
+  const POSITIONS = ['QB', 'WR', 'TE'];
+  // Madden-style: each position weights the ratings differently, then the result is stretched around 70.
+  const WEIGHTS = {
+    QB: { THA: 0.40, THP: 0.25, SPD: 0.10, AGI: 0.10, ACC: 0.07, PWR: 0.05, CTH: 0.03 },
+    WR: { CTH: 0.24, SPD: 0.22, RTE: 0.22, ACC: 0.12, AGI: 0.12, PWR: 0.08 },
+    TE: { CTH: 0.28, PWR: 0.22, RTE: 0.18, SPD: 0.14, ACC: 0.09, AGI: 0.09 },
+  };
+  const DEF_WEIGHTS = { COV: 0.45, SPD: 0.18, AGI: 0.15, ACC: 0.12, PWR: 0.10 };
+  const STRETCH = 1.5, PIVOT = 70;
+  const STATS = {
+    passTD: 'Pass TDs', comp: 'Completions', intThrown: 'INTs thrown', rec: 'Receptions', recTD: 'Rec TDs',
+    rushTD: 'Rush TDs', totalTD: 'Total TDs', defINT: 'Def INTs', defTD: 'Def TDs', sacks: 'Sacks', pat: 'PATs made',
+  };
+  // Stats the commish types into a box score. totalTD is worked out from rec + rush + def TDs.
+  const BOX_STATS = ['comp', 'passTD', 'intThrown', 'rec', 'recTD', 'rushTD', 'defINT', 'defTD', 'sacks', 'pat'];
+  const EVENTS = {
+    catch: { label: 'Catch', pts: 0, needs: 'player' },
+    catchTD: { label: 'TD catch', pts: 6, needs: 'player' },
+    rushTD: { label: 'Rushing TD', pts: 6, needs: 'player' },
+    pat1: { label: 'PAT (1 pt)', pts: 1, needs: 'team' },
+    pat2: { label: 'PAT (2 pts)', pts: 2, needs: 'team' },
+    int: { label: 'Interception', pts: 0, needs: 'player' },
+    pick6: { label: 'Pick-six', pts: 6, needs: 'player' },
+    sack: { label: 'Sack', pts: 0, needs: 'player' },
+    safety: { label: 'Safety', pts: 2, needs: 'team' },
+    points: { label: 'Points adjustment', pts: null, needs: 'team' },
+  };
+  const QUARTERS = [1, 2, 3, 4, 5]; // 5 = OT
+  const qLabel = (q) => (q === 5 ? 'OT' : 'Q' + q);
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const round = (v, d = 0) => { const f = 10 ** d; return Math.round((v + Number.EPSILON) * f) / f; };
+  const roundHalf = (v) => Math.round(v * 2) / 2;
+  const toHalfPoint = (v) => { const r = roundHalf(v); return Number.isInteger(r) ? r + (v >= r ? 0.5 : -0.5) : r; };
+
+  function weighted(p, w) {
+    let s = 0;
+    for (const k in w) s += w[k] * (Number(p.ratings?.[k]) || 0);
+    return s;
+  }
+  function stretch(w) { return clamp(Math.round(w + (STRETCH - 1) * (w - PIVOT)), 1, 99); }
+  function ovr(p) {
+    if (p.ovrOverride) return clamp(Math.round(p.ovrOverride), 1, 99);
+    const w = WEIGHTS[p.pos];
+    if (!w) return stretch(weighted(p, { SPD: 0.2, CTH: 0.2, RTE: 0.15, AGI: 0.15, ACC: 0.1, PWR: 0.1, THA: 0.05, THP: 0.05 }));
+    return stretch(weighted(p, w));
+  }
+  function def(p) { return stretch(weighted(p, DEF_WEIGHTS)); }
+  function tier(v) { return v >= 90 ? 'elite' : v >= 80 ? 'gold' : v >= 70 ? 'silver' : 'bronze'; }
+
+  // ---------- teams, draft ----------
+  const other = (t) => (t === 'A' ? 'B' : 'A');
+  function rosters(cfg) {
+    const r = { A: [], B: [] };
+    for (const t of ['A', 'B']) { const c = cfg.teams?.[t]?.captainId; if (c) r[t].push(c); }
+    for (const pk of cfg.draft?.picks || []) if (r[pk.team] && !r[pk.team].includes(pk.playerId)) r[pk.team].push(pk.playerId);
+    return r;
+  }
+  function teamOf(cfg, id) { const r = rosters(cfg); return r.A.includes(id) ? 'A' : r.B.includes(id) ? 'B' : null; }
+  function player(cfg, id) { return (cfg.players || []).find((p) => p.id === id); }
+  function teamName(cfg, t) {
+    const tm = cfg.teams?.[t] || {};
+    if (tm.name) return tm.name;
+    const cap = tm.captainId && player(cfg, tm.captainId);
+    return cap ? 'Team ' + cap.name : 'Team ' + (t === 'A' ? '1' : '2');
+  }
+  function teamQB(cfg, t) { return rosters(cfg)[t].map((id) => player(cfg, id)).find((p) => p && p.pos === 'QB') || null; }
+  function nextPickTeam(cfg) {
+    const d = cfg.draft || {}; const n = (d.picks || []).length; const first = d.first || 'A';
+    if ((d.order || 'snake') === 'alternating') return n % 2 === 0 ? first : other(first);
+    const round = Math.floor(n / 2), inRound = n % 2;
+    const t = inRound === 0 ? first : other(first);
+    return round % 2 === 0 ? t : other(t);
+  }
+  function draftable(cfg) { const r = rosters(cfg); const taken = new Set([...r.A, ...r.B]); return (cfg.players || []).filter((p) => !taken.has(p.id)); }
+  function teamRatings(cfg, t) {
+    const ps = rosters(cfg)[t].map((id) => player(cfg, id)).filter(Boolean);
+    if (!ps.length) return { ovr: 0, off: 0, def: 0, n: 0 };
+    const qb = ps.find((p) => p.pos === 'QB');
+    const skill = ps.filter((p) => p !== qb);
+    const avg = (a) => (a.length ? a.reduce((s, v) => s + v, 0) / a.length : 0);
+    const skillAvg = avg(skill.map(ovr));
+    const off = qb ? (skill.length ? 0.35 * ovr(qb) + 0.65 * skillAvg : ovr(qb)) : skillAvg;
+    const d = avg(ps.map(def));
+    return { ovr: Math.round(0.55 * off + 0.45 * d), off: Math.round(off), def: Math.round(d), n: ps.length };
+  }
+
+  // ---------- odds and lines ----------
+  function profit(stake, odds) { odds = Number(odds); return odds > 0 ? stake * odds / 100 : stake * 100 / Math.abs(odds); }
+  function fmtOdds(o) { o = Number(o); return o === 100 ? 'EVEN' : (o > 0 ? '+' + o : String(o)); }
+  function probToOdds(p) {
+    p = clamp(p, 0.02, 0.98);
+    let o = p >= 0.5 ? -100 * p / (1 - p) : 100 * (1 - p) / p;
+    if (Math.abs(o) <= 105) return 100;
+    const r = Math.abs(o) >= 1000 ? 100 : Math.abs(o) >= 300 ? 25 : 5;
+    return Math.round(o / r) * r;
+  }
+  function normCdf(x) { // Abramowitz-Stegun
+    const t = 1 / (1 + 0.2316419 * Math.abs(x));
+    const d = 0.3989423 * Math.exp(-x * x / 2);
+    const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    return x > 0 ? 1 - p : p;
+  }
+  const SPREAD_SD = 10;
+  function projection(cfg) {
+    const a = teamRatings(cfg, 'A'), b = teamRatings(cfg, 'B');
+    const margin = (a.ovr - b.ovr) * 0.9; // points Team A is expected to win by
+    return { a, b, margin, probA: normCdf(margin / SPREAD_SD) };
+  }
+  function suggestLines(cfg) {
+    const pr = projection(cfg);
+    const spreadA = -toHalfPoint(pr.margin === 0 ? 0.01 : pr.margin);
+    const ml = { A: probToOdds(pr.probA), B: probToOdds(1 - pr.probA) }; // fair odds: no house cut
+    const offAvg = (pr.a.off + pr.b.off) / 2 || 70;
+    const total = toHalfPoint(56 + (offAvg - 75) * 0.6);
+    const props = []; const ftd = [];
+    const r = rosters(cfg); const inGame = new Set([...r.A, ...r.B]);
+    const ps = (cfg.players || []).filter((p) => inGame.size === 0 || inGame.has(p.id));
+    let wsum = 0; const ws = [];
+    for (const p of ps) {
+      const R = p.ratings || {};
+      if (p.pos === 'QB') {
+        props.push({ id: 'p-' + p.id + '-passTD', playerId: p.id, stat: 'passTD', line: clamp(toHalfPoint(3.5 + (R.THA - 75) / 10 + (R.THP - 75) / 20), 1.5, 6.5), odds: 100 });
+        props.push({ id: 'p-' + p.id + '-intThrown', playerId: p.id, stat: 'intThrown', line: R.THA >= 80 ? 0.5 : 1.5, odds: 100 });
+        const w = Math.max(5, (R.SPD + R.AGI) / 2 - 55) * 0.35; ws.push([p.id, w]); wsum += w;
+      } else {
+        props.push({ id: 'p-' + p.id + '-rec', playerId: p.id, stat: 'rec', line: clamp(toHalfPoint(3 + (R.CTH - 70) / 10 + (R.RTE - 70) / 12 + (R.SPD - 70) / 25), 0.5, 8.5), odds: 100 });
+        props.push({ id: 'p-' + p.id + '-recTD', playerId: p.id, stat: 'recTD', line: ovr(p) >= 88 ? 1.5 : 0.5, odds: 100 });
+        const w = Math.max(5, (R.CTH + R.RTE + R.SPD) / 3 - 55); ws.push([p.id, w]); wsum += w;
+      }
+    }
+    for (const [id, w] of ws) {
+      const pTD = (w / wsum) * 0.95; // the 5% left over is "no one" / misc
+      ftd.push({ playerId: id, odds: Math.max(150, probToOdds(pTD)) });
+    }
+    return { ml, spread: { A: spreadA, odds: 100 }, total: { points: total, odds: 100 }, props, ftd };
+  }
+
+  // ---------- stats & settlement ----------
+  function sortEvents(evs) { return [...(evs || [])].sort((x, y) => (x.q - y.q) || (x.ts - y.ts)); }
+  function computeStats(snap) {
+    const cfg = snap.config; const pl = {}; const blank = () => ({ passTD: 0, comp: 0, intThrown: 0, rec: 0, recTD: 0, rushTD: 0, totalTD: 0, defINT: 0, defTD: 0, sacks: 0, pat: 0 });
+    for (const p of cfg.players || []) pl[p.id] = blank();
+    const teams = { A: { pts: 0, byQ: {} }, B: { pts: 0, byQ: {} } };
+    const add = (t, q, n) => { if (!teams[t] || !n) return; teams[t].pts += n; teams[t].byQ[q] = (teams[t].byQ[q] || 0) + n; };
+    let firstTD = null; const log = [];
+    for (const e of sortEvents(snap.events)) {
+      const def = EVENTS[e.type]; if (!def) continue;
+      const t = e.playerId ? teamOf(cfg, e.playerId) : e.team; const s = e.playerId && pl[e.playerId];
+      if (['catch', 'catchTD'].includes(e.type) && s) {
+        s.rec++; const qb = t && teamQB(cfg, t); if (qb && qb.id !== e.playerId && pl[qb.id]) pl[qb.id].comp++;
+        if (e.type === 'catchTD') { s.recTD++; s.totalTD++; if (qb && qb.id !== e.playerId && pl[qb.id]) pl[qb.id].passTD++; firstTD = firstTD || e.playerId; }
+      }
+      if (e.type === 'rushTD' && s) { s.rushTD++; s.totalTD++; firstTD = firstTD || e.playerId; }
+      if (['int', 'pick6'].includes(e.type) && s) {
+        s.defINT++; const qb = t && teamQB(cfg, other(t)); if (qb && pl[qb.id]) pl[qb.id].intThrown++;
+        if (e.type === 'pick6') { s.defTD++; s.totalTD++; firstTD = firstTD || e.playerId; }
+      }
+      if (e.type === 'sack' && s) s.sacks++;
+      if (['pat1', 'pat2'].includes(e.type) && e.playerId && pl[e.playerId]) pl[e.playerId].pat++;
+      const pts = e.type === 'points' ? Number(e.pts) || 0 : def.pts;
+      const scoringTeam = e.team || t;
+      if (scoringTeam) add(scoringTeam, e.q, pts);
+      log.push({ ...e, team: scoringTeam, pts });
+    }
+    // A box score typed in by the commish (config.box) replaces the play-by-play totals.
+    // Only the page's copy of core needs this: the Function only checks bankrolls while betting is open.
+    const box = cfg.box;
+    if (box) {
+      const n = (v) => (v === '' || v == null || !Number.isFinite(Number(v)) ? null : Math.max(0, Math.round(Number(v))));
+      for (const [id, m] of Object.entries(box.players || {})) {
+        if (!pl[id]) continue;
+        const s = blank(); for (const k of BOX_STATS) s[k] = n(m?.[k]) || 0;
+        s.totalTD = s.recTD + s.rushTD + s.defTD; pl[id] = s;
+      }
+      for (const t of ['A', 'B']) {
+        const sc = box.score?.[t]; if (!sc) continue;
+        const byQ = {}; for (const q of QUARTERS) { const v = n(sc.q?.[q]); if (v !== null) byQ[q] = v; }
+        const fin = n(sc.final); const qs = Object.values(byQ);
+        if (fin === null && !qs.length) continue;
+        teams[t] = { pts: fin !== null ? fin : qs.reduce((a, b) => a + b, 0), byQ };
+      }
+      if (box.firstTD) firstTD = box.firstTD === 'none' ? null : box.firstTD;
+    }
+    return { players: pl, teams, firstTD, log, manual: !!box };
+  }
+  function lineFor(bet) { return bet.line; }
+  function settle(bet, snap, st) {
+    if ((snap.voids || []).includes(bet.id)) return { status: 'void', ret: bet.stake };
+    if (snap.game?.status !== 'final') return { status: 'open', ret: 0 };
+    st = st || computeStats(snap);
+    const A = st.teams.A.pts, B = st.teams.B.pts;
+    let res; // 1 win, 0 push, -1 loss
+    if (bet.market === 'ml') res = A === B ? 0 : ((A > B ? 'A' : 'B') === bet.sel ? 1 : -1);
+    else if (bet.market === 'spread') { const m = (bet.sel === 'A' ? A - B : B - A) + lineFor(bet); res = m > 0 ? 1 : m < 0 ? -1 : 0; }
+    else if (bet.market === 'total') { const d = A + B - bet.line; res = d === 0 ? 0 : ((d > 0) === (bet.sel === 'over') ? 1 : -1); }
+    else if (bet.market === 'prop') { const v = st.players[bet.playerId]?.[bet.stat] || 0; const d = v - bet.line; res = d === 0 ? 0 : ((d > 0) === (bet.sel === 'over') ? 1 : -1); }
+    else if (bet.market === 'ftd') res = st.firstTD === bet.sel ? 1 : -1;
+    else res = 0;
+    if (res > 0) return { status: 'won', ret: round(bet.stake + profit(bet.stake, bet.odds), 2) };
+    if (res === 0) return { status: 'push', ret: bet.stake };
+    return { status: 'lost', ret: 0 };
+  }
+  function ledger(snap) {
+    const bank = snap.config?.settings?.bankroll ?? 100; const st = computeStats(snap); const out = {};
+    for (const b of snap.bettors || []) out[b.id] = { id: b.id, name: b.name, playerId: b.playerId || null, available: bank, atRisk: 0, bets: [], won: 0, lost: 0 };
+    for (const bet of [...(snap.bets || [])].sort((x, y) => x.ts - y.ts)) {
+      const L = out[bet.bettorId]; if (!L) continue;
+      const s = settle(bet, snap, st);
+      L.available -= bet.stake;
+      if (s.status === 'open') L.atRisk += bet.stake; else L.available += s.ret;
+      if (s.status === 'won') L.won++; if (s.status === 'lost') L.lost++;
+      L.bets.push({ ...bet, ...s });
+    }
+    for (const L of Object.values(out)) { L.available = round(L.available, 2); L.atRisk = round(L.atRisk, 2); L.bankroll = round(L.available + L.atRisk, 2); }
+    return out;
+  }
+  function describe(bet, cfg) {
+    const tn = (t) => teamName(cfg, t); const pn = (id) => player(cfg, id)?.name || '?';
+    const sgn = (v) => (v > 0 ? '+' + v : String(v));
+    if (bet.market === 'ml') return tn(bet.sel) + ' moneyline';
+    if (bet.market === 'spread') return tn(bet.sel) + ' ' + sgn(bet.line);
+    if (bet.market === 'total') return (bet.sel === 'over' ? 'Over ' : 'Under ') + bet.line + ' total points';
+    if (bet.market === 'prop') return pn(bet.playerId) + ' ' + (bet.sel === 'over' ? 'over ' : 'under ') + bet.line + ' ' + (STATS[bet.stat] || bet.stat).toLowerCase();
+    if (bet.market === 'ftd') return pn(bet.sel) + ' first TD scorer';
+    return bet.market;
+  }
+  // Resolve a market selection against the posted lines. Returns {line, odds, playerId, stat} or an error string.
+  function quote(cfg, market, sel, propId) {
+    const L = cfg.lines; if (!L) return 'Lines are not set';
+    if (market === 'ml') { if (!['A', 'B'].includes(sel)) return 'Bad pick'; return { line: null, odds: Number(L.ml[sel]) }; }
+    if (market === 'spread') { if (!['A', 'B'].includes(sel)) return 'Bad pick'; const a = Number(L.spread.A); return { line: sel === 'A' ? a : -a, odds: Number(L.spread.odds) }; }
+    if (market === 'total') { if (!['over', 'under'].includes(sel)) return 'Bad pick'; return { line: Number(L.total.points), odds: Number(L.total.odds) }; }
+    if (market === 'prop') { const pr = (L.props || []).find((x) => x.id === propId); if (!pr) return 'That prop is gone'; if (!['over', 'under'].includes(sel)) return 'Bad pick'; return { line: Number(pr.line), odds: Number(pr.odds), playerId: pr.playerId, stat: pr.stat, propId }; }
+    if (market === 'ftd') { const f = (L.ftd || []).find((x) => x.playerId === sel); if (!f) return 'Not offered'; return { line: null, odds: Number(f.odds) }; }
+    return 'Unknown market';
+  }
+
+  // ---------- seed ----------
+  const NAMES = ['Shac', 'Teb', 'Z', 'JerJay', 'Fay', 'JSiff', 'ZSiff', 'Big Fry', 'Small Fry', 'Pan', 'Hafe', 'OG Hein (E)'];
+  const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  function seedConfig(seed) {
+    const players = (seed?.players || NAMES.map((n) => ({ name: n }))).map((p) => ({
+      id: p.id || slug(p.name), name: p.name, num: p.num ?? '', pos: p.pos || '',
+      ratings: Object.fromEntries(ATTRS.map((a) => [a, p.ratings?.[a] ?? 70])), ovrOverride: p.ovrOverride || null,
+      comps: p.comps || { worst: { name: '', note: '' }, base: { name: '', note: '' }, best: { name: '', note: '' } },
+    }));
+    return {
+      v: 1, settings: { title: 'Turkey Bowl', year: 2026, bankroll: 100 },
+      players, teams: { A: { name: '', color: '#F28C28', captainId: null }, B: { name: '', color: '#2EC4B6', captainId: null } },
+      draft: { order: 'snake', first: 'A', picks: [] }, lines: null,
+    };
+  }
+  const SEED = typeof TB_SEED !== 'undefined' ? TB_SEED : null; // eslint-disable-line no-undef
+
+  // ---------- server ----------
+  const enc = new TextEncoder();
+  async function sha(s) { const b = await crypto.subtle.digest('SHA-256', enc.encode(s)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join(''); }
+  function rid(n = 10) { const a = new Uint8Array(n); crypto.getRandomValues(a); return [...a].map((x) => (x % 36).toString(36)).join(''); }
+  async function hashPin(pin, salt) { salt = salt || rid(12); return { salt, hash: await sha(salt + ':' + pin) }; }
+  async function checkPin(pin, rec) { return !!rec && (await sha(rec.salt + ':' + pin)) === rec.hash; }
+  const json = (obj, status = 200) => new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+  const err = (msg, status = 400) => json({ error: msg }, status);
+  const validPin = (p) => /^\d{4}$/.test(String(p || ''));
+
+  async function loadAll(store, prefix) {
+    const { blobs } = await store.list({ prefix });
+    const out = []; const keys = blobs.map((b) => b.key);
+    for (let i = 0; i < keys.length; i += 16) {
+      const vals = await Promise.all(keys.slice(i, i + 16).map((k) => store.get(k, { type: 'json' })));
+      vals.forEach((v) => v && out.push(v));
+    }
+    return out;
+  }
+  async function getConfig(store) {
+    let c = await store.getWithMetadata('config', { type: 'json' });
+    if (!c) { await store.setJSON('config', seedConfig(SEED), { onlyIfNew: true }); c = await store.getWithMetadata('config', { type: 'json' }); }
+    return c;
+  }
+  async function rebuild(store) {
+    for (let attempt = 0; attempt < 6; attempt++) {
+      const cur = await store.getWithMetadata('snapshot', { type: 'json' });
+      const [cfg, game, bettors, bets, voids, events] = await Promise.all([
+        getConfig(store), store.get('game', { type: 'json' }), loadAll(store, 'bettors/'), loadAll(store, 'bets/'), loadAll(store, 'voids/'), loadAll(store, 'events/'),
+      ]);
+      const snap = {
+        builtAt: Date.now(), config: cfg.data, configEtag: cfg.etag, game: game || { status: 'pre', linesPosted: false, betsLocked: false },
+        bettors: bettors.map((b) => ({ id: b.id, name: b.name, playerId: b.playerId || null, ts: b.ts })),
+        bets, voids: voids.map((v) => v.betId), events,
+      };
+      const res = await store.setJSON('snapshot', snap, cur ? { onlyIfMatch: cur.etag } : { onlyIfNew: true });
+      if (res.modified) return snap;
+    }
+    throw new Error('Busy, try again');
+  }
+  async function readSnap(store) { const s = await store.get('snapshot', { type: 'json' }); return s || rebuild(store); }
+  async function requireCommish(store, pin) {
+    const auth = await store.get('auth', { type: 'json' });
+    if (!auth) return 'Set a commissioner PIN first';
+    return (await checkPin(pin, auth.commish)) ? null : 'Wrong commissioner PIN';
+  }
+
+  async function handle(request, store) {
+    try {
+      const url = new URL(request.url); const path = url.pathname.replace(/^\/api/, '').replace(/\/+$/, '') || '/';
+      if (request.method === 'GET' && path === '/state') {
+        const known = url.searchParams.get('etag');
+        let s = await store.getWithMetadata('snapshot', { type: 'json', etag: known || undefined });
+        if (!s) { await rebuild(store); s = await store.getWithMetadata('snapshot', { type: 'json' }); }
+        const auth = await store.get('auth', { type: 'json' });
+        if (known && s.etag === known) return json({ etag: s.etag, unchanged: true, hasCommish: !!auth });
+        return json({ etag: s.etag, state: s.data, hasCommish: !!auth });
+      }
+      if (request.method !== 'POST') return err('Not found', 404);
+      const body = await request.json().catch(() => ({}));
+      const ok = async (extra = {}) => { const snap = await rebuild(store); return json({ ok: true, ...extra, builtAt: snap.builtAt }); };
+
+      if (path === '/commish/claim') {
+        if (!validPin(body.pin)) return err('PIN must be 4 digits');
+        const r = await store.setJSON('auth', { commish: await hashPin(body.pin) }, { onlyIfNew: true });
+        return r.modified ? json({ ok: true }) : err('A commissioner PIN is already set', 409);
+      }
+      if (path === '/commish/check') { const e = await requireCommish(store, body.pin); return e ? err(e, 403) : json({ ok: true }); }
+      if (path === '/config') {
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        const cur = await getConfig(store);
+        if (body.baseEtag && body.baseEtag !== cur.etag) return err('Someone else changed the setup. Refresh and try again.', 409);
+        const c = body.config; if (!c || !Array.isArray(c.players) || c.players.length > 60) return err('Bad config');
+        for (const p of c.players) for (const a of ATTRS) p.ratings[a] = clamp(Math.round(Number(p.ratings[a]) || 1), 1, 99);
+        const r = await store.setJSON('config', c, { onlyIfMatch: cur.etag });
+        if (!r.modified) return err('Someone else changed the setup. Refresh and try again.', 409);
+        return ok();
+      }
+      if (path === '/game') {
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        const cur = (await store.get('game', { type: 'json' })) || { status: 'pre', linesPosted: false, betsLocked: false };
+        const next = { ...cur };
+        for (const k of ['status', 'linesPosted', 'betsLocked', 'quarter']) if (k in (body.game || {})) next[k] = body.game[k];
+        if (!['pre', 'live', 'final'].includes(next.status)) return err('Bad status');
+        await store.setJSON('game', next); return ok();
+      }
+      if (path === '/event') {
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        const ev = body.event || {}; const def = EVENTS[ev.type]; if (!def) return err('Unknown event');
+        const q = Number(ev.q); if (!QUARTERS.includes(q)) return err('Pick a quarter');
+        const snap = await readSnap(store);
+        if (def.needs === 'player' && !player(snap.config, ev.playerId)) return err('Pick a player');
+        if (def.needs === 'player' && !teamOf(snap.config, ev.playerId)) return err('That player is not on a team yet');
+        if (def.needs === 'team' && !['A', 'B'].includes(ev.team)) return err('Pick a team');
+        const id = rid(8); const ts = Date.now();
+        const rec = { id, ts, q, type: ev.type, playerId: ev.playerId || null, team: def.needs === 'team' ? ev.team : null, pts: ev.type === 'points' ? Number(ev.pts) || 0 : undefined, note: String(ev.note || '').slice(0, 80) };
+        await store.setJSON('events/' + ts + '-' + id, rec, { onlyIfNew: true }); return ok({ id });
+      }
+      if (path === '/event/delete') {
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        const { blobs } = await store.list({ prefix: 'events/' }); const k = blobs.find((b) => b.key.endsWith('-' + body.id));
+        if (!k) return err('Already gone', 404); await store.delete(k.key); return ok();
+      }
+      if (path === '/join') {
+        const name = String(body.name || '').trim().slice(0, 24); if (!name) return err('Enter a name');
+        if (!validPin(body.pin)) return err('PIN must be 4 digits');
+        const snap = await readSnap(store);
+        const pid = body.playerId && player(snap.config, body.playerId) ? body.playerId : null;
+        if (pid && (snap.bettors || []).some((b) => b.playerId === pid)) return err('That player already has an account. Log in instead.', 409);
+        const id = slug(name) || rid(6);
+        const r = await store.setJSON('bettors/' + id, { id, name, playerId: pid, pin: await hashPin(body.pin), ts: Date.now() }, { onlyIfNew: true });
+        if (!r.modified) return err('That name is taken. Log in instead.', 409);
+        return ok({ bettor: { id, name, playerId: pid } });
+      }
+      if (path === '/login') {
+        const id = slug(body.name || ''); const b = id && (await store.get('bettors/' + id, { type: 'json' }));
+        if (!b || !(await checkPin(body.pin, b.pin))) return err('Name or PIN is wrong', 403);
+        return json({ ok: true, bettor: { id: b.id, name: b.name, playerId: b.playerId || null } });
+      }
+      if (path === '/bet') {
+        const b = await store.get('bettors/' + slug(body.bettorId || ''), { type: 'json' });
+        if (!b || !(await checkPin(body.pin, b.pin))) return err('Log in again', 403);
+        const snap = await readSnap(store); const g = snap.game || {};
+        if (!g.linesPosted) return err('Lines are not posted yet'); if (g.betsLocked || g.status !== 'pre') return err('Betting is locked');
+        const qt = quote(snap.config, body.market, body.sel, body.propId); if (typeof qt === 'string') return err(qt);
+        if (Number(body.odds) !== qt.odds || (qt.line !== null && Number(body.line) !== qt.line)) return err('The line moved. Check the new number and try again.', 409);
+        if (body.market === 'prop' && body.sel === 'under' && b.playerId && b.playerId === qt.playerId) return err("You can't bet the under on your own props");
+        const stake = round(Number(body.stake), 2); if (!(stake >= 1)) return err('Minimum bet is $1');
+        const L = ledger(snap)[b.id] || { available: snap.config.settings?.bankroll ?? 100 };
+        if (stake > L.available + 1e-9) return err('Not enough in your bankroll');
+        const id = rid(10); const ts = Date.now();
+        const bet = { id, ts, bettorId: b.id, market: body.market, sel: body.sel, line: qt.line, odds: qt.odds, stake, propId: qt.propId || null, playerId: qt.playerId || null, stat: qt.stat || null };
+        await store.setJSON('bets/' + id, bet, { onlyIfNew: true }); return ok({ bet });
+      }
+      if (path === '/bet/void') {
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        await store.setJSON('voids/' + body.betId, { betId: body.betId, ts: Date.now() }); return ok();
+      }
+      if (path === '/reset') {
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        const what = body.what;
+        const wipe = async (prefix) => { const { blobs } = await store.list({ prefix }); for (const x of blobs) await store.delete(x.key); };
+        if (what === 'game') { await wipe('events/'); await store.setJSON('game', { status: 'pre', linesPosted: false, betsLocked: false }); }
+        else if (what === 'book') { await wipe('bets/'); await wipe('voids/'); await wipe('bettors/'); }
+        else return err('Unknown reset');
+        return ok();
+      }
+      return err('Not found', 404);
+    } catch (e) {
+      return err(e?.message || 'Server error', 500);
+    }
+  }
+
+  return {
+    ATTRS, ATTR_NAMES, POSITIONS, WEIGHTS, DEF_WEIGHTS, STATS, BOX_STATS, EVENTS, QUARTERS, qLabel, STRETCH, PIVOT,
+    ovr, def, tier, rosters, teamOf, player, teamName, teamQB, nextPickTeam, draftable, teamRatings, other,
+    profit, fmtOdds, probToOdds, projection, suggestLines, computeStats, settle, ledger, describe, quote,
+    seedConfig, slug, round, handle,
+  };
+})();
+</script>
+<script>// Turkey Bowl playbook: published flag-football pass plays and zone coverages, drawn Madden-style.
+// Every play is transcribed from a published source (see PB.SOURCES). Coordinates are yards:
+// x = left/right from the ball (+ is right), y = depth from the line of scrimmage (+ is downfield).
+// Each play is drawn the way the source draws it. "add6"/"add7" are the source's own instructions
+// for adding the 6th / 7th player; plays without a 7-on-7 version say so instead of inventing one.
+const PB = (() => {
+  const SOURCES = {
+    ffp: { short: 'FlagFootballPractice.com', name: 'FlagFootballPractice.com: Complete Flag Football Playbook (Knowledge Spot Inc.)', url: 'https://s3.amazonaws.com/footballtutorials/complete/CompleteFlagFootballPlaybook1118.pdf' },
+    fa: { short: 'Football Advantage', name: 'Football Advantage: 6 on 6 Flag Football Plays (Coach Martin)', url: 'https://footballadvantage.com/6-on-6-flag-football-plays/' },
+    fd: { short: 'FirstDown PlayBook', name: 'FirstDown PlayBook: 6v6 Bunch man beater ("Yes 6v6 Flag Football Too")', url: 'https://firstdown.playbooktech.com/coaches-community/yes-6v6-flag-football-too' },
+    nfl: { short: 'NFL FLAG', name: 'NFL FLAG: Official 5 on 5 Flag Football Playbook', url: 'https://nflflag.com/coaches/flag-football-rules/5-on-5-flag-football-playbook' },
+    nfldef: { short: 'NFL FLAG', name: 'NFL FLAG: 5 on 5 Flag Football Defense Guide', url: 'https://nflflag.com/coaches/default/flag-football-rules/5-on-5-flag-football-defense' },
+    fd7: { short: 'FirstDown PlayBook', name: 'FirstDown PlayBook: 9 Important 7v7 Flag Football Defenses', url: 'https://firstdown.playbooktech.com/coaches-community/9-important-7v7-flag-football-defenses' },
+    fd6: { short: 'FirstDown PlayBook', name: 'FirstDown PlayBook: Overload 6v6 Flag Football Zone Coverage (4-2 zone)', url: 'https://firstdown.playbooktech.com/coaches-community/overload-6v6-flag-football-zone-coverage' },
+  };
+
+  // ---------- shorthand ----------
+  const pl = (id, x, y, o = {}) => ({ id, x, y, ...o });
+  const rt = (p, pts, o = {}) => ({ p, pts, ...o });
+  const QB = (y = -5) => pl('QB', 0, y);
+  const C0 = () => pl('C', 0, 0);
+  // FlagFootballPractice's standard add-on for 6-on-6 / 7-on-7 (a back who flares to the flat).
+  const flare = (x, y, dir) => [[x, y], [x + dir * 2.4, y - 0.3], [x + dir * 6.4, y + 3.2], [x + dir * 8.6, y + 5.4]];
+  const STD6 = (x, y, dir) => ({ players: [pl('RB', x, y, { add: 1 })], routes: [rt('RB', flare(x, y, dir), { c: 1, role: 'add' })],
+    text: 'RB flares to the flat. NFL FLAG plays are 5-on-5, so this uses FlagFootballPractice.com\'s standard 6-on-6 add-on.' });
+  const STD7 = (a, b) => ({ players: [...a.players, pl('RB2', b[0], b[1], { add: 1 })], routes: [...a.routes, rt('RB2', flare(b[0], b[1], b[2]), { c: 1, role: 'add' })],
+    text: 'Two backs flare to the flat, one toward each sideline (FlagFootballPractice.com\'s standard 7-on-7 add-on).' });
+  const NO7 = 'The source only draws this play 6-on-6, so the 7th player sits out or subs in.';
+
+  // Formations used by the FlagFootballPractice.com plays (drawn to the left, as in the book).
+  const SPREAD_L = () => [pl('Z', -12, 0), pl('Y', -8.4, 0), C0(), QB(), pl('X', 11, 0)];
+  const TRIPS_L = () => [pl('Z', -12, 0), pl('Y', -8.6, 0), pl('X', -5.2, 0), C0(), QB()];
+  const STACK_L = () => [pl('Y', -8.5, 0), pl('Z', -8.5, -2.5), C0(), QB(), pl('X', 11, 0)];
+  const I_FORM = (a = 'Z', b = 'X') => [pl(a, -10, 0), C0(), QB(-2.3), pl('RB', 0, -6.2), pl(b, 10, 0)];
+
+  const OFFENSE = [
+    // ===================== SHORT =====================
+    { id: 'ffp-double-slant', cat: 'short', name: 'Spread Double Slant', src: 'ffp', ref: 'Play 2, p. 6', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 15.5], [-6, 15.5]]), rt('Y', [[-8.4, 0], [-8.2, 1], [-4.4, 5.6]], { role: 'primary' }),
+        rt('C', [[0, 0], [0, 13], [6.5, 13]]), rt('X', [[11, 0], [10.8, 1], [6.8, 5.2]], { role: 'primary' })],
+      assign: ['X: slant', 'Y: slant', 'Z: in', 'C: snaps, then runs an out'],
+      tip: 'The quick slant builds QB and receiver confidence. If it isn\'t there, hold the ball a beat and look at the longer routes.',
+      add6: { players: [pl('RB', -2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-8.4, 0.4]], { role: 'add' })], text: 'RB runs an arrow out to where Y lined up.' },
+      add7: { players: [pl('RB', -2.6, -5, { add: 1 }), pl('RB2', 2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-8.4, 0.4]], { role: 'add' }), rt('RB2', [[2.6, -5], [8.8, 0.6]], { role: 'add' })], text: 'Two backs run arrow (or in) routes underneath the receivers.' } },
+
+    { id: 'ffp-levels', cat: 'short', name: 'Trips Levels', src: 'ffp', ref: 'Play 9, p. 14', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('X', [[-5.2, 0], [-5.2, 1], [-2, 6]], { role: 'primary' }), rt('Y', [[-8.6, 0], [-8.6, 8.2], [-7.7, 8.6], [-7.4, 6.4]], { c: 1 }),
+        rt('Z', [[-12, 0], [-12, 22]]), rt('C', [], { k: 'stay' })],
+      assign: ['X: slant', 'Y: hook', 'Z: go', 'C: snaps and stays home'],
+      tip: 'Look short first (X). If that\'s covered, work to the hook and then the go.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'RB flares toward the right sideline.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' }), rt('OL', [[2.6, 0], [2.7, 4.5], [3.6, 3.6]], { role: 'add' })], text: 'Add a lineman right of the center who runs a hitch toward the right sideline, plus the RB.' } },
+
+    { id: 'ffp-west-coast', cat: 'short', name: 'Trips West Coast', src: 'ffp', ref: 'Play 10, p. 15', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('X', [[-5.2, 0], [-5.3, 0.6], [-7.9, 4]]), rt('Y', [[-8.6, 0], [-8.6, 8.5], [-5.5, 12.8]]),
+        rt('Z', [[-12, 0], [-12, 6], [-3.4, 6]]), rt('C', [[0, 0], [0, 7.6], [0.7, 7.9], [0.8, 5.8]], { c: 1 })],
+      assign: ['X: slant toward the sideline', 'Y: post', 'Z: in, across the field', 'C: curl down the middle'],
+      tip: 'Several short throws to choose from. Routes have to be precise and well-timed so receivers don\'t run into each other.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [6.6, -3.2], [10.4, 0.6], [11, 8], [11, 16]], { c: 1, role: 'add' })], text: 'RB runs a replace route down the right sideline.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [6.6, -3.2], [10.4, 0.6], [11, 8], [11, 16]], { c: 1, role: 'add' }), rt('OL', [[2.6, 0], [2.6, 5], [7.4, 5]], { role: 'add' })], text: 'Add a lineman right of the center who runs a 5-yard out, plus the RB.' } },
+
+    { id: 'ffp-screen-cross', cat: 'short', name: 'Trips Screen Cross', src: 'ffp', ref: 'Play 12, p. 17', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('Z', [[-12, 0], [-7, 4.6]]), rt('Y', [[-8.6, 0], [-12.6, 4.6]]),
+        rt('X', [[-5.2, 0], [-6, -1.6], [-8.4, -2.6], [-11, -2.4]], { c: 1 }), rt('C', [[0, 0], [0, 4.6], [2.4, 8.8]])],
+      assign: ['Y and Z: crossing slants', 'X: screen behind the other two', 'C: corner (the center goes deep)'],
+      tip: 'Z and Y try to lose their defenders on the cross while X takes the screen behind them. With three receivers bunched, don\'t forget to look at the center.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 5], [7, 5]], { role: 'add' })], text: 'RB runs a 5-yard out.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 5], [7, 5]], { role: 'add' }), rt('OL', [[2.6, 0], [4.6, 1.4], [9, 2]], { role: 'add' })], text: 'Add a lineman right of the center who runs to the flat, plus the RB.' } },
+
+    { id: 'ffp-stacked-slants', cat: 'short', name: 'Stack Stacked Slants', src: 'ffp', ref: 'Play 17, p. 23', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [10.4, 5], [13.6, 13.6]]), rt('Y', [[-8.5, 0], [-11.8, 4.6]]),
+        rt('Z', [[-8.5, -2.2], [-3.4, 5.2]]), rt('C', [[0, 0], [0, 5], [5, 5]])],
+      assign: ['X: corner', 'Y: slant to the sideline', 'Z: slant to the middle', 'C: 5-yard out'],
+      tip: 'Receivers in space have to beat their man with fast, precise cuts. QB scans left to right.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9, 0.6]], { role: 'add' })], text: 'RB runs a flare or arrow into the right flat.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9, 0.6]], { role: 'add' }), rt('OL', [[2.6, 0], [2.7, 1], [6.2, 4.6]], { role: 'add' })], text: 'Add a lineman right of the center who slants to the sideline, plus the RB.' } },
+
+    { id: 'ffp-yz-split', cat: 'short', name: 'Stack YZ Split', src: 'ffp', ref: 'Play 18, p. 24', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [11, 22]], { role: 'primary' }), rt('Y', [[-8.5, 0], [-8.5, 5.2], [-12.4, 5.2]]),
+        rt('Z', [[-8.5, -2.2], [-8.1, 5.6], [-3.6, 5.6]]), rt('C', [[0, 0], [3, 7], [3.9, 7.3], [3.5, 5.6]], { c: 1 })],
+      assign: ['X: go', 'Y: 5-yard out', 'Z: 5-yard in', 'C: hook toward the sideline'],
+      tip: 'Y and Z break sharply off the stack. Give X a quick look first, before he gets out of range.',
+      add6: { players: [pl('RB', 0, -7.6, { add: 1 })], routes: [rt('RB', [[0, -7.6], [0, 5], [-3.6, 5]], { role: 'add' })], text: 'RB runs a 5-yard in up the middle, breaking opposite the center.' },
+      add7: { players: [pl('RB', 0, -7.6, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[0, -7.6], [0, 5], [-3.6, 5]], { role: 'add' }), rt('OL', [[2.6, 0], [2.7, 1], [6.2, 4.6]], { role: 'add' })], text: 'Add a lineman right of the center who slants toward the sideline, plus the RB.' } },
+
+    { id: 'fa-rb-screen', cat: 'short', name: 'Trips Right RB Screen', src: 'fa', ref: 'Play #3', form: 'Trips Right',
+      players: [pl('C', 0, 0), pl('QB', 0.2, -4.4), pl('RB', -3.6, -4.8), pl('X', 5.5, -1.9), pl('Y', 8.3, 0), pl('Z', 10.9, -1.3)],
+      routes: [rt('RB', [[-3.6, -4.8], [-3.6, -3.2], [-9.2, -2.5]], { role: 'primary' }),
+        rt('C', [[0, 0], [-1.2, 0.2], [-6, 0.3], [-8.2, 2.8], [-8.9, 12]], { c: 1, role: 'decoy' }),
+        rt('X', [[5.5, -1.9], [1.6, 4.3], [2.1, 3.4]]), rt('Y', [[8.3, 0], [6.8, 11], [1.8, 18]], { role: 'decoy' }), rt('Z', [[10.9, -1.3], [10.6, 22]], { role: 'decoy' })],
+      assign: ['RB: screen to the left (the target)', 'C (snapper): runs flat to the left sideline, then upfield ahead of the RB', 'X: quick hitch toward the middle', 'Y: deep slant-and-go', 'Z: go down the right sideline'],
+      tip: 'Everyone on the right pulls their defenders away from the left side. No blocking in flag, so the snapper just leads the way and clears space.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-v-snapper', cat: 'short', name: 'V Snapper Comeback', src: 'fa', ref: 'Play #7', form: 'V (X motions left)',
+      players: [pl('C', 0, 0), pl('QB', -0.1, -4.6), pl('X', -5.4, -1.9), pl('Y', -2.25, -1.75), pl('Z', 3.4, -2), pl('RB', 5.9, -1.65)],
+      routes: [rt('X', [[-5.4, -1.9], [-10.9, -1.6]], { k: 'motion' }), rt('X', [[-10.9, -1.6], [-10.9, 6], [-12.1, 4]]),
+        rt('Y', [[-2.25, -1.75], [-4.1, 0], [-4, 6.5], [-2, 5.2]]), rt('Z', [[3.4, -2], [2.9, 12], [6.5, 19]]),
+        rt('RB', [[5.9, -1.65], [5.75, 5.6], [-1.6, 14.8]]),
+        rt('C', [], { role: 'primary', parts: [{ pts: [[0, 0], [0.2, 2.2], [3, 3.6], [5.6, 3.4], [7.9, 6.6]], c: 1 }, { pts: [[7.9, 6.6], [9, 4.9]] }] })],
+      assign: ['C (snapper): shallow drag right, gets depth, then a comeback to the right sideline (the short target)', 'X: motions out left, then a quick comeback', 'Y: fakes a quick slant left, then a hitch toward the middle', 'Z: deep post toward the right', 'RB: deep slant to the left'],
+      tip: 'The snapper is the short throw, but if a deep route opens, take it.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-quads-flood', cat: 'short', name: 'Quads Left Flood Right', src: 'fa', ref: 'Play #10', form: 'Quads Left (Y motions right)',
+      players: [pl('C', 0, 0), pl('QB', 0, -2.5), pl('RB', -12.1, 0), pl('X', -7.9, 0), pl('Z', -9.85, -2.1), pl('Y', -5.5, -1.9)],
+      routes: [rt('Y', [[-5.5, -1.9], [-5.4, -5], [5.7, -4.8]], { k: 'motion' }), rt('Y', [[5.7, -4.8], [4.8, 4.4], [9.3, 4.6]]),
+        rt('C', [[0, 0], [-0.4, 6], [8.8, 6.2]]), rt('X', [[-7.9, 0], [-8, 13], [-5.2, 19]]),
+        rt('RB', [[-12.1, 0], [-11.6, 2.6], [-9.5, 4], [-2.7, 4.4]], { c: 1 }), rt('Z', [[-9.85, -2.1], [-10.2, 22]])],
+      assign: ['Y: motions right, then a quick out', 'C (snapper): quick out right, a little deeper than Y', 'X: deep post to the right', 'RB: drag to the right', 'Z: go (the only route not heading right)'],
+      tip: 'Everything floods right, so defenders have to run the width of the field to stay with their man.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fd-bunch', cat: 'short', name: '6v6 Bunch Man Beater', src: 'fd', ref: 'Bunch formation', form: 'Bunch Right',
+      drawn: 'FirstDown\'s diagram is an image, so this is drawn from the written assignments (bunch to the right, X alone on the left).',
+      players: [pl('X', -11, 0), C0(), QB(), pl('Z', 5.4, -1.3), pl('F', 7, 0), pl('H', 8.6, -1.3)],
+      routes: [rt('Z', [[5.4, -1.3], [6.2, 0.8], [2.2, 4]], { role: 'primary' }), rt('H', [[8.6, -1.3], [7.4, 0.8], [9.5, 2], [13.2, 2.4]], { c: 1 }),
+        rt('F', [[7, 0], [7.4, 22]]), rt('C', [[0, 0], [0, 10], [-3.8, 14]]), rt('X', [[-11, 0], [-11, 1.4]], { k: 'now' })],
+      assign: ['Z: dart, sprints off the back of H and expects the ball early', 'H: sprints at Z\'s defender to make him go over the top, then the flat (vs zone, turn up the sideline late)', 'F: go, clears the area', 'C: 10 yards, then a corner', 'X: "now" route: one hard step, then turn and show the QB your numbers'],
+      tip: 'Read Z, then H. Get it out fast, in front of the receiver toward the sideline. If everyone\'s covered, scramble. Bunch makes man coverage defenders fight through traffic.',
+      add6: null, add7: { none: NO7 } },
+
+    // ===================== MEDIUM =====================
+    { id: 'ffp-double-hook', cat: 'medium', name: 'Spread Double Hook', src: 'ffp', ref: 'Play 1, p. 5', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 14], [-11.2, 15.6], [-6.5, 16.2]], { c: 1 }), rt('Y', [[-8.4, 0], [-8.4, 9], [-7.7, 9.3], [-7.5, 7]], { c: 1, role: 'primary' }),
+        rt('C', [[0, 0], [0, 10], [1.4, 13.3], [7.5, 14.6]], { c: 1 }), rt('X', [[11, 0], [11, 9], [10.3, 9.3], [10.2, 7]], { c: 1, role: 'primary' })],
+      assign: ['X: 5-10 yard hook', 'Y: 5-10 yard hook', 'Z: post', 'C: snaps, runs up the middle, then angles off to the corner'],
+      tip: 'Look at one of the two hooks first, then the deep routes if there\'s time. Under pressure, the QB can roll either way and throw to that side.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'RB flares out to the flat.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('RB2', -2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' }), rt('RB2', flare(-2.6, -5, -1), { c: 1, role: 'add' })], text: 'Two backs flare to the flat, one toward each sideline.' } },
+
+    { id: 'ffp-corners-in', cat: 'medium', name: 'Spread Corners In', src: 'ffp', ref: 'Play 4, p. 8', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 13.5], [-14.6, 17]]), rt('Y', [[-8.4, 0], [-8.4, 8.6], [-3.6, 8.6]]),
+        rt('C', [[0, 0], [0, 4.4], [5.6, 4.4]]), rt('X', [[11, 0], [11, 13.5], [13.8, 17]])],
+      assign: ['X: corner', 'Z: corner', 'Y: short in', 'C: snaps, waits two seconds, then a short out'],
+      tip: 'Pick outside (the corners) or inside (the in). The QB can roll out for more on the deep throw, but shouldn\'t throw back across the field.',
+      add6: { players: [pl('RB', -2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-5, -4.6], [-7.6, -2], [-8.4, 0.4]], { c: 1, role: 'add' })], text: 'RB flares toward where Y lined up.' },
+      add7: { players: [pl('RB', -2.6, -5, { add: 1 }), pl('RB2', 2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-5, -4.6], [-7.6, -2], [-8.4, 0.4]], { c: 1, role: 'add' }), rt('RB2', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'A second back flares toward the right sideline.' } },
+
+    { id: 'ffp-crossover', cat: 'medium', name: 'Trips Crossover', src: 'ffp', ref: 'Play 11, p. 16', form: 'Trips Left',
+      players: TRIPS_L(),
+      routes: [rt('X', [[-5.2, 0], [-5.2, 5], [-4.6, 3.9]]), rt('Y', [[-8.6, 0], [-11, 5], [-7.4, 12.6]]),
+        rt('Z', [[-12, 0], [-8.3, 3.1], [2.6, 8.4], [6.6, 9.6]], { role: 'primary' }), rt('C', [[0, 0], [0, 20]])],
+      assign: ['Z: across the field, then to the corner (look here first)', 'Y: out, then to the post', 'X: 5-yard hitch (safety valve)', 'C: go, straight up the field'],
+      tip: 'Look for Z first. If he\'s not open crossing the field, check down to C and Y going deep. X is the safety valve.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9.6, 0.6]], { role: 'add' })], text: 'RB runs an arrow to the right flat.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', [[2.6, -5], [9.6, 0.6]], { role: 'add' }), rt('OL', [[2.6, 0], [2.6, 5], [7, 5]], { role: 'add' })], text: 'Add a lineman right of the center who runs a 5-yard out, plus the RB.' } },
+
+    { id: 'ffp-high-low', cat: 'medium', name: 'Stack High Low', src: 'ffp', ref: 'Play 20, p. 26', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [11, 22]]), rt('Y', [[-8.5, 0], [-8.5, 7.5], [-5.4, 13.8]]),
+        rt('Z', [[-8.5, -2.2], [-8.1, 3.6], [-5.2, 8.8]]), rt('C', [[0, 0], [0, 5], [5, 5]])],
+      assign: ['X: go', 'Y: post', 'Z: post (3-5 yards under Y)', 'C: 5-yard out toward the right sideline'],
+      tip: 'Everything flows to the right side of the field. Scan right to left, and keep a 3-5 yard gap between the two posts.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' })], text: 'RB runs a flare (or circle) toward the right sideline.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('RB', flare(2.6, -5, 1), { c: 1, role: 'add' }), rt('OL', [[2.6, 0], [2.7, 1], [6.2, 4.6]], { role: 'add' })], text: 'Add a lineman right of the center who slants toward the sideline, plus the RB.' } },
+
+    { id: 'fa-trips-comeback', cat: 'medium', name: 'Trips Right Comeback', src: 'fa', ref: 'Play #1', form: 'Trips Right',
+      players: [pl('C', 0, 0), pl('QB', 0, -4.85), pl('RB', -4.7, -4.85), pl('X', 5.9, -1.6), pl('Y', 9.25, -0.45), pl('Z', 11.75, -1.6)],
+      routes: [rt('X', [[5.9, -1.6], [5.6, 22]]), rt('Y', [[9.25, -0.45], [9.1, 4], [2.2, 13]]), rt('Z', [[11.75, -1.6], [12.6, 12], [13.8, 9.8]]),
+        rt('C', [[0, 0], [-0.2, 4], [-1.1, 3]]), rt('RB', [[-4.7, -4.85], [-6.6, -3.6], [-8.8, 0], [-10, 6.5]], { c: 1 })],
+      assign: ['X: go', 'Y: deep slant (crosses X)', 'Z: deep comeback', 'C (snapper): quick hitch', 'RB: swing left, then upfield'],
+      tip: 'Two crossing routes on the right, with the outside receiver running a deep comeback.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-spread-combos', cat: 'medium', name: 'Spread Combos', src: 'fa', ref: 'Play #8', form: 'Spread',
+      players: [pl('C', 0, 0), pl('QB', -0.5, -4.75), pl('Z', -10, -0.3), pl('Y', -5.4, -2.2), pl('RB', 5.9, -2.05), pl('X', 9.8, -0.3)],
+      routes: [rt('Z', [[-10, -0.3], [-8.4, 3.5], [-8.1, 15], [-10.1, 11]]), rt('X', [[9.8, -0.3], [9.4, 12.3], [8.3, 8.6]]),
+        rt('Y', [[-5.4, -2.2], [-5.2, 8], [-4, 12], [-0.7, 17.5]], { c: 1 }), rt('RB', [[5.9, -2.05], [5.2, 14.5], [8.1, 19.8]]),
+        rt('C', [[0, 0], [-1.6, 3], [11, 3.4]])],
+      assign: ['Z: deep comeback, fakes a slant first', 'X: deep comeback', 'Y: deep post (rounded)', 'RB: deep post', 'C (snapper): zag that ends shallow to the right'],
+      tip: 'Outside receivers run the same route, and so do the inside receivers. Spread the defense out first, then hit the open combo.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'nfl-trips-2', cat: 'medium', name: 'Trips Formation: Play 2', src: 'nfl', ref: 'Trips, play 2', form: 'Trips Right',
+      players: [C0(), QB(-4.6), pl('X', 1.6, 0), pl('Y', 4.5, 0), pl('Z', 7.8, 0)],
+      routes: [rt('Z', [[7.8, 0], [8.2, 1.5], [8.2, 22]]), rt('Y', [[4.5, 0], [4.5, 7.5], [8.6, 12.6]]),
+        rt('X', [[1.6, 0], [1.6, 2.3], [-2.8, 2.3]], { role: 'primary' }), rt('C', [[0, 0], [0, 5], [3, 5]])],
+      assign: ['Z: fly', 'Y: corner at 7 yards', 'X: out (to the left)', 'C: in'],
+      tip: 'Receivers end up at staggered depths, and the routes cross. With the defense pulled toward the deep routes on the right, the inside receiver breaking left should come open.',
+      add6: STD6(-2.6, -4.6, -1), add7: STD7(STD6(-2.6, -4.6, -1), [2.6, -4.6, 1]) },
+
+    { id: 'nfl-bunch-3', cat: 'medium', name: 'Bunch Formation: Play 3', src: 'nfl', ref: 'Bunch, play 3', form: 'Bunch',
+      players: [pl('X', -1.7, 0), C0(), pl('Y', 1.7, 0), pl('Z', 3.4, 0), QB(-4.3)],
+      routes: [rt('X', [[-1.7, 0], [-1.7, 7.5], [-4.8, 11.4]]), rt('Y', [[1.7, 0], [1.7, 7.5], [4.8, 11.4]]),
+        rt('Z', [[3.4, 0], [3.4, 5], [8.2, 5]]), rt('C', [[0, 0], [0, 5], [-6.4, 5]])],
+      assign: ['X: 7 yards, then a corner (long yardage)', 'Y: 7 yards, then a corner (long yardage)', 'Z: 5 yards and out', 'C: 5 yards and out'],
+      tip: 'Get the defense tangled up in the middle, then spread out. The 5-yard outs open up as defenders chase the corners.',
+      add6: STD6(-2.6, -4.3, -1), add7: STD7(STD6(-2.6, -4.3, -1), [2.6, -4.3, 1]) },
+
+    { id: 'nfl-trips-stack-3', cat: 'medium', name: 'Trips Stack: Play 3', src: 'nfl', ref: 'Trips Stack, play 3', form: 'Trips Stack Right',
+      drawn: 'NFL FLAG\'s diagram for this play shows only the alignment, so the routes are drawn from its written description.',
+      players: [C0(), QB(-4.3), pl('X', 4.6, 0), pl('Y', 4.6, -2.4), pl('Z', 4.6, -4.8)],
+      routes: [rt('X', [[4.6, 0], [4.6, 7], [0.2, 7]]), rt('Y', [[4.6, -2.4], [6.4, 4], [10.2, 10.4]]),
+        rt('Z', [[4.6, -4.8], [5.6, 2.2], [1.6, 4.6]]), rt('C', [[0, 0], [0, 9], [6.2, 15.6]])],
+      assign: ['X: 7 yards, then in', 'Y: angled corner', 'Z: angled in', 'C: deep corner'],
+      tip: 'Attacks the right side with two cuts toward the middle. Good against a team that\'s weak on its right side.',
+      add6: STD6(-2.6, -4.3, -1), add7: STD7(STD6(-2.6, -4.3, -1), [2.6, -6.2, 1]) },
+
+    { id: 'nfl-twins-stack-3', cat: 'medium', name: 'Twins Stack: Play 3', src: 'nfl', ref: 'Twins Stack, play 3', form: 'Twins Stack Right',
+      players: [pl('X', -1.9, 0), C0(), QB(-4.2), pl('Y', 4.4, 0), pl('Z', 5.2, -2.5)],
+      routes: [rt('Y', [[4.4, 0], [4.4, 8.2], [1.2, 8.2]]), rt('Z', [[5.2, -2.5], [6.3, 0], [6.3, 9], [3.4, 15.2]]),
+        rt('X', [[-1.9, 0], [-1.9, 2], [-3, 2.6], [1.8, 3.9]]), rt('C', [[0, 0], [0, 4.6], [-4, 4.6]])],
+      assign: ['Y: 8-yard in', 'Z: deep post', 'X: shallow option route across the center', 'C: 5 yards and out'],
+      tip: 'Y and Z go deep for big yardage. X (shallow option across the center) and the center (5 and out) are the short options.',
+      add6: STD6(-2.6, -4.2, -1), add7: STD7(STD6(-2.6, -4.2, -1), [2.6, -4.2, 1]) },
+
+    // ===================== LONG =====================
+    { id: 'ffp-y-post', cat: 'long', name: 'Spread Y Post', src: 'ffp', ref: 'Play 3, p. 7', form: 'Spread Left',
+      players: SPREAD_L(),
+      routes: [rt('Z', [[-12, 0], [-12, 12], [-15, 12]]), rt('Y', [[-8.4, 0], [-8.4, 9.5], [-4.4, 18]], { role: 'primary' }),
+        rt('C', [[0, 0], [0, 4], [6.4, 4]]), rt('X', [[11, 0], [11, 22]])],
+      assign: ['Y: deep post', 'Z: out', 'X: go', 'C: short out (check-down)'],
+      tip: 'Stretches the field, with the center as a short dump-off. Lead receivers so they catch it on the run.',
+      add6: { players: [pl('RB', -2.6, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-2.8, 5], [0.8, 5]], { role: 'add' })], text: 'RB runs a 5-yard in to the left of the center.' },
+      add7: { players: [pl('RB', -2.6, -5, { add: 1 }), pl('RB2', -5.2, -5, { add: 1 })], routes: [rt('RB', [[-2.6, -5], [-2.8, 5], [0.8, 5]], { role: 'add' }), rt('RB2', [[-5.2, -5], [-7.6, -4.4], [-9.6, -1.4], [-9, 1.8], [-7.2, 2.6]], { c: 1, role: 'add' })], text: 'Second back runs a circle route to the left.' } },
+
+    { id: 'ffp-stop-go', cat: 'long', name: 'Stack Stop & Go', src: 'ffp', ref: 'Play 19, p. 25', form: 'Stack Left',
+      players: STACK_L(),
+      routes: [rt('X', [[11, 0], [10.8, 1], [7, 5.2]], { role: 'primary' }), rt('Y', [[-8.5, 0], [-8.5, 5.4], [-7.8, 4.3]]),
+        rt('Z', [[-8.5, -2.2], [-8.5, 22]]), rt('C', [[0, 0], [0, 7], [3.6, 12.4]])],
+      assign: ['X: slant (first look)', 'Y: 5-yard hitch', 'Z: go', 'C: corner'],
+      tip: 'First look is X on the slant, then work left. If defenders jump Y\'s short route, air it out to Z.',
+      add6: { players: [pl('RB', 2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 15]], { role: 'add' })], text: 'RB runs a replace route straight up the field.' },
+      add7: { players: [pl('RB', 2.6, -5, { add: 1 }), pl('RB2', -2.6, -5, { add: 1 })], routes: [rt('RB', [[2.6, -5], [2.6, 15]], { role: 'add' }), rt('RB2', [[-2.6, -5], [-2.6, 5], [-7, 5]], { role: 'add' })], text: 'Second back runs a 5-yard out toward the left sideline.' } },
+
+    { id: 'ffp-dump-go', cat: 'long', name: 'I Formation Dump & Go', src: 'ffp', ref: 'Play 25, p. 32', form: 'I Formation',
+      players: I_FORM(),
+      routes: [rt('X', [[10, 0], [10, 22]]), rt('Z', [[-10, 0], [-10, 22]]),
+        rt('RB', [[0, -6.2], [1.8, -3.8], [1.6, 2], [0.4, 7]], { c: 1 }), rt('C', [[0, 0], [3.2, 2.6], [7.2, 4]])],
+      assign: ['X: go', 'Z: go', 'RB: delays, then releases to the middle for a short dump pass', 'C: snaps, then clears toward the sideline'],
+      tip: 'Go over the top to X or Z, or underneath to the RB or center. Faking a handoff to the RB draws the defense in. The center should look back in case the QB needs to check down.',
+      add6: { players: [pl('SL', -5.5, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 4], [-9.6, 4]], { role: 'add' })], text: 'Add a third receiver who runs a short out to the left sideline, away from the center.' },
+      add7: { players: [pl('SL', -5.5, 0, { add: 1 }), pl('OL', 2.6, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 4], [-9.6, 4]], { role: 'add' }), rt('OL', [], { k: 'stay', role: 'add' })], text: 'Same third receiver, plus a lineman who stays home.' } },
+
+    { id: 'ffp-flea-flicker', cat: 'long', name: 'I Formation Flea Flicker', src: 'ffp', ref: 'Play 41, p. 51', form: 'I Formation',
+      players: I_FORM('WR', 'WR2'),
+      routes: [rt('RB', [[0, -6.2], [0.6, -4.4], [1.4, -2.4]]), rt('QB', [[0, -2.3], [-2.2, -4], [-2, -7.4], [1.6, -8.8]], { c: 1, k: 'qb' }),
+        rt('RB', [[1.6, -2.6], [1.8, -8]], { k: 'pitch' }),
+        rt('C', [[0, 0], [0, 5], [4, 5]]), rt('WR', [[-10, 0], [-10, 5], [-5.4, 11.4]], { role: 'primary' }), rt('WR2', [[10, 0], [9, 5], [12.2, 12.4]], { role: 'primary' })],
+      assign: ['QB: hands off to the RB, then drops back', 'RB: takes the handoff, stays behind the line, and pitches it back to the QB', 'Left WR: post', 'Right WR: corner', 'C: 5-yard out'],
+      tip: 'Looks like a run, then becomes a deep pass. The RB has to stay behind the line of scrimmage before pitching it back.',
+      add6: { players: [pl('SL', -5.5, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 5], [-8.8, 11]], { role: 'add' })], text: 'Add a slot receiver on the left who runs a corner.' },
+      add7: { players: [pl('SL', -5.5, 0, { add: 1 }), pl('SR', 5.5, 0, { add: 1 })], routes: [rt('SL', [[-5.5, 0], [-5.5, 5], [-8.8, 11]], { role: 'add' }), rt('SR', [[5.5, 0], [5.5, 5], [9, 5]], { role: 'add' })], text: 'Slot receivers on both sides: left runs a corner, right runs an out.' } },
+
+    { id: 'fa-motion-out-up', cat: 'long', name: 'Trips Motion Out & Up', src: 'fa', ref: 'Play #2', form: 'Trips Right (Y motions left)',
+      players: [pl('C', 0, 0), pl('QB', 0, -2.3), pl('RB', -0.25, -5.6), pl('X', 5.6, 0), pl('Y', 8.25, -1.3), pl('Z', 11.6, 0)],
+      routes: [rt('Y', [[8.25, -1.3], [8.25, -3.4], [-7.6, -3.4]], { k: 'motion' }), rt('Y', [[-7.6, -3.4], [-7.9, 22]]),
+        rt('RB', [[-0.25, -5.6], [-3.2, -2.4], [-4.7, 2.6], [-4.3, 4.6], [-3.3, 2.8]], { c: 1 }), rt('C', [[0, 0], [0.3, 2], [1.6, 3.3], [4.5, 3.5]], { c: 1 }),
+        rt('X', [[5.6, 0], [5.6, 5], [12.2, 5], [12.2, 22]], { role: 'primary' }), rt('Z', [[11.6, 0], [11.5, 4.5], [9.8, 7.6], [2.1, 14]], { c: 1 })],
+      assign: ['X: out, then turns up the sideline (out-and-up, the primary target)', 'Y: motions right to left, then a go down the left sideline', 'Z: deep slant (rounded), crossing up the right-side defenders', 'RB: rounded hitch to the left', 'C (snapper): rounded short out to the right'],
+      tip: 'X is the target: sell the out, then turn it up the sideline.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-crossing-post', cat: 'long', name: 'Slot Right Crossing Post', src: 'fa', ref: 'Play #4', form: 'Slot Right (QB under center)',
+      players: [pl('C', 0, 0), pl('QB', 0, -2.3), pl('RB', 0.1, -5.6), pl('X', -10.4, 0), pl('Y', 5.9, -1.85), pl('Z', 10.6, 0)],
+      routes: [rt('X', [[-10.4, 0], [-10.1, 9.9], [-0.7, 18.2]]), rt('C', [[0, 0], [-0.4, 9.1], [-8.7, 18.7]]),
+        rt('Y', [[5.9, -1.85], [5.6, 4], [-3.5, 8]]), rt('Z', [[10.6, 0], [10.5, 8.8], [-0.4, 12.8]]), rt('RB', [], { k: 'stay' })],
+      assign: ['X: deep slant', 'C (snapper): deep post', 'Y: in, angled slightly downfield', 'Z: in, angled slightly downfield (deeper than Y)', 'RB: stays in, no route'],
+      tip: 'Every route crosses another, so defenders have to run across the field and may bump into each other.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-slot-out-up', cat: 'long', name: 'Slot Right Out & Up', src: 'fa', ref: 'Play #5', form: 'Slot Right (QB under center)',
+      players: [pl('C', 0, 0), pl('QB', -0.2, -2.3), pl('RB', 0.25, -5.6), pl('X', -11.5, 0), pl('Y', 5.9, -1.65), pl('Z', 9.4, 0)],
+      routes: [rt('X', [[-11.5, 0], [-11.5, 10.3], [-6.3, 18.9]]), rt('C', [[0, 0], [-0.4, 4], [-2.4, 7.4], [-6.1, 8.4]], { c: 1 }),
+        rt('Z', [[9.4, 0], [9, 4.5], [4, 10]]), rt('Y', [[5.9, -1.65], [5.5, 3], [6.8, 6.4], [10.2, 8.8], [10.4, 20]], { c: 1, role: 'primary' }),
+        rt('RB', [[0.25, -5.6], [4, -5.8], [7.6, -5.1], [9.6, -3.2]], { c: 1 })],
+      assign: ['Y: out-and-up to the right, rounded double move (the shot)', 'X: deep slant to the middle', 'C (snapper): rounded slant to the left', 'Z: quick slant left, deeper than usual', 'RB: swing right (safety valve)'],
+      tip: 'Crossing routes underneath confuse defenders while Y gets deep. If nobody\'s open, dump it to the RB.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-v-corner-posts', cat: 'long', name: 'V Corner Posts', src: 'fa', ref: 'Play #6', form: 'V',
+      players: [pl('C', 0, 0), pl('QB', 0, -4.5), pl('X', -4.4, -2), pl('Y', -1.9, -1.65), pl('Z', 2.4, -1.8), pl('RB', 5.6, -1.8)],
+      routes: [rt('C', [[0, 0], [0.3, 4], [-5.9, 4.3]]), rt('Z', [[2.4, -1.8], [2.1, 7.7], [-9.2, 7.9]]),
+        rt('X', [[-4.4, -2], [-4.2, 7.4], [-6.7, 12.1], [-2.9, 19.1]]), rt('Y', [[-1.9, -1.65], [-2.3, 9.2], [1.8, 16.5]]),
+        rt('RB', [[5.6, -1.8], [5.6, 8], [7.4, 6]])],
+      assign: ['X: triple move: go, slant, then post', 'Y: deep post to the right', 'Z: out to the left (deeper)', 'C (snapper): out to the left (shallower)', 'RB: comeback to the right (short option)'],
+      tip: 'Tight formation, and every route crosses another. Defenders playing man lose their guy in the traffic.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'fa-quads-go', cat: 'long', name: 'Quads Left Go', src: 'fa', ref: 'Play #9', form: 'Quads Left (QB under center)',
+      players: [pl('C', 0, 0), pl('QB', -0.4, -2.55), pl('RB', -11.8, 0), pl('X', -7.15, 0), pl('Z', -9.35, -1.9), pl('Y', -4.8, -1.75)],
+      routes: [rt('RB', [[-11.8, 0], [-12.2, 14], [-10.6, 18.7]]), rt('X', [[-7.15, 0], [-7.7, 22]]),
+        rt('Z', [[-9.35, -1.9], [-10.3, 13], [-1.8, 14]]), rt('Y', [[-4.8, -1.75], [-3.3, 4], [-11.4, 4.6]]),
+        rt('C', [[0, 0], [3.6, 3.6], [8.6, 3.6]])],
+      assign: ['X: go, straight downfield', 'RB: deep skinny slant', 'Z: in', 'Y: shallow out', 'C (snapper): shallow out, angling first (the QB\'s safety valve)'],
+      tip: 'Four receivers bunched left, with routes crossing at different depths. The snapper\'s shallow out is the safety valve.',
+      add6: null, add7: { none: NO7 } },
+
+    { id: 'nfl-single-set-3', cat: 'long', name: 'Single Set: Play 3', src: 'nfl', ref: 'Single Set, play 3', form: 'Single Set',
+      players: [C0(), pl('QB', 0, -2.3), pl('X', 0, -5.6), pl('Y', 1.6, 0), pl('Z', 5.3, 0)],
+      routes: [rt('Z', [[5.3, 0], [5.3, 8], [1, 16.2]]), rt('Y', [[1.6, 0], [1.6, 8], [7.2, 15.2]]),
+        rt('X', [[0, -5.6], [-2.2, 0.2], [-2.2, 22]]), rt('C', [[0, 0], [0, 4.9], [-4, 4.9]])],
+      assign: ['Z: deep post', 'Y: deep corner', 'X: angled fly to the left', 'C: 5 yards and out to the left'],
+      tip: 'Two deep routes cross. X\'s fly to the left clears out the shallow left side for the center.',
+      add6: STD6(2.6, -4, 1), add7: STD7(STD6(2.6, -4, 1), [-2.6, -4, -1]) },
+  ];
+
+  // ---------- zone coverages ----------
+  // zone: [type, cx, cy, rx, ry] in yards. Types: deep, hook, flat, curl (curl/flat). r: rusher.
+  const dz = (id, x, y, zone, o = {}) => ({ id, x, y, zone, ...o });
+  const DEFENSE = [
+    { id: 'c2-6', n: 6, name: 'Cover 2', src: 'nfldef', also: 'fd7', ref: 'Cover 2',
+      d: [dz('CB', -12, 5, ['flat', -12.6, 4.6, 3.4, 2.6]), dz('CB', 12, 5, ['flat', 12.6, 4.6, 3.4, 2.6]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2]),
+        dz('M', 0, 5, ['hook', 0, 7.4, 4, 2.6]), dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Two corners line up about 5 yards off, near the sidelines, and guard the outside.', 'Two safeties start at 10 yards and drop to split the deep field in halves.', 'One rusher goes after the QB.', '6th defender: drops to the middle hook, as the middle LB does in FirstDown\'s 7v7 Cover 2.'],
+      pro: 'Covers both sidelines and the deep ball.', con: 'Short throws over the middle. The rusher can peel back to help on the center.' },
+    { id: 'c3-6', n: 6, name: 'Cover 3', src: 'nfldef', also: 'fd7', ref: 'Cover 3',
+      d: [dz('U', -6, 5, ['hook', -6.4, 7.5, 4.6, 2.7]), dz('U', 6, 5, ['hook', 6.4, 7.5, 4.6, 2.7]),
+        dz('S', -10, 10, ['deep', -10.8, 17.5, 5.2, 5]), dz('S', 0, 10.5, ['deep', 0, 18.5, 5.2, 5]), dz('S', 10, 10, ['deep', 10.8, 17.5, 5.2, 5]),
+        dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Two defenders start 5 yards off and sink into the middle of each half, from about 5 to 10 yards (slants, ins, outs).', 'Three defenders start around 10 yards and each take a deep third.', 'NFL FLAG plays this 5-on-5 with no rusher. Our 6th defender rushes, as in FirstDown\'s 7v7 Cover 3.'],
+      pro: 'Good for keeping the offense from getting a first down. Safeties keep everyone in front of them.', con: null },
+    { id: 'c4-6', n: 6, name: 'Cover 4', src: 'nfldef', ref: 'Cover 4',
+      d: [dz('S', -12, 10, ['deep', -12.4, 16.5, 3.8, 5.2]), dz('S', -4.2, 10, ['deep', -4.2, 17.5, 3.8, 5.2]), dz('S', 4.2, 10, ['deep', 4.2, 17.5, 3.8, 5.2]), dz('S', 12, 10, ['deep', 12.4, 16.5, 3.8, 5.2]),
+        dz('M', 0, 5, ['hook', 0, 6.8, 4.4, 2.6]), dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Four defenders line up 10 yards off and each take a deep quarter of the field.', 'One rusher goes after the QB and can help underneath.', '6th defender: plays the middle hook underneath.'],
+      pro: 'Excellent against deep throws, or when the offense needs a big play late.', con: 'Short yardage near the line of scrimmage is open.' },
+    { id: 'z42-6', n: 6, name: '4-2 Zone', src: 'fd6', ref: '4-2 zone',
+      d: [dz('F', -12, 4, ['flat', -12.6, 4.4, 3.4, 2.6]), dz('H', -4.5, 5, ['hook', -4.8, 6.8, 3.6, 2.6]), dz('H', 4.5, 5, ['hook', 4.8, 6.8, 3.6, 2.6]), dz('F', 12, 4, ['flat', 12.6, 4.4, 3.4, 2.6]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2])],
+      text: ['A 6v6 zone with four underneath defenders and two deep safeties, and no rusher.', 'FirstDown PlayBook\'s answers to it are worth knowing: three verticals against the two safeties, or five receivers flooding underneath.'],
+      pro: null, con: null },
+    { id: 'c2-7', n: 7, name: 'Cover 2 (1-4-2)', src: 'fd7', also: 'nfldef', ref: '1-4-2 Base',
+      d: [dz('LB', -10.5, 4, ['curl', -11, 5.6, 3.8, 2.8]), dz('LB', 10.5, 4, ['curl', 11, 5.6, 3.8, 2.8]),
+        dz('M', -1.4, 5, ['hook', -4.6, 7.6, 3.4, 2.6]), dz('D', 2.8, 2.4, ['hook', 4.6, 7.6, 3.4, 2.6]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2]), dz('R', -2.8, 2.4, null, { rush: 1 })],
+      text: ['Outside linebackers take the curl/flat on each side.', 'Middle linebacker and one dropping rusher take the hook/curl zones.', 'Two safeties split the deep field in halves, and one defender rushes.'],
+      pro: 'One of the simplest, most effective 7v7 defenses. A good first zone because it teaches zone responsibilities.', con: null },
+    { id: 'c3-7', n: 7, name: 'Cover 3 (1-3-3)', src: 'fd7', also: 'nfldef', ref: '1-3-3 (2 deep disguise)',
+      d: [dz('LB', -10.5, 4, ['curl', -11, 5.6, 3.8, 2.8]), dz('LB', 10.5, 4, ['curl', 11, 5.6, 3.8, 2.8]),
+        dz('D', 2.8, 2.4, ['hook', 0, 7.4, 4, 2.6]),
+        dz('S', -9.5, 10, ['deep', -10.8, 17.5, 5.2, 5]), dz('M', 0, 9, ['deep', 0, 18.5, 5.2, 5]), dz('S', 9.5, 10, ['deep', 10.8, 17.5, 5.2, 5]),
+        dz('R', -2.8, 2.4, null, { rush: 1 })],
+      text: ['Shows two deep before the snap. At the snap, the middle defender opens to the deep middle third.', 'Safeties play the outside thirds.', 'One rusher, and one dropping rusher takes the middle hook. Outside linebackers take the curl/flat.'],
+      pro: null, con: null },
+    { id: 'c4-7', n: 7, name: 'Cover 4', src: 'nfldef', ref: 'Cover 4',
+      d: [dz('S', -12, 10, ['deep', -12.4, 16.5, 3.8, 5.2]), dz('S', -4.2, 10, ['deep', -4.2, 17.5, 3.8, 5.2]), dz('S', 4.2, 10, ['deep', 4.2, 17.5, 3.8, 5.2]), dz('S', 12, 10, ['deep', 12.4, 16.5, 3.8, 5.2]),
+        dz('H', -4.5, 5, ['hook', -4.8, 6.8, 3.6, 2.6]), dz('H', 4.5, 5, ['hook', 4.8, 6.8, 3.6, 2.6]), dz('R', 2.8, 2.4, null, { rush: 1 })],
+      text: ['Four defenders line up 10 yards off and each take a deep quarter.', 'One rusher goes after the QB.', 'Extra defenders (6th and 7th): split the underneath hooks.'],
+      pro: 'Excellent against deep throws, or when the offense needs a big play late.', con: 'Short yardage near the line of scrimmage is open.' },
+    { id: 'z232-7', n: 7, name: '2-3-2 Pressure Zone', src: 'fd7', ref: '2-3-2 Pressure (2 shell)',
+      d: [dz('R', -2.8, 2.4, null, { rush: 1 }), dz('R', 2.8, 2.4, null, { rush: 1 }),
+        dz('LB', -10.5, 4, ['curl', -11, 5.4, 3.8, 2.8]), dz('M', 0, 5, ['hook', 0, 7.2, 4, 2.6]), dz('LB', 10.5, 4, ['curl', 11, 5.4, 3.8, 2.8]),
+        dz('S', -7, 10, ['deep', -8, 18, 7.4, 5.2]), dz('S', 7, 10, ['deep', 8, 18, 7.4, 5.2])],
+      text: ['Two rushers, one off each edge.', 'Three underneath zone defenders.', 'Two deep safeties split the field in halves.'],
+      pro: null, con: null },
+  ];
+
+  // ---------- drawing ----------
+  const W = 480, H = 330, LOS = 236;
+  const sx = (x) => 240 + x * 14;
+  const sy = (y) => (y >= 0 ? (y <= 10 ? LOS - y * 11 : LOS - 110 - (y - 10) * 7) : LOS - y * 10);
+  const r1 = (v) => Math.round(v * 10) / 10;
+  const COL = { norm: '#E3C04F', primary: '#EF4D5E', add: '#4C8DF6', decoy: '#8C8250', motion: '#D9DEE7', zone: { deep: '#3B82F6', hook: '#FACC15', flat: '#22D3EE', curl: '#A855F7' } };
+
+  function seg(P, curve) {
+    if (!curve || P.length < 3) return { d: 'L' + P.slice(1).map((p) => `${r1(p[0])} ${r1(p[1])}`).join(' L'), tail: P[P.length - 2] };
+    let d = ''; let tail = P[P.length - 2];
+    for (let i = 0; i < P.length - 1; i++) {
+      const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+      const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += ` C${r1(c1[0])} ${r1(c1[1])} ${r1(c2[0])} ${r1(c2[1])} ${r1(p2[0])} ${r1(p2[1])}`;
+      if (i === P.length - 2 && Math.hypot(p2[0] - c2[0], p2[1] - c2[1]) > 0.5) tail = c2;
+    }
+    return { d, tail };
+  }
+  function arrow(tail, tip, color, s = 9) {
+    const a = Math.atan2(tip[1] - tail[1], tip[0] - tail[0]);
+    const b = [tip[0] - Math.cos(a) * s, tip[1] - Math.sin(a) * s];
+    const w = s * 0.55, n = [-Math.sin(a) * w, Math.cos(a) * w];
+    return `<path d="M${r1(tip[0] + Math.cos(a) * 2)} ${r1(tip[1] + Math.sin(a) * 2)} L${r1(b[0] + n[0])} ${r1(b[1] + n[1])} L${r1(b[0] - n[0])} ${r1(b[1] - n[1])} Z" fill="${color}"/>`;
+  }
+  function drawRoute(r, byId) {
+    const kind = r.k || 'route';
+    const color = kind === 'motion' || kind === 'pitch' || kind === 'qb' ? COL.motion : COL[r.role] || COL.norm;
+    const who = byId[r.p];
+    if (kind === 'stay') {
+      if (!who) return '';
+      const x = sx(who.x), y = sy(who.y) - 13;
+      return `<path d="M${r1(x)} ${r1(y + 2)} L${r1(x)} ${r1(y - 7)} M${r1(x - 6)} ${r1(y - 7)} L${r1(x + 6)} ${r1(y - 7)}" stroke="${color}" stroke-width="3" stroke-linecap="round" fill="none"/>`;
+    }
+    const parts = r.parts || [{ pts: r.pts, c: r.c }];
+    let d = '', tail = null, tip = null;
+    parts.forEach((pt, i) => {
+      const P = pt.pts.map(([x, y]) => [sx(x), sy(y)]);
+      if (i === 0) d += `M${r1(P[0][0])} ${r1(P[0][1])}`;
+      const s = seg(P, pt.c); d += ' ' + s.d; tail = s.tail; tip = P[P.length - 1];
+    });
+    const dash = kind === 'motion' ? ' stroke-dasharray="6 5"' : kind === 'pitch' || kind === 'qb' ? ' stroke-dasharray="3 4"' : '';
+    const sw = kind === 'route' || kind === 'now' ? 3.2 : 2.2;
+    let out = `<path d="${d}" stroke="${color}" stroke-width="${sw}" fill="none" stroke-linecap="round" stroke-linejoin="round"${dash}/>`;
+    if (kind === 'now') {
+      out += `<path d="M${r1(tip[0] - 6)} ${r1(tip[1])} L${r1(tip[0] + 6)} ${r1(tip[1])}" stroke="${color}" stroke-width="3.2" stroke-linecap="round"/>`;
+    } else if (kind !== 'motion') out += arrow(tail, tip, color, kind === 'route' ? 10 : 8);
+    return out;
+  }
+  function drawPlayer(p) {
+    const x = r1(sx(p.x)), y = r1(sy(p.y));
+    const ring = p.add ? ` stroke="${COL.add}" stroke-width="3"` : ' stroke="#0f1318" stroke-width="1.5"';
+    const lab = p.id === 'WR2' ? 'WR' : p.id;
+    const fs = lab.length >= 3 ? 7.8 : lab.length === 2 ? 9.2 : 12;
+    const shape = p.id === 'C' ? `<rect x="${r1(x - 10)}" y="${r1(y - 10)}" width="20" height="20" rx="2.5" fill="#fff"${ring}/>` : `<circle cx="${x}" cy="${y}" r="11" fill="#fff"${ring}/>`;
+    return `${shape}<text x="${x}" y="${r1(y + fs * 0.36)}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="#11161d" font-family="system-ui,sans-serif">${lab}</text>`;
+  }
+  function field(inner, label) {
+    const marks = [5, 10, 15, 20].map((yd) => `<line x1="10" x2="${W - 10}" y1="${r1(sy(yd))}" y2="${r1(sy(yd))}" stroke="#ffffff" stroke-opacity="${yd === 10 || yd === 20 ? 0.09 : 0.05}"/><text x="${W - 12}" y="${r1(sy(yd) - 3)}" text-anchor="end" font-size="9" fill="#ffffff" fill-opacity=".28" font-family="system-ui,sans-serif">${yd}</text>`).join('');
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label}"><rect width="${W}" height="${H}" fill="#16191e"/>${marks}<line x1="10" x2="${W - 10}" y1="${LOS}" y2="${LOS}" stroke="#ffffff" stroke-opacity=".16" stroke-dasharray="2 5"/>${inner}</svg>`;
+  }
+  // Players and routes for an offense on the field: 5 / 6 / 7 players depending on the play's source.
+  function offenseFor(play, n) {
+    const base = { players: play.players.slice(), routes: play.routes.slice(), note: '', size: play.players.length };
+    const add = n >= 7 ? play.add7 : n >= 6 ? play.add6 : null;
+    if (n >= 6 && play.players.length === 6) { base.note = n >= 7 ? (play.add7 && play.add7.none) || '' : ''; return base; }
+    if (add && add.players) { base.players.push(...add.players); base.routes.push(...add.routes); base.note = add.text; }
+    else if (add && add.none) base.note = add.none;
+    base.size = base.players.length;
+    return base;
+  }
+  function offenseSVG(play, n = 6) {
+    const o = offenseFor(play, n); const byId = Object.fromEntries(o.players.map((p) => [p.id, p]));
+    const body = o.routes.map((r) => drawRoute(r, byId)).join('') + o.players.map(drawPlayer).join('');
+    return field(body, play.name);
+  }
+  function zoneShape(z) {
+    const [type, cx, cy, rx, ry] = z; const c = COL.zone[type];
+    const px = sx(cx), py = sy(cy), prx = rx * 14, pry = Math.abs(sy(cy - ry) - sy(cy + ry)) / 2;
+    return `<ellipse cx="${r1(px)}" cy="${r1(py)}" rx="${r1(prx)}" ry="${r1(pry)}" fill="${c}" fill-opacity=".22" stroke="${c}" stroke-opacity=".85" stroke-width="1.6"/>`;
+  }
+  function defenseSVG(cov) {
+    const ghost = [[-12, 0], [-6, -1], [6, -1], [12, 0]].map(([x, y]) => `<circle cx="${r1(sx(x))}" cy="${r1(sy(y))}" r="7" fill="#fff" fill-opacity=".12"/>`).join('') +
+      `<rect x="${r1(sx(0) - 6.5)}" y="${r1(sy(0) - 6.5)}" width="13" height="13" rx="2" fill="#fff" fill-opacity=".18"/><circle cx="${r1(sx(0))}" cy="${r1(sy(-5))}" r="7" fill="#fff" fill-opacity=".18"/>`;
+    let zones = '', lines = '', marks = '';
+    for (const d of cov.d) {
+      const x = sx(d.x), y = sy(d.y);
+      if (d.rush) {
+        const tip = [sx(0) + (d.x > 0 ? 9 : -9) * 0.5, sy(-5) - 10];
+        lines += `<path d="M${r1(x)} ${r1(y)} L${r1(tip[0])} ${r1(tip[1])}" stroke="${COL.primary}" stroke-width="3" fill="none" stroke-linecap="round"/>` + arrow([x, y], tip, COL.primary, 10);
+      } else if (d.zone) {
+        zones += zoneShape(d.zone);
+        lines += `<line x1="${r1(x)}" y1="${r1(y)}" x2="${r1(sx(d.zone[1]))}" y2="${r1(sy(d.zone[2]))}" stroke="${COL.zone[d.zone[0]]}" stroke-width="1.8" stroke-opacity=".9"/>`;
+      }
+      marks += `<path d="M${r1(x)} ${r1(y + 14)} L${r1(x - 14)} ${r1(y - 9)} L${r1(x + 14)} ${r1(y - 9)} Z" fill="${d.rush ? '#ffd5d9' : '#fff'}" stroke="#0f1318" stroke-width="1.4" stroke-linejoin="round"/><text x="${r1(x)}" y="${r1(y + 1.6)}" text-anchor="middle" font-size="${d.id.length > 1 ? 9.4 : 12}" font-weight="800" fill="#11161d" font-family="system-ui,sans-serif">${d.id}</text>`;
+    }
+    return field(ghost + zones + lines + marks, cov.name);
+  }
+  return { SOURCES, OFFENSE, DEFENSE, offenseFor, offenseSVG, defenseSVG, COL };
+})();
+if (typeof module !== 'undefined') module.exports = PB;
+
+(() => {
+  const C = Core;
+  const $ = (s, el = document) => el.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const money = (v) => { v = Math.round((Number(v) || 0) * 100) / 100; return (v < 0 ? '-$' : '$') + Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
+  const sgn = (v) => (v > 0 ? '+' + v : String(v));
+  const mem = new Map();
+  const LS = {
+    get(k) { try { const v = localStorage.getItem(k); return v == null ? null : JSON.parse(v); } catch { return mem.has(k) ? mem.get(k) : null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { mem.set(k, v); } },
+    del(k) { try { localStorage.removeItem(k); } catch { mem.delete(k); } },
+  };
+  const TEAM_COLORS = [['Pumpkin', '#F28C28'], ['Cranberry', '#C0392B'], ['Teal', '#2EC4B6'], ['Royal', '#3B6FD8'], ['Forest', '#2E8B57'], ['Gold', '#E6B325'], ['Plum', '#8E44AD'], ['Slate', '#7F8C8D']];
+  const TABS = [['players', 'Players'], ['draft', 'Draft'], ['teams', 'Teams'], ['plays', 'Playbook'], ['rules', 'Rules'], ['book', 'Sportsbook'], ['score', 'Scoreboard']];
+
+  // ---------- backend ----------
+  class LocalStore {
+    constructor(ns) { this.ns = ns; }
+    raw(k) { const v = LS.get(this.ns + k); return v; }
+    async get(k, { type } = {}) { const e = this.raw(k); if (!e) return null; return type === 'json' ? JSON.parse(e.v) : e.v; }
+    async getWithMetadata(k, { type, etag } = {}) { const e = this.raw(k); if (!e) return null; if (etag && etag === e.etag) return { data: null, etag: e.etag, metadata: {} }; return { data: type === 'json' ? JSON.parse(e.v) : e.v, etag: e.etag, metadata: {} }; }
+    async setJSON(k, val, o = {}) {
+      const e = this.raw(k);
+      if (o.onlyIfNew && e) return { modified: false };
+      if (o.onlyIfMatch && (!e || e.etag !== o.onlyIfMatch)) return { modified: false };
+      const n = (LS.get(this.ns + '#n') || 0) + 1; LS.set(this.ns + '#n', n); const etag = '"' + n + '"';
+      LS.set(this.ns + k, { v: JSON.stringify(val), etag }); const keys = new Set(LS.get(this.ns + '#keys') || []); keys.add(k); LS.set(this.ns + '#keys', [...keys]);
+      return { modified: true, etag };
+    }
+    async delete(k) { LS.del(this.ns + k); const keys = new Set(LS.get(this.ns + '#keys') || []); keys.delete(k); LS.set(this.ns + '#keys', [...keys]); }
+    async list({ prefix = '' } = {}) { return { blobs: (LS.get(this.ns + '#keys') || []).filter((k) => k.startsWith(prefix)).map((k) => ({ key: k, etag: this.raw(k)?.etag })), directories: [] }; }
+  }
+  const demo = window.TB_DEMO ? new LocalStore('tb-demo:') : null;
+  async function call(method, path, body) {
+    let res;
+    if (demo) res = await C.handle(new Request('http://demo.local/api' + path, method === 'GET' ? {} : { method, body: JSON.stringify(body || {}) }), demo);
+    else res = await fetch('/api' + path, method === 'GET' ? { cache: 'no-store' } : { method, headers: { 'content-type': 'application/json' }, body: JSON.stringify(body || {}) });
+    let j; try { j = await res.json(); } catch { j = { error: 'Server error (' + res.status + ')' }; }
+    if (!res.ok || j.error) throw Object.assign(new Error(j.error || 'Request failed'), { status: res.status });
+    return j;
+  }
+
+  // ---------- state ----------
+  const S = {
+    snap: null, etag: null, hasCommish: false, offline: false, tab: LS.get('tb-tab') || 'players', pb: Object.assign({ side: 'off', cat: 'all', n: 6 }, LS.get('tb-pb') || {}), pin: LS.get('tb-pin'), me: LS.get('tb-me'),
+    filter: 'All', sort: 'ovr', slip: null, modal: null, evq: LS.get('tb-evq') || 1, ev: { type: 'catchTD', playerId: '', team: 'A', pts: '' },
+    draftTeam: null, linesDraft: null, rDraft: null, bDraft: null, bDraft0: null, dirty: false, booted: false,
+  };
+  let stats = null, ledger = {};
+  function derive() {
+    stats = C.computeStats(S.snap); ledger = C.ledger(S.snap);
+    if (S.me && !(S.snap.bettors || []).some((b) => b.id === S.me.id)) { S.me = null; LS.del('tb-me'); }
+  }
+  async function refresh(force) {
+    try {
+      const j = await call('GET', '/state' + (S.etag && !force ? '?etag=' + encodeURIComponent(S.etag) : ''));
+      const wasOffline = S.offline; S.offline = false; S.hasCommish = j.hasCommish;
+      if (!j.unchanged) { S.snap = j.state; S.etag = j.etag; derive(); render(); }
+      else if (wasOffline || !S.booted) render();
+      S.booted = true;
+    } catch (e) { S.offline = true; if (!S.snap) $('#app').innerHTML = `<div class="banner err">Can't reach the server: ${esc(e.message)}. Retrying…</div>`; else renderHeader(); }
+  }
+  const cfg = () => S.snap.config;
+  const game = () => S.snap.game || { status: 'pre' };
+  const tcol = (t) => cfg().teams?.[t]?.color || (t === 'A' ? '#F28C28' : '#2EC4B6');
+  const tname = (t) => C.teamName(cfg(), t);
+  const initials = (n) => { const w = String(n).trim().split(/\s+/); return (w.length > 1 ? w[0][0] + w[1][0] : String(n).slice(0, 2)).toUpperCase(); };
+
+  // ---------- ui helpers ----------
+  function toast(msg, kind = '') {
+    const r = $('#toast-root'); r.innerHTML = `<div class="toast ${kind}">${esc(msg)}</div>`;
+    clearTimeout(toast.t); toast.t = setTimeout(() => (r.innerHTML = ''), kind === 'err' ? 4200 : 2600);
+  }
+  function busy(el, on) { if (el) { el.disabled = on; el.style.opacity = on ? 0.6 : ''; } }
+  async function act(el, fn) { busy(el, true); try { return await fn(); } catch (e) { toast(e.message, 'err'); if (e.status === 409) await refresh(true); } finally { busy(el, false); } }
+  async function saveConfig(mut, okMsg) {
+    const c = structuredClone(cfg()); if (mut(c) === false) return false;
+    await call('POST', '/config', { pin: S.pin, config: c, baseEtag: S.snap.configEtag });
+    await refresh(true); if (okMsg) toast(okMsg, 'ok'); return true;
+  }
+  async function setGame(patch, okMsg) { await call('POST', '/game', { pin: S.pin, game: patch }); await refresh(true); if (okMsg) toast(okMsg, 'ok'); }
+  const isCommish = () => !!S.pin;
+
+  // ---------- render ----------
+  function render() {
+    if (!S.snap) return;
+    const ae = document.activeElement;
+    if (S.booted && ae && ae.closest && ae.closest('#app, #slip-root') && /INPUT|SELECT|TEXTAREA/.test(ae.tagName)) { S.dirty = true; renderHeader(); return; }
+    S.dirty = false;
+    renderHeader();
+    const views = { players: renderPlayers, draft: renderDraft, teams: renderTeams, plays: renderPlays, rules: renderRules, book: renderBook, score: renderScore };
+    $('#app').innerHTML = (S.offline ? '<div class="banner err">Connection lost. Showing the last update; retrying…</div>' : '') + (window.TB_DEMO ? '<div class="banner">Demo mode: everything saves on this device only. Deploy to Netlify for the shared version.</div>' : '') + (views[S.tab] || renderPlayers)();
+    renderSlip();
+  }
+  function renderHeader() {
+    $('#tabs').innerHTML = TABS.map(([k, l]) => `<button class="tab ${S.tab === k ? 'on' : ''}" data-act="tab" data-tab="${k}">${l}</button>`).join('');
+    const y = cfg()?.settings?.year; if (y) $('#yr').textContent = "'" + String(y).slice(-2);
+    const me = S.me && ledger[S.me.id];
+    $('#hright').innerHTML = (me ? `<button class="chip" data-act="tab" data-tab="book">${esc(me.name)} · <b>${money(me.available)}</b></button>` : '') +
+      (isCommish() ? `<button class="chip on" data-act="commish-menu">Commish</button>` : `<button class="chip" data-act="commish">${S.hasCommish ? 'Commish' : 'Set commish PIN'}</button>`);
+  }
+
+  // The first ratings update saves everyone's pregame ratings, so cards can show ▲▼ changes.
+  const preOf = (p) => cfg().pregame?.players?.[p.id] || null;
+  const dOvr = (p) => { const b = preOf(p); return b ? C.ovr(p) - b.ovr : 0; };
+  const arrow = (d, cls = 'dlt') => (d ? `<span class="${cls} ${d > 0 ? 'up' : 'dn'}" title="Change since pregame">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</span>` : '');
+  function card(p, o = {}) {
+    const c = cfg(); const ov = C.ovr(p); const t = C.teamOf(c, p.id); const cap = t && c.teams[t].captainId === p.id;
+    const attrs = C.ATTRS.map((a) => `<div class="at"><span>${a}</span><span class="${p.ratings[a] >= 90 ? 'hi' : ''}">${p.ratings[a]}</span></div>`).join('');
+    const base = p.comps?.base?.name;
+    return `<div class="pc ${C.tier(ov)}" role="button" tabindex="0" data-act="${o.act || 'open-player'}" data-id="${esc(p.id)}" style="--tc:${t ? tcol(t) : '#2a3550'}">
+      <div class="top"><div class="ovr">${ov}${arrow(dOvr(p), 'dl')}<small>OVR</small></div><div class="pos">${esc(p.pos || '—')}</div><div class="num">${p.num !== '' && p.num != null ? '#' + esc(p.num) : ''}</div></div>
+      ${cap ? '<div class="cbadge" title="Captain">C</div>' : ''}
+      <div class="av">${esc(initials(p.name))}</div>
+      <div class="nm">${esc(p.name)}</div>
+      <div class="tm">${t ? esc(tname(t)) + (cap ? ' · Captain' : '') : 'Undrafted'}</div>
+      <div class="attrs">${attrs}</div>
+      <div class="foot"><span>DEF ${C.def(p)}</span><span>${base ? 'Comp: ' + esc(base) : ''}</span></div>
+    </div>`;
+  }
+
+  // ----- players -----
+  function renderPlayers() {
+    if (S.rDraft && isCommish()) return ratingsEditor();
+    const c = cfg(); const R = C.rosters(c); const onTeam = new Set([...R.A, ...R.B]);
+    let ps = c.players.filter((p) => S.filter === 'All' || (S.filter === 'Undrafted' ? !onTeam.has(p.id) : p.pos === S.filter));
+    const key = S.sort;
+    ps.sort((a, b) => key === 'name' ? a.name.localeCompare(b.name) : key === 'ovr' ? C.ovr(b) - C.ovr(a) : key === 'def' ? C.def(b) - C.def(a) : (b.ratings[key] || 0) - (a.ratings[key] || 0));
+    const qbs = c.players.filter((p) => p.pos === 'QB').length; const nopos = c.players.filter((p) => !p.pos).length;
+    let warn = '';
+    if (isCommish() && (qbs !== 2 || nopos)) warn = `<div class="banner">${nopos ? nopos + ' player' + (nopos > 1 ? 's' : '') + ' still need a position. ' : ''}${qbs !== 2 ? 'There ' + (qbs === 1 ? 'is 1 QB' : 'are ' + qbs + ' QBs') + '; each team needs exactly one.' : ''}</div>`;
+    const capSel = (t) => `<label class="fl">${t === 'A' ? 'Team 1' : 'Team 2'} captain<select data-change="captain" data-team="${t}"><option value="">Not set</option>${c.players.map((p) => `<option value="${esc(p.id)}" ${c.teams[t].captainId === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select></label>`;
+    return `${warn}
+      ${isCommish() ? `<div class="panel" style="margin-top:14px"><div class="row" style="align-items:flex-end">${capSel('A')}${capSel('B')}<span class="grow"></span><button class="btn sm gold" data-act="rate-open">Update ratings</button><button class="btn sm" data-act="add-player">Add player</button></div><div class="tiny muted" style="margin-top:8px">Captains start on their team and don't get drafted. Update ratings puts every player's attributes on one screen; tap a card to edit one player's position, number, ratings and comps.</div></div>` : ''}
+      <h2 class="sec">Players <span class="sub">Tap a card for full ratings and NFL comps</span></h2>
+      <div class="row" style="margin-bottom:14px">
+        <div class="pills">${['All', 'QB', 'WR', 'TE', 'Undrafted'].map((f) => `<button class="pill ${S.filter === f ? 'on' : ''}" data-act="filter" data-f="${f}">${f}</button>`).join('')}</div>
+        <span class="grow"></span>
+        <label class="small muted">Sort <select data-change="sort">${[['ovr', 'OVR'], ['def', 'DEF'], ...C.ATTRS.map((a) => [a, a]), ['name', 'Name']].map(([v, l]) => `<option value="${v}" ${S.sort === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+      </div>
+      ${ps.length ? `<div class="grid">${ps.map((p) => card(p)).join('')}</div>` : '<div class="empty">No players match.</div>'}`;
+  }
+
+  function playerModal(id, edit) {
+    const c = cfg(); const p = C.player(c, id); if (!p) return;
+    const w = C.WEIGHTS[p.pos]; const pre = preOf(p); const dO = dOvr(p);
+    const fmla = w ? Object.entries(w).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${Math.round(v * 100)}% ${k}`).join(', ') : 'Set a position to use the position formula';
+    const barColor = (v) => (v >= 85 ? 'var(--green)' : v >= 75 ? 'var(--gold)' : v >= 65 ? 'var(--accent)' : 'var(--red)');
+    let body;
+    if (!edit) {
+      const comp = (k, l) => { const x = p.comps?.[k] || {}; return `<div class="comp ${k}"><div class="lbl">${l}</div><b>${esc(x.name || 'TBD')}</b><div class="small muted">${esc(x.note || '')}</div></div>`; };
+      body = `<div class="mgrid"><div>${card(p, { act: 'noop' })}</div><div>
+        <h3 style="font-size:22px;margin-bottom:2px">${esc(p.name)}</h3>
+        <div class="muted small">${esc(p.pos || 'No position')} ${p.num !== '' ? '· #' + esc(p.num) : ''} · OVR ${C.ovr(p)}${p.ovrOverride ? ' (set by commish)' : ''}${pre ? ` (pregame ${pre.ovr}${dO ? ' ' + arrow(dO) : ''})` : ''} · DEF ${C.def(p)}</div>
+        <div style="margin-top:10px">${C.ATTRS.map((a) => { const da = pre ? p.ratings[a] - (pre.ratings?.[a] ?? p.ratings[a]) : 0; return `<div class="attrrow${pre ? ' d4' : ''}"><span>${C.ATTR_NAMES[a]} <span class="muted tiny">${a}</span></span><div class="bar"><i style="width:${p.ratings[a]}%;background:${barColor(p.ratings[a])}"></i></div><b>${p.ratings[a]}</b>${pre ? `<span class="dlt ${da > 0 ? 'up' : 'dn'}">${da ? (da > 0 ? '+' : '−') + Math.abs(da) : ''}</span>` : ''}</div>`; }).join('')}</div>
+        <div class="tiny muted" style="margin-top:6px">OVR (Madden-style): ${esc(fmla)}, then stretched ${C.STRETCH}× around ${C.PIVOT}. DEF: 45% COV, 18% SPD, 15% AGI, 12% ACC, 10% PWR.</div>
+        <h3 style="margin-top:14px">NFL comps</h3>
+        <div class="comps">${comp('worst', 'Worst case')}${comp('base', 'Base case')}${comp('best', 'Best case')}</div>
+        ${isCommish() ? `<div class="row" style="margin-top:14px"><button class="btn" data-act="edit-player" data-id="${esc(p.id)}">Edit player</button></div>` : ''}
+      </div></div>`;
+    } else {
+      const compF = (k, l) => `<div class="comp ${k}"><div class="lbl">${l}</div><input data-f="comp-${k}-name" value="${esc(p.comps?.[k]?.name || '')}" placeholder="NFL player" style="width:100%;margin:6px 0"><textarea data-f="comp-${k}-note" rows="2" placeholder="Why (roast welcome)" style="width:100%">${esc(p.comps?.[k]?.note || '')}</textarea></div>`;
+      body = `<h3 style="font-size:20px">Edit ${esc(p.name)}</h3>
+        <div class="form" style="margin-top:10px">
+          <label>Name<input data-f="name" value="${esc(p.name)}"></label>
+          <label>Jersey #<input data-f="num" value="${esc(p.num ?? '')}" inputmode="numeric"></label>
+          <label>Position<select data-f="pos"><option value="">—</option>${C.POSITIONS.map((x) => `<option ${p.pos === x ? 'selected' : ''}>${x}</option>`).join('')}</select></label>
+          <label>OVR override<input data-f="ovr" type="number" min="1" max="99" value="${p.ovrOverride || ''}" placeholder="Auto: ${C.ovr({ ...p, ovrOverride: null })}"></label>
+        </div>
+        <div class="form" style="margin-top:10px">${C.ATTRS.map((a) => `<label>${C.ATTR_NAMES[a]}<input data-f="r-${a}" type="number" min="1" max="99" value="${p.ratings[a]}"></label>`).join('')}</div>
+        <h3 style="margin-top:14px">NFL comps</h3>
+        <div class="comps">${compF('worst', 'Worst case')}${compF('base', 'Base case')}${compF('best', 'Best case')}</div>
+        <div class="row" style="margin-top:14px"><button class="btn pri" data-act="save-player" data-id="${esc(p.id)}">Save</button><button class="btn ghost" data-act="open-player" data-id="${esc(p.id)}">Cancel</button><span class="grow"></span><button class="btn danger sm" data-act="delete-player" data-id="${esc(p.id)}">Remove player</button></div>`;
+    }
+    openModal(body);
+  }
+
+  // ----- playbook (plays and coverages come from src/plays.js) -----
+  const pbSeg = (act, cur, opts, extra = '') => `<div class="seg">${opts.map(([v, l]) => `<button class="${String(cur) === String(v) ? 'on' : ''}" data-act="${act}" data-v="${v}"${extra}>${l}</button>`).join('')}</div>`;
+  const pbSrc = (k) => PB.SOURCES[k];
+  function pbPlayCard(p, n) {
+    const o = PB.offenseFor(p, n);
+    const tag = n === 7 && o.size < 7 ? '<span class="pbtag">6v6 only</span>' : '';
+    return `<div class="pbcard" role="button" tabindex="0" data-act="open-play" data-id="${p.id}"><div class="pbart">${PB.offenseSVG(p, n)}</div><div class="pbbar">${esc(p.name)}</div>
+      <div class="pbmeta"><span class="pbcat ${p.cat}">${p.cat}</span>${tag}<span class="muted pbform">${esc(p.form)}</span><span class="grow"></span><span class="muted">${esc(pbSrc(p.src).short)}</span></div></div>`;
+  }
+  function pbCovCard(d) {
+    const rush = d.d.filter((x) => x.rush).length;
+    return `<div class="pbcard" role="button" tabindex="0" data-act="open-cov" data-id="${d.id}"><div class="pbart">${PB.defenseSVG(d)}</div><div class="pbbar">${esc(d.name)}</div>
+      <div class="pbmeta"><span class="pbcat zone">Zone</span><span class="muted">${d.n} defenders · ${rush ? rush + ' rusher' + (rush > 1 ? 's' : '') : 'no rusher'}</span><span class="grow"></span><span class="muted">${esc(pbSrc(d.src).short)}</span></div></div>`;
+  }
+  function renderPlays() {
+    const pb = S.pb; const off = pb.side !== 'def';
+    const cnt = (c) => PB.OFFENSE.filter((p) => c === 'all' || p.cat === c).length;
+    const list = off ? PB.OFFENSE.filter((p) => pb.cat === 'all' || p.cat === pb.cat) : PB.DEFENSE.filter((d) => d.n === pb.n);
+    const key = (c, l, cls = '') => `<span><i class="${cls}" style="background:${c}"></i>${l}</span>`;
+    const legend = off
+      ? key(PB.COL.norm, 'Route') + key(PB.COL.primary, 'First read / target') + key(PB.COL.decoy, 'Decoy / clear-out') + key(PB.COL.add, pb.n === 7 ? '6th & 7th players' : '6th player') + key('transparent', 'Motion, pitch, QB path', 'dash')
+      : key(PB.COL.zone.deep, 'Deep zone') + key(PB.COL.zone.hook, 'Hook / curl') + key(PB.COL.zone.flat, 'Flat') + key(PB.COL.zone.curl, 'Curl / flat') + key(PB.COL.primary, 'Rusher');
+    const used = off ? ['ffp', 'fa', 'fd', 'nfl'] : ['nfldef', 'fd7', 'fd6'];
+    return `<h2 class="sec">Playbook <span class="sub">${off ? 'Pass plays from published flag football playbooks. Tap a play for every assignment.' : 'Zone coverages from NFL FLAG and FirstDown PlayBook. Tap one for each defender\'s job.'}</span></h2>
+      <div class="pbctl">${pbSeg('pb-side', off ? 'off' : 'def', [['off', 'Offense'], ['def', 'Defense']])}
+        ${off ? pbSeg('pb-cat', pb.cat, [['all', `All ${cnt('all')}`], ['short', `Short ${cnt('short')}`], ['medium', `Medium ${cnt('medium')}`], ['long', `Long ${cnt('long')}`]]) : ''}
+        ${pbSeg('pb-n', pb.n, [[6, '6 per side'], [7, '7 per side']])}</div>
+      <div class="pbkey">${legend}</div>
+      <div class="pbgrid">${list.map((x) => (off ? pbPlayCard(x, pb.n) : pbCovCard(x))).join('')}</div>
+      <p class="tiny muted" style="margin-top:16px">Sources: ${used.map((k) => `<a href="${pbSrc(k).url}" target="_blank" rel="noopener">${esc(pbSrc(k).name)}</a>`).join(' · ')}</p>`;
+  }
+  function playModal(id) {
+    const p = PB.OFFENSE.find((x) => x.id === id); if (!p) return;
+    const n = S.pb.n; const o = PB.offenseFor(p, n); const src = pbSrc(p.src);
+    openModal(`<div class="pbdetail"><div><div class="pbcard flat"><div class="pbart">${PB.offenseSVG(p, n)}</div><div class="pbbar">${esc(p.name)}</div></div>
+        <div class="row" style="margin-top:10px">${pbSeg('pb-n-modal', n, [[6, '6 per side'], [7, '7 per side']], ` data-id="${p.id}"`)}<span class="small muted">${o.size} players on offense</span></div></div>
+      <div><h3 style="margin-top:4px">${esc(p.form)} &nbsp;<span class="pbcat ${p.cat}">${p.cat}</span></h3>
+        <ul class="pblist">${p.assign.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
+        ${o.note ? `<div class="pbnote"><b>${n} on ${n}:</b> ${esc(o.note)}</div>` : ''}
+        <p class="small" style="margin:12px 0">${esc(p.tip)}</p>
+        <p class="tiny muted">Source: <a href="${src.url}" target="_blank" rel="noopener">${esc(src.name)}</a> (${esc(p.ref)}). ${p.drawn ? esc(p.drawn) : 'Drawn in the source\'s alignment.'}</p></div></div>`);
+  }
+  function covModal(id) {
+    const d = PB.DEFENSE.find((x) => x.id === id); if (!d) return;
+    const src = pbSrc(d.src), also = d.also ? pbSrc(d.also) : null;
+    openModal(`<div class="pbdetail"><div><div class="pbcard flat"><div class="pbart">${PB.defenseSVG(d)}</div><div class="pbbar">${esc(d.name)}</div></div></div>
+      <div><h3 style="margin-top:4px">${d.n} defenders &nbsp;<span class="pbcat zone">Zone</span></h3>
+        <ul class="pblist">${d.text.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+        ${d.pro ? `<p class="small"><b style="color:var(--green)">Strength:</b> ${esc(d.pro)}</p>` : ''}${d.con ? `<p class="small"><b style="color:var(--red)">Weak spot:</b> ${esc(d.con)}</p>` : ''}
+        <p class="tiny muted">Source: <a href="${src.url}" target="_blank" rel="noopener">${esc(src.name)}</a> (${esc(d.ref)})${also ? `; extra defenders follow <a href="${also.url}" target="_blank" rel="noopener">${esc(also.name)}</a>` : ''}.</p></div></div>`);
+  }
+
+  function openModal(html, narrow) {
+    $('#modal-root').innerHTML = `<div class="scrim" data-act="close-modal-bg"><div class="modal ${narrow ? 'narrow' : ''}"><button class="xbtn" data-act="close-modal" aria-label="Close">×</button>${html}</div></div>`;
+    document.body.style.overflow = 'hidden';
+  }
+  function ask(msg, okLabel = 'Confirm', input = false, danger = false) {
+    return new Promise((res) => {
+      openModal(`<h3 style="font-size:18px;text-transform:none;letter-spacing:0;font-family:system-ui">${esc(msg)}</h3>${input ? '<input id="ask-in" style="width:100%;margin-top:10px">' : ''}<div class="row" style="margin-top:16px"><button class="btn ${danger ? 'danger' : 'pri'}" id="ask-ok">${esc(okLabel)}</button><button class="btn ghost" id="ask-cancel">Cancel</button></div>`, true);
+      const inp = $('#ask-in'); if (inp) { inp.focus(); inp.onkeydown = (e) => { if (e.key === 'Enter') $('#ask-ok').click(); }; }
+      $('#ask-ok').onclick = () => { const v = input ? $('#ask-in').value : true; closeModal(); res(v); };
+      $('#ask-cancel').onclick = () => { closeModal(); res(input ? null : false); };
+    });
+  }
+  function closeModal() { $('#modal-root').innerHTML = ''; document.body.style.overflow = ''; if (S.dirty) render(); }
+
+  // ----- draft -----
+  function renderDraft() {
+    const c = cfg(); const d = c.draft; const avail = C.draftable(c).sort((a, b) => C.ovr(b) - C.ovr(a)); const n = d.picks.length;
+    const next = S.draftTeam || C.nextPickTeam(c); const done = !avail.length;
+    const teamPanel = (t) => {
+      const R = C.rosters(c)[t].map((id) => C.player(c, id)).filter(Boolean); const tr = C.teamRatings(c, t);
+      return `<div class="tpanel" style="--tc:${tcol(t)}"><div class="thead"><span class="dot"></span><span class="tn">${esc(tname(t))}</span><span class="grow"></span><span class="small muted">${R.length} players</span></div>
+        <ul class="rlist">${R.map((p) => `<li><span class="posb">${esc(p.pos || '—')}</span><span class="grow">${esc(p.name)}${c.teams[t].captainId === p.id ? ' <span class="tiny muted">(C)</span>' : ''}</span><span class="small muted">${p.num !== '' ? '#' + esc(p.num) : ''}</span><span class="ovrb">${C.ovr(p)}</span></li>`).join('') || '<li class="muted small">No players yet</li>'}</ul>
+        <div class="ratings3"><div><b>${tr.ovr || '—'}</b><span>OVR</span></div><div><b>${tr.off || '—'}</b><span>OFF</span></div><div><b>${tr.def || '—'}</b><span>DEF</span></div></div></div>`;
+    };
+    const capsSet = c.teams.A.captainId && c.teams.B.captainId;
+    return `<h2 class="sec">Draft board <span class="sub">${isCommish() ? 'Enter picks from the group-text draft. Tap a player to draft them.' : 'Results from the draft'}</span></h2>
+      ${!capsSet ? '<div class="banner">Captains aren\'t set yet. ' + (isCommish() ? 'Pick them on the Players tab.' : '') + '</div>' : ''}
+      <div class="clock" style="margin-top:12px;--tc:${tcol(next)}">
+        ${done ? '<div class="big">Draft complete</div>' : `<span class="dot" style="width:16px;height:16px"></span><div><div class="tiny muted" style="letter-spacing:.12em;font-weight:800">PICK ${n + 1} · ROUND ${Math.floor(n / 2) + 1}</div><div class="big">${esc(tname(next))} on the clock</div></div>`}
+        <span class="grow"></span>
+        ${isCommish() ? `<div class="row">${!done ? `<button class="btn sm" data-act="switch-team">Switch team</button>` : ''}<button class="btn sm" data-act="undo-pick" ${n ? '' : 'disabled'}>Undo last pick</button><button class="btn sm danger" data-act="reset-draft" ${n ? '' : 'disabled'}>Reset draft</button></div>` : ''}
+      </div>
+      ${isCommish() ? `<div class="row small" style="margin-top:10px"><label class="muted">Order <select data-change="draft-order"><option value="snake" ${d.order !== 'alternating' ? 'selected' : ''}>Snake</option><option value="alternating" ${d.order === 'alternating' ? 'selected' : ''}>Alternating</option></select></label><label class="muted">First pick <select data-change="draft-first"><option value="A" ${d.first !== 'B' ? 'selected' : ''}>${esc(tname('A'))}</option><option value="B" ${d.first === 'B' ? 'selected' : ''}>${esc(tname('B'))}</option></select></label></div>` : ''}
+      <div class="teams2" style="margin-top:14px">${teamPanel('A')}${teamPanel('B')}</div>
+      ${!done ? `<h2 class="sec">Available <span class="sub">${avail.length} left · sorted by OVR</span></h2><div class="grid">${avail.map((p) => card(p, { act: isCommish() ? 'draft-player' : 'open-player' })).join('')}</div>` : ''}
+      ${n ? `<h2 class="sec">Pick history</h2><div class="panel"><ul class="picks">${d.picks.map((pk, i) => { const p = C.player(c, pk.playerId); return `<li><span class="kbd">${Math.floor(i / 2) + 1}.${String(i % 2 + 1).padStart(2, '0')}</span><span class="dot" style="--tc:${tcol(pk.team)}"></span><b>${esc(tname(pk.team))}</b><span class="grow">${esc(p?.name || '?')} <span class="muted small">${esc(p?.pos || '')} · ${p ? C.ovr(p) : ''} OVR</span></span></li>`; }).join('')}</ul></div>` : ''}`;
+  }
+  function draftConfirm(id) {
+    const c = cfg(); const p = C.player(c, id); const t = S.draftTeam || C.nextPickTeam(c);
+    const opt = (x) => `<button class="pill ${x === t ? 'on' : ''}" data-act="draft-team-pick" data-team="${x}" data-id="${esc(id)}">${esc(tname(x))}</button>`;
+    openModal(`<h3 style="font-size:20px">Draft ${esc(p.name)}?</h3><div class="muted small" style="margin:4px 0 12px">${esc(p.pos || 'No position')} · ${C.ovr(p)} OVR</div>
+      <div class="pills">${opt('A')}${opt('B')}</div>
+      <div class="row" style="margin-top:16px"><button class="btn pri" data-act="confirm-pick" data-id="${esc(id)}" data-team="${t}">Draft to ${esc(tname(t))}</button><button class="btn ghost" data-act="close-modal">Cancel</button></div>`, true);
+  }
+
+  // ----- rules -----
+  const RULES = [["The basics", ["Even numbers on the field. If one team has an extra player, he rotates in.", "Snapper optional: take a snap, or let the QB start with the ball and yell hike. Everyone is an eligible receiver.", "No kickoffs or punts. Every drive starts at your own 5.", "Coin toss winner picks ball or end. The other team gets the ball to start the 2nd half.", "Four <b>12-minute quarters</b>, running clock. Switch ends at halftime. One timeout per team per half."]], ["Scoring", ["Touchdown: <b>6</b>", "Extra point: <b>1</b> from the 5 (pass only) or <b>2</b> from the 10 (run or pass). Call it before the snap.", "Defense takes a pick or fumble on an extra point all the way back: <b>2</b>.", "Safety: <b>2</b>, and the defense gets the ball."]], ["Downs", ["<b>4 downs</b> to cross midfield, then <b>4 downs</b> to score.", "Come up short and the other team takes over at its own 5."]], ["Rushing the passer", ["<b>One rusher.</b> He counts out loud to <b>7 Mississippi</b>, then rushes.", "<b>One blitz per drive:</b> the rusher goes right at the snap, no count.", "Everyone else stays on their side of the line. A handoff, fake, pitch, backward pass or QB run ends the count, and then anyone can go.", "Pull the QB's flag, but <b>don't hit the QB</b>. Jumping to block a pass is fine.", "Sack: the QB's flag is pulled behind the line. Throwing it away is legal."]], ["QB runs & trick plays", ["<b>One QB run per drive:</b> the QB can take off on his own once each drive. Otherwise, he can only run after the rusher crosses the line.", "Handoffs are legal behind the line. Laterals and backward pitches or passes are legal anywhere, even past the line.", "<b>Trick plays are on.</b> Whoever has the ball behind the line can throw the play's one forward pass. Flea flickers, halfback passes, double passes and hook and ladders are all fair game.", "A dropped pitch or backward pass is a live ball, just like a fumble.", "<b>No-run zones:</b> inside 5 yards of midfield or the goal line, it's pass only. No scrambles either."]], ["Ball or knee on the ground", ["The play ends when the runner's flag comes off or he steps out of bounds.", "<b>Going down isn't down.</b> While you're on the ground, one touch from a defender ends it. If nobody touches you, get up and keep running.", "<b>Fumbles are live.</b> Anyone can scoop it up and run it back, dropped snaps included.", "Incomplete passes are dead, not fumbles.", "Spot the ball where it was when the play ended.", "No diving forward with the ball.", "Flag fell off? You're down right there, even if nobody touched you.", "Catches need one foot in bounds."]], ["Blocking & contact", ["<b>No blocking.</b> No screens, no picks, no escorting the runner.", "Bumping on a route happens. Running into a defender on purpose doesn't.", "Defense: no holding, pushing, jamming or hitting receivers, and no stripping the ball. Pull flags, don't tackle."]], ["Flags & flag guarding", ["Flags on both hips, outside your clothes. Tuck in the hoodie: a covered flag counts as flag guarding.", "<b>Flag guarding</b> is a hand, arm or the ball over your flag, a stiff arm, or a lowered shoulder. Spin and juke all you want.", "Only the ball carrier's flag can be pulled. Pull one early or grab a shirt: 5 yards, and that player is down on a one-hand touch instead."]], ["Turnovers", ["Picks and fumbles can be run back. No score? Your offense starts where you're downed.", "Downed in your own end zone after a turnover? Start at your own 5."]], ["Penalties", ["<b>Offense</b> (flag guarding, blocking, illegal QB run, running in a no-run zone, offensive PI): 5 yards and loss of down.", "<b>Defense</b> (early or extra rusher, offside, illegal flag pull): 5 yards.", "Holding or roughing the QB: 10 yards and a first down.", "Pass interference: ball at the spot of the foul and a first down.", "The team that was fouled can always decline and take the play."]], ["Overtime", ["Coin toss, then teams trade 1-point tries from the 5 (pass only).", "The first round where one team scores and the other doesn't ends it. The winner gets 1 point added."]], ["Disputes", ["Captains settle it. Can't agree? Replay the down.", "The commish has the final say, including on stats and bets."]]];
+  function renderRules() {
+    return `<h2 class="sec">Rules <span class="sub">House rules. Not that serious, still binding.</span></h2>
+      <div class="rules">${RULES.map(([t, items]) => `<div class="panel"><h3>${t}</h3><ul>${items.map((i) => `<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>
+      <p class="tiny muted" style="margin-top:4px">Adapted from the <a href="https://static.www.nfl.com/image/upload/league/gxtdqh8hcquhezyzssfo.pdf" target="_blank" rel="noopener">NFL FLAG rulebook</a>, simplified for a game with no refs.</p>`;
+  }
+
+  // ----- teams -----
+  function renderTeams() {
+    const c = cfg(); const pr = C.projection(c); const has = pr.a.n && pr.b.n;
+    const tp = (t) => {
+      const R = C.rosters(c)[t].map((id) => C.player(c, id)).filter(Boolean).sort((a, b) => (a.pos === 'QB' ? -1 : b.pos === 'QB' ? 1 : C.ovr(b) - C.ovr(a)));
+      const tr = C.teamRatings(c, t);
+      return `<div class="tpanel" style="--tc:${tcol(t)}"><div class="thead"><span class="dot"></span><span class="tn">${esc(tname(t))}</span></div>
+        ${isCommish() ? `<div class="row small" style="padding:10px 14px;border-bottom:1px solid var(--line)"><input data-change="team-name" data-team="${t}" value="${esc(c.teams[t].name || '')}" placeholder="${esc(tname(t))}" style="flex:1"><select data-change="team-color" data-team="${t}">${TEAM_COLORS.map(([n, h]) => `<option value="${h}" ${tcol(t) === h ? 'selected' : ''}>${n}</option>`).join('')}</select></div>` : ''}
+        <div class="ratings3"><div><b>${tr.ovr || '—'}</b><span>TEAM OVR</span></div><div><b>${tr.off || '—'}</b><span>OFF</span></div><div><b>${tr.def || '—'}</b><span>DEF</span></div></div>
+        <ul class="rlist" style="border-top:1px solid var(--line)">${R.map((p) => `<li data-act="open-player" data-id="${esc(p.id)}" style="cursor:pointer"><span class="posb">${esc(p.pos || '—')}</span><span class="grow">${esc(p.name)}${c.teams[t].captainId === p.id ? ' <span class="tiny muted">(C)</span>' : ''}</span><span class="small muted">DEF ${C.def(p)}</span><span class="ovrb">${C.ovr(p)}</span></li>`).join('') || '<li class="muted small">Draft not entered yet</li>'}</ul></div>`;
+    };
+    const avgA = (t, a) => { const ps = C.rosters(c)[t].map((id) => C.player(c, id)).filter(Boolean); return ps.length ? Math.round(ps.reduce((s, p) => s + p.ratings[a], 0) / ps.length) : 0; };
+    const tape = C.ATTRS.map((a) => { const x = avgA('A', a), y = avgA('B', a); return `<div class="tape"><b style="text-align:right;color:${x >= y ? 'var(--text)' : 'var(--muted)'}">${x || '—'}</b><div class="bar l"><i style="width:${x}%;background:${tcol('A')}"></i></div><span class="small muted" style="text-align:center;font-weight:700">${a}</span><div class="bar"><i style="width:${y}%;background:${tcol('B')}"></i></div><b style="color:${y >= x ? 'var(--text)' : 'var(--muted)'}">${y || '—'}</b></div>`; }).join('');
+    const fav = pr.margin >= 0 ? 'A' : 'B'; const m = Math.abs(pr.margin); const p = fav === 'A' ? pr.probA : 1 - pr.probA;
+    return `<h2 class="sec">Teams</h2>
+      ${has ? `<div class="banner" style="background:rgba(60,207,127,.08);border-color:rgba(60,207,127,.35);color:#bff2d4">Ratings projection: <b>${m < 0.75 ? 'pick\'em' : esc(tname(fav)) + ' by ' + (Math.round(m * 2) / 2)}</b> · ${esc(tname(fav))} win probability ${Math.round(p * 100)}%</div>` : ''}
+      <div class="teams2" style="margin-top:14px">${tp('A')}${tp('B')}</div>
+      ${has ? `<h2 class="sec">Tale of the tape <span class="sub">Average rating by category</span></h2><div class="panel"><div class="row small muted" style="justify-content:space-between;margin-bottom:6px"><span>${esc(tname('A'))}</span><span>${esc(tname('B'))}</span></div>${tape}</div>` : ''}`;
+  }
+
+  // ----- sportsbook -----
+  function oddsBtn(market, sel, label, sub, o = {}) {
+    const g = game(); const open = g.linesPosted && !g.betsLocked && g.status === 'pre';
+    const on = S.slip && S.slip.market === market && S.slip.sel === sel && (S.slip.propId || null) === (o.propId || null);
+    return `<button class="ob ${on ? 'sel' : ''}" data-act="pick-bet" data-market="${market}" data-sel="${esc(sel)}" ${o.propId ? `data-prop="${esc(o.propId)}"` : ''} ${open && !o.off ? '' : 'disabled'} ${o.off ? 'title="No unders on your own props"' : ''}>${label}${sub !== undefined ? `<small>${sub}</small>` : ''}</button>`;
+  }
+  function renderBook() {
+    const c = cfg(); const g = game(); const L = c.lines; const me = S.me && ledger[S.me.id];
+    const status = g.status === 'final' ? ['Final: bets are settled', 'var(--green)'] : !g.linesPosted ? ['Lines not posted yet', 'var(--muted)'] : g.betsLocked || g.status !== 'pre' ? ['Betting locked', 'var(--red)'] : ['Betting open', 'var(--green)'];
+    let html = `<h2 class="sec">Sportsbook <span class="sub" style="color:${status[1]};font-weight:700">${status[0]}</span></h2>`;
+    if (me) {
+      html += `<div class="panel"><div class="row" style="margin-bottom:10px"><b style="font-size:17px">${esc(me.name)}</b><span class="grow"></span><button class="btn sm ghost" data-act="logout">Log out</button></div>
+        <div class="money"><div><span>Available</span><b>${money(me.available)}</b></div><div><span>At risk</span><b>${money(me.atRisk)}</b></div><div><span>Bankroll</span><b style="color:${me.bankroll >= (c.settings?.bankroll ?? 100) ? 'var(--green)' : 'var(--red)'}">${money(me.bankroll)}</b></div></div></div>`;
+    } else {
+      const claimed = new Set((S.snap.bettors || []).map((b) => b.playerId).filter(Boolean));
+      html += `<div class="teams2"><div class="panel"><h3>Join the book</h3><div class="small muted" style="margin-bottom:10px">Everyone starts with ${money(c.settings?.bankroll ?? 100)} in fake money.</div>
+        <div class="row"><select id="join-who" data-change="join-who" class="grow">${c.players.filter((p) => !claimed.has(p.id)).map((p) => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('')}<option value="">Someone else</option></select></div>
+        <div class="row" style="margin-top:8px"><input id="join-name" placeholder="Your name" class="grow ${c.players.some((p) => !claimed.has(p.id)) ? 'hide' : ''}"><input id="join-pin" type="password" inputmode="numeric" maxlength="4" placeholder="4-digit PIN" style="width:130px"><button class="btn pri" data-act="join">Join</button></div></div>
+        <div class="panel"><h3>Log in</h3><div class="small muted" style="margin-bottom:10px">Already joined on another device?</div>
+        <div class="row"><select id="login-who" class="grow">${(S.snap.bettors || []).map((b) => `<option value="${esc(b.name)}">${esc(b.name)}</option>`).join('') || '<option value="">No one has joined yet</option>'}</select><input id="login-pin" type="password" inputmode="numeric" maxlength="4" placeholder="PIN" style="width:90px"><button class="btn" data-act="login">Log in</button></div></div></div>`;
+    }
+    if (L && (g.linesPosted || isCommish())) {
+      if (!g.linesPosted) html += '<div class="banner">Preview: only you can see these until you post the lines.</div>';
+      const sp = Number(L.spread.A); const tot = L.total.points;
+      const trow = (t) => { const line = t === 'A' ? sp : -sp; return `<div class="tname"><span class="dot" style="--tc:${tcol(t)}"></span>${esc(tname(t))}</div>
+        ${oddsBtn('spread', t, sgn(line), C.fmtOdds(L.spread.odds))}${oddsBtn('ml', t, C.fmtOdds(L.ml[t]), 'to win')}${oddsBtn('total', t === 'A' ? 'over' : 'under', (t === 'A' ? 'O ' : 'U ') + tot, C.fmtOdds(L.total.odds))}`; };
+      html += `<h2 class="sec">Game lines</h2><div class="panel"><div class="odds"><div></div><div class="h">Spread</div><div class="h">Moneyline</div><div class="h">Total</div>${trow('A')}${trow('B')}</div></div>`;
+      const byP = {}; for (const pr of L.props || []) (byP[pr.playerId] = byP[pr.playerId] || []).push(pr);
+      const pcards = Object.entries(byP).map(([pid, list]) => { const p = C.player(c, pid); if (!p) return ''; const t = C.teamOf(c, pid);
+        return `<div class="panel"><div class="row" style="margin-bottom:4px"><span class="posb">${esc(p.pos || '—')}</span><b>${esc(p.name)}</b><span class="grow"></span>${t ? `<span class="small muted"><span class="dot" style="--tc:${tcol(t)};width:8px;height:8px"></span> ${esc(tname(t))}</span>` : ''}</div>
+          ${list.map((pr) => `<div class="prow"><span>${esc(C.STATS[pr.stat] || pr.stat)}</span>${oddsBtn('prop', 'over', 'O ' + pr.line, C.fmtOdds(pr.odds), { propId: pr.id })}${oddsBtn('prop', 'under', 'U ' + pr.line, C.fmtOdds(pr.odds), { propId: pr.id, off: S.me && S.me.playerId === pr.playerId })}</div>`).join('')}</div>`; }).join('');
+      if (pcards) html += `<h2 class="sec">Player props</h2><div class="props">${pcards}</div>`;
+      if ((L.ftd || []).length) html += `<h2 class="sec">First TD scorer</h2><div class="props">${[...L.ftd].sort((a, b) => a.odds - b.odds).map((f) => { const p = C.player(c, f.playerId); return p ? `<div class="prow" style="grid-template-columns:1fr 110px;margin:0" ><span><span class="posb">${esc(p.pos || '—')}</span> ${esc(p.name)}</span>${oddsBtn('ftd', f.playerId, C.fmtOdds(f.odds))}</div>` : ''; }).join('')}</div>`;
+    } else if (!g.linesPosted) html += `<div class="empty" style="margin-top:14px">Lines drop after the draft. Check back soon.</div>`;
+    if (me && me.bets.length) html += `<h2 class="sec">My bets</h2><div class="panel scroll-x">${betTable(me.bets, false)}</div>`;
+    const lb = Object.values(ledger).sort((a, b) => b.bankroll - a.bankroll);
+    if (lb.length) html += `<h2 class="sec">Leaderboard</h2><div class="panel scroll-x"><table class="t"><tr><th>#</th><th>Bettor</th><th class="n">Bankroll</th><th class="n">Available</th><th class="n">At risk</th><th class="n">W-L</th></tr>${lb.map((b, i) => `<tr><td>${i + 1}</td><td><b>${esc(b.name)}</b></td><td class="n"><b>${money(b.bankroll)}</b></td><td class="n">${money(b.available)}</td><td class="n">${money(b.atRisk)}</td><td class="n">${b.won}-${b.lost}</td></tr>`).join('')}</table></div>`;
+    const all = Object.values(ledger).flatMap((b) => b.bets.map((x) => ({ ...x, who: b.name }))).sort((a, b) => b.ts - a.ts);
+    if (all.length) html += `<h2 class="sec">Bet feed <span class="sub">${all.length} bets</span></h2><div class="panel scroll-x">${betTable(all, true)}</div>`;
+    if (isCommish()) html += linesEditor();
+    return html;
+  }
+  function betTable(bets, who) {
+    const c = cfg();
+    return `<table class="t"><tr>${who ? '<th>Bettor</th>' : ''}<th>Bet</th><th class="n">Odds</th><th class="n">Stake</th><th class="n">Pays</th><th>Status</th>${who && isCommish() ? '<th></th>' : ''}</tr>${bets.map((b) => `<tr>${who ? `<td><b>${esc(b.who)}</b></td>` : ''}<td>${esc(C.describe(b, c))}</td><td class="n">${C.fmtOdds(b.odds)}</td><td class="n">${money(b.stake)}</td><td class="n">${b.status === 'open' ? money(b.stake + C.profit(b.stake, b.odds)) : money(b.ret)}</td><td><span class="st ${b.status}">${b.status}</span></td>${who && isCommish() ? `<td>${b.status !== 'void' ? `<button class="btn sm ghost" data-act="void-bet" data-id="${esc(b.id)}">Void</button>` : ''}</td>` : ''}</tr>`).join('')}</table>`;
+  }
+  function linesEditor() {
+    const c = cfg(); const g = game(); const D = S.linesDraft || (c.lines ? structuredClone(c.lines) : null);
+    S.linesDraft = D;
+    const num = (path, v, step = 0.5, w = 90) => `<input type="number" step="${step}" data-lines="${path}" value="${v}" style="width:${w}px">`;
+    let h = `<h2 class="sec">Commissioner: lines and betting</h2><div class="panel">
+      <div class="row"><button class="btn gold" data-act="suggest-lines">Suggest lines from ratings</button>${D ? '<button class="btn pri" data-act="save-lines">Save lines</button>' : ''}<span class="grow"></span>
+      ${c.lines ? (g.linesPosted ? '<button class="btn" data-act="unpost-lines">Hide lines</button>' : '<button class="btn pri" data-act="post-lines">Post lines</button>') : ''}
+      ${g.linesPosted ? (g.betsLocked ? '<button class="btn" data-act="unlock-bets">Unlock bets</button>' : '<button class="btn danger" data-act="lock-bets">Lock bets</button>') : ''}</div>
+      <div class="tiny muted" style="margin-top:8px">Odds use American format: 100 = even money, -150 = bet $150 to win $100, +250 = bet $100 to win $250. Changing a line doesn't change bets already placed.</div>`;
+    if (D) {
+      h += `<div class="row" style="margin-top:14px;align-items:flex-end;gap:16px">
+        <label class="fl">${esc(tname('A'))} spread${num('spread.A', D.spread.A)}</label><label class="fl">Spread odds${num('spread.odds', D.spread.odds, 5)}</label>
+        <label class="fl">${esc(tname('A'))} ML${num('ml.A', D.ml.A, 5)}</label><label class="fl">${esc(tname('B'))} ML${num('ml.B', D.ml.B, 5)}</label>
+        <label class="fl">Total points${num('total.points', D.total.points)}</label><label class="fl">Total odds${num('total.odds', D.total.odds, 5)}</label></div>
+        <h3 style="margin-top:16px">Player props</h3><div class="scroll-x"><table class="t"><tr><th>Player</th><th>Stat</th><th>Line</th><th>Odds</th><th></th></tr>
+        ${(D.props || []).map((pr, i) => `<tr><td><select data-lines="props.${i}.playerId">${c.players.map((p) => `<option value="${esc(p.id)}" ${p.id === pr.playerId ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select></td>
+          <td><select data-lines="props.${i}.stat">${Object.entries(C.STATS).map(([k, l]) => `<option value="${k}" ${k === pr.stat ? 'selected' : ''}>${l}</option>`).join('')}</select></td>
+          <td>${num(`props.${i}.line`, pr.line)}</td><td>${num(`props.${i}.odds`, pr.odds, 5)}</td><td><button class="btn sm ghost" data-act="del-prop" data-i="${i}">Remove</button></td></tr>`).join('')}</table></div>
+        <button class="btn sm" data-act="add-prop" style="margin-top:8px">Add prop</button>
+        <h3 style="margin-top:16px">First TD scorer odds</h3><div class="row">${(D.ftd || []).map((f, i) => { const p = C.player(c, f.playerId); return p ? `<label class="fl">${esc(p.name)}${num(`ftd.${i}.odds`, f.odds, 25, 96)}</label>` : ''; }).join('')}</div>`;
+    }
+    h += `<div class="row" style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px"><span class="small muted grow">Danger zone</span><button class="btn sm danger" data-act="reset-book">Reset all bets and accounts</button></div></div>`;
+    return h;
+  }
+  function renderSlip() {
+    const r = $('#slip-root'); if (!S.slip || S.tab !== 'book') { r.innerHTML = ''; return; }
+    const c = cfg(); const q = C.quote(c, S.slip.market, S.slip.sel, S.slip.propId);
+    if (typeof q === 'string') { S.slip = null; r.innerHTML = ''; return; }
+    const bet = { ...S.slip, line: q.line, odds: q.odds, playerId: q.playerId, stat: q.stat };
+    const me = S.me && ledger[S.me.id]; const stake = Number(S.slip.stake) || 0;
+    r.innerHTML = `<div class="slip"><div class="row"><b class="grow">${esc(C.describe(bet, c))}</b><span class="kbd">${C.fmtOdds(q.odds)}</span><button class="btn sm ghost" data-act="clear-slip" aria-label="Clear">×</button></div>
+      ${me ? `<div class="row" style="margin-top:10px"><input id="stake" data-input="stake" type="number" min="1" step="1" inputmode="decimal" value="${esc(S.slip.stake || '')}" placeholder="Stake $" style="width:110px">${[5, 10, 25].map((v) => `<button class="btn sm" data-act="stake" data-v="${v}">$${v}</button>`).join('')}<button class="btn sm" data-act="stake" data-v="max">Max</button></div>
+      <div class="row" style="margin-top:10px"><span class="small muted grow" id="towin">To win ${money(C.profit(stake, q.odds))} · available ${money(me.available)}</span><button class="btn pri" data-act="place-bet">Place bet</button></div>` : `<div class="row" style="margin-top:10px"><span class="small muted grow">Join or log in above to place bets.</span></div>`}</div>`;
+  }
+
+  // ----- scoreboard -----
+  function renderScore() {
+    if (S.bDraft && isCommish()) return boxEditor();
+    const c = cfg(); const g = game(); const st = stats; const A = st.teams.A, B = st.teams.B;
+    const qs = [1, 2, 3, 4].concat([A, B].some((t) => t.byQ[5]) ? [5] : []);
+    const statusTxt = g.status === 'final' ? '<div class="small" style="font-weight:800;letter-spacing:.12em">FINAL</div>' : g.status === 'live' ? `<div class="live">LIVE · ${C.qLabel(g.quarter || 1)}</div>` : '<div class="small muted" style="font-weight:800;letter-spacing:.12em">PREGAME</div>';
+    let h = `<h2 class="sec">Scoreboard</h2>
+      <div class="sb"><div class="side" style="--tc:${tcol('A')}"><span class="dot" style="width:14px;height:14px"></span><div class="nm">${esc(tname('A'))}</div><div class="pts">${A.pts}</div></div>
+      <div class="mid">${statusTxt}<div class="tiny muted" style="margin-top:6px">vs</div></div>
+      <div class="side" style="--tc:${tcol('B')}"><span class="dot" style="width:14px;height:14px"></span><div class="nm">${esc(tname('B'))}</div><div class="pts">${B.pts}</div></div></div>
+      <div class="panel scroll-x" style="margin-top:10px"><table class="t"><tr><th>Team</th>${qs.map((q) => `<th class="n">${C.qLabel(q)}</th>`).join('')}<th class="n">T</th></tr>
+      ${['A', 'B'].map((t) => `<tr><td><span class="dot" style="--tc:${tcol(t)};width:9px;height:9px"></span> <b>${esc(tname(t))}</b></td>${qs.map((q) => `<td class="n">${st.teams[t].byQ[q] ?? '–'}</td>`).join('')}<td class="n"><b>${st.teams[t].pts}</b></td></tr>`).join('')}</table>${st.firstTD && C.player(c, st.firstTD) ? `<div class="small muted" style="margin:8px 0 2px">First TD: <b style="color:var(--text)">${esc(C.player(c, st.firstTD).name)}</b></div>` : ''}</div>`;
+    if (isCommish()) h += statEntry();
+    const log = [...st.log].sort((x, y) => (y.q - x.q) || (y.ts - x.ts));
+    let ra = 0, rb = 0; const running = {}; for (const e of [...st.log]) { if (e.team === 'A') ra += e.pts || 0; if (e.team === 'B') rb += e.pts || 0; running[e.id] = ra + '-' + rb; }
+    const showLog = log.length || !st.manual;
+    if (showLog) h += `<h2 class="sec">Play-by-play <span class="sub">${log.length} plays${st.manual && log.length ? ' · the box score sets the totals' : ''}</span></h2>`;
+    if (showLog) h += log.length ? `<div class="panel"><ul class="picks">${log.map((e) => { const p = e.playerId && C.player(c, e.playerId); const t = e.team; const ev = C.EVENTS[e.type];
+      return `<li><span class="kbd">${C.qLabel(e.q)}</span>${t ? `<span class="dot" style="--tc:${tcol(t)}"></span>` : ''}<span class="grow">${p ? '<b>' + esc(p.name) + '</b> · ' : ''}${esc(ev?.label || e.type)}${e.type === 'points' ? ' (' + sgn(e.pts) + ')' : ''}${t ? ' · ' + esc(tname(t)) : ''}${e.note ? ' <span class="muted small">' + esc(e.note) + '</span>' : ''}</span>${e.pts ? `<span class="small muted">${running[e.id]}</span>` : ''}${isCommish() ? `<button class="btn sm ghost" data-act="del-event" data-id="${esc(e.id)}" aria-label="Delete">Delete</button>` : ''}</li>`; }).join('')}</ul></div>` : '<div class="empty">No plays logged yet.</div>';
+    const cols = BOXCOLS.flatMap(([, cs]) => cs).concat([['totalTD', 'TDs']]);
+    const ghead = `<tr><th></th>${BOXCOLS.map(([gn, cs]) => `<th class="g" colspan="${cs.length}">${gn}</th>`).join('')}<th></th></tr>`;
+    h += `<h2 class="sec">Box score</h2><div class="teams2">${['A', 'B'].map((t) => { const R = roster(t);
+      return `<div class="tpanel" style="--tc:${tcol(t)}"><div class="thead"><span class="dot"></span><span class="tn">${esc(tname(t))}</span></div><div class="scroll-x"><table class="t box">${ghead}<tr><th>Player</th>${cols.map(([, l]) => `<th class="n">${l}</th>`).join('')}</tr>${R.map((p) => `<tr><td><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '')}</span></td>${cols.map(([k]) => `<td class="n">${st.players[p.id]?.[k] || ''}</td>`).join('')}</tr>`).join('') || `<tr><td class="muted" colspan="${cols.length + 1}">No roster yet</td></tr>`}</table></div></div>`; }).join('')}</div>`;
+    return h;
+  }
+  function statEntry() {
+    const c = cfg(); const g = game(); const ev = S.ev; const def = C.EVENTS[ev.type]; const R = C.rosters(c);
+    const popts = ['A', 'B'].map((t) => `<optgroup label="${esc(tname(t))}">${R[t].map((id) => { const p = C.player(c, id); return `<option value="${esc(id)}" ${ev.playerId === id ? 'selected' : ''}>${esc(p.name)} (${esc(p.pos || '—')})</option>`; }).join('')}</optgroup>`).join('');
+    return `<h2 class="sec">Commissioner: game and stats</h2><div class="panel">
+      <div class="row" style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)"><button class="btn gold" data-act="box-open">${c.box ? 'Edit box score' : 'Enter box score'}</button><span class="small muted grow">${c.box ? `The score and box score come from the stats you typed in, not logged plays.` : `Game already played? Type the final score and everyone's stats on one screen instead of logging plays.`}</span></div>
+      <div class="row"><span class="small muted">Game status</span><div class="pills">${[['pre', 'Pregame'], ['live', 'Live'], ['final', 'Final']].map(([k, l]) => `<button class="pill ${g.status === k ? 'on' : ''}" data-act="game-status" data-s="${k}">${l}</button>`).join('')}</div>
+      <span class="grow"></span><span class="tiny muted">Final settles every bet. Switch back to Live to fix a stat and bets re-settle when you go Final again.</span></div>
+      <div class="row" style="margin-top:14px;align-items:flex-end">
+        <label class="fl">Quarter<select data-change="evq">${C.QUARTERS.map((q) => `<option value="${q}" ${S.evq === q ? 'selected' : ''}>${C.qLabel(q)}</option>`).join('')}</select></label>
+        <label class="fl">Play<select data-change="evtype">${Object.entries(C.EVENTS).map(([k, v]) => `<option value="${k}" ${ev.type === k ? 'selected' : ''}>${v.label}</option>`).join('')}</select></label>
+        ${def.needs === 'player' ? `<label class="fl grow">${['int', 'pick6', 'sack'].includes(ev.type) ? 'Defender' : ev.type === 'rushTD' ? 'Runner' : 'Receiver'}<select data-change="evplayer"><option value="">Pick a player</option>${popts}</select></label>` : `<label class="fl">Team<select data-change="evteam">${['A', 'B'].map((t) => `<option value="${t}" ${ev.team === t ? 'selected' : ''}>${esc(tname(t))}</option>`).join('')}</select></label>${['pat1', 'pat2'].includes(ev.type) ? `<label class="fl grow">Scored by (optional)<select data-change="evplayer"><option value="">—</option>${R[ev.team].map((id) => `<option value="${esc(id)}" ${ev.playerId === id ? 'selected' : ''}>${esc(C.player(c, id).name)}</option>`).join('')}</select></label>` : ''}${ev.type === 'points' ? `<label class="fl">Points (+/-)<input data-input="evpts" type="number" step="1" value="${esc(ev.pts)}" style="width:90px"></label>` : ''}`}
+        <button class="btn pri" data-act="add-event">Add play</button></div>
+      <div class="tiny muted" style="margin-top:8px">Catches and TD catches credit the team's QB with a completion and pass TD. INTs and pick-sixes charge the other team's QB. Plays can be logged live or after the game; set the quarter first.${c.box ? ` <b class="warn">A box score is entered, so logged plays won't change the totals.</b>` : ''}</div>
+      <div class="row" style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px"><span class="small muted grow">Danger zone</span>${c.box ? '<button class="btn sm danger" data-act="box-clear">Clear box score</button>' : ''}<button class="btn sm danger" data-act="reset-game">Clear all plays and reset game</button></div></div>`;
+  }
+
+  // ----- post-game: ratings editor and box score entry (commish only) -----
+  const BOXCOLS = [['Passing', [['comp', 'CMP'], ['passTD', 'TD'], ['intThrown', 'INT']]], ['Receiving', [['rec', 'REC'], ['recTD', 'TD']]], ['Rushing', [['rushTD', 'TD']]], ['Defense', [['defINT', 'INT'], ['defTD', 'TD'], ['sacks', 'SACK']]], ['', [['pat', 'PAT']]]];
+  const digits = (v) => String(v ?? '').replace(/\D/g, '');
+  const n0 = (v) => Number(digits(v)) || 0;
+  const numIn = (attrs, val, label, max = 2, cls = '') => `<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="${max}" autocomplete="off" class="${cls}" ${attrs} value="${esc(val)}" aria-label="${esc(label)}">`;
+  const savebar = (info, btns) => `<div class="savebar"><span class="small grow" id="sb-info">${info}</span>${btns}</div>`;
+  function roster(t) { const c = cfg(); return C.rosters(c)[t].map((id) => C.player(c, id)).filter(Boolean).sort((a, b) => (a.pos === 'QB' ? -1 : b.pos === 'QB' ? 1 : C.ovr(b) - C.ovr(a))); }
+
+  // ratings
+  const rOk = (v) => { const n = Number(v); return digits(v) !== '' && n >= 1 && n <= 99; };
+  function rPreview(p) {
+    const D = S.rDraft[p.id] || {}; const r = {};
+    for (const a of C.ATTRS) r[a] = rOk(D[a]) ? Number(D[a]) : p.ratings[a];
+    const q = { ...p, ratings: r }; const ov = C.ovr(q); const b = preOf(p);
+    return { ovr: ov, def: C.def(q), d: ov - (b ? b.ovr : C.ovr(p)) };
+  }
+  const rCls = (p, a) => { const v = S.rDraft[p.id][a]; return !rOk(v) ? 'bad' : Number(v) !== p.ratings[a] ? 'chg' : ''; };
+  const rChanged = () => cfg().players.filter((p) => S.rDraft[p.id] && C.ATTRS.some((a) => Number(S.rDraft[p.id][a]) !== p.ratings[a]));
+  const rInfo = () => { const n = rChanged().length; return n ? `<b>${n}</b> player${n > 1 ? 's' : ''} changed` : '<span class="muted">No changes yet</span>'; };
+  function rateRow(p) {
+    const pv = rPreview(p);
+    return `<tr><td><div><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '—')}</span></div><div class="rsub"><b class="rovr">${pv.ovr}${p.ovrOverride ? '*' : ''}</b> OVR <span class="rdl">${arrow(pv.d)}</span> · DEF <span class="rdef">${pv.def}</span></div></td>${C.ATTRS.map((a) => `<td>${numIn(`data-r="${esc(p.id)}" data-a="${a}"`, S.rDraft[p.id][a], p.name + ' ' + C.ATTR_NAMES[a], 2, rCls(p, a))}</td>`).join('')}</tr>`;
+  }
+  function ratingsEditor() {
+    const c = cfg(); const pg = c.pregame;
+    for (const p of c.players) if (!S.rDraft[p.id]) S.rDraft[p.id] = { ...p.ratings };
+    const R = C.rosters(c); const on = new Set([...R.A, ...R.B]);
+    const groups = [[tname('A'), tcol('A'), roster('A')], [tname('B'), tcol('B'), roster('B')], ['Not on a team', '#2a3550', c.players.filter((p) => !on.has(p.id))]].filter((g) => g[2].length);
+    const head = `<tr><th>Player</th>${C.ATTRS.map((a) => `<th title="${C.ATTR_NAMES[a]}">${a}</th>`).join('')}</tr>`;
+    const when = pg ? new Date(pg.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    return `<h2 class="sec">Update ratings <span class="sub">Type each player's new ratings, 1 to 99. OVR and DEF update as you type.</span></h2>
+      <div class="banner" style="margin:0 0 14px">${pg ? `▲▼ show changes from the pregame ratings, saved ${esc(when)}. <button class="btn sm ghost" data-act="rate-clear-base" style="margin-left:4px">Clear arrows</button>` : `When you save, the current ratings are kept as the pregame ratings so player cards can show ▲▼ changes.`}</div>
+      ${groups.map(([name, col, ps]) => `<div class="tpanel" style="--tc:${col};margin-bottom:14px"><div class="thead"><span class="dot"></span><span class="tn">${esc(name)}</span></div><div class="scroll-x"><table class="t ed">${head}${ps.map(rateRow).join('')}</table></div></div>`).join('')}
+      <div class="tiny muted">${C.ATTRS.map((a) => `${a} ${C.ATTR_NAMES[a].toLowerCase()}`).join(' · ')}${c.players.some((p) => p.ovrOverride) ? ' · * OVR is locked by an override (edit that player to clear it)' : ''}</div>
+      ${savebar(rInfo(), `<button class="btn ghost" data-act="rate-cancel">Cancel</button><button class="btn pri" data-act="rate-save">Save ratings</button>`)}`;
+  }
+
+  // box score
+  function boxDraft() {
+    const c = cfg(); const st = stats; const bx = c.box; const s = (v) => (v === '' || v == null || v === 0 ? '' : String(v));
+    const D = { score: {}, firstTD: bx ? bx.firstTD || '' : st.firstTD || '', players: {} };
+    for (const t of ['A', 'B']) {
+      const sc = bx?.score?.[t]; const byQ = sc ? sc.q || {} : st.teams[t].byQ;
+      const fin = sc ? sc.final : (st.teams[t].pts || Object.keys(byQ).length ? st.teams[t].pts : '');
+      D.score[t] = { final: fin === '' || fin == null ? '' : String(fin), q: Object.fromEntries(C.QUARTERS.map((q) => [q, byQ[q] == null ? '' : String(byQ[q])])) };
+      for (const p of roster(t)) { const m = bx?.players?.[p.id] || st.players[p.id] || {}; D.players[p.id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, s(m[k])])); }
+    }
+    return D;
+  }
+  const bSum = (t, k) => roster(t).reduce((s, p) => s + n0(S.bDraft.players[p.id]?.[k]), 0);
+  function bTot(id) { const m = S.bDraft.players[id] || {}; return n0(m.recTD) + n0(m.rushTD) + n0(m.defTD) || ''; }
+  function bPts(t) { const s = S.bDraft.score[t]; if (digits(s.final) !== '') return n0(s.final); const qs = C.QUARTERS.filter((q) => digits(s.q[q]) !== ''); return qs.length ? qs.reduce((a, q) => a + n0(s.q[q]), 0) : null; }
+  function bScoreChk() {
+    const w = ['A', 'B'].map((t) => { const s = S.bDraft.score[t]; const qs = C.QUARTERS.filter((q) => digits(s.q[q]) !== ''); if (!qs.length || digits(s.final) === '') return ''; const sum = qs.reduce((a, q) => a + n0(s.q[q]), 0); return sum === n0(s.final) ? '' : `${esc(tname(t))}: quarters add to ${sum}, but the final says ${n0(s.final)}.`; }).filter(Boolean);
+    return w.length ? `<span class="warn">${w.join(' ')}</span>` : 'Quarters are optional. If you fill them in, they should add up to the final.';
+  }
+  function bTeamChk(t) {
+    const o = C.other(t); const sum = (k, x = t) => bSum(x, k); const td = sum('recTD') + sum('rushTD') + sum('defTD'); const pat = sum('pat'); const pts = bPts(t); const w = [];
+    if (sum('passTD') !== sum('recTD')) w.push(`pass TDs (${sum('passTD')}) vs receiving TDs (${sum('recTD')})`);
+    if (sum('comp') !== sum('rec')) w.push(`completions (${sum('comp')}) vs catches (${sum('rec')})`);
+    if (sum('intThrown') !== sum('defINT', o)) w.push(`INTs thrown (${sum('intThrown')}) vs ${esc(tname(o))} INTs (${sum('defINT', o)})`);
+    if (pts !== null && pts < td * 6) w.push(`${td} TDs is ${td * 6} points, more than the final (${pts})`);
+    return `${td} TD${td === 1 ? '' : 's'} (${td * 6} pts) · ${pat} PAT${pat === 1 ? '' : 's'}${pts !== null ? ` · final ${pts}` : ''}<br>${w.length ? `<span class="warn">Double-check: ${w.join('; ')}.</span>` : '<span class="ok">✓ Passing, catches and INTs line up</span>'}`;
+  }
+  function bRefresh() {
+    for (const td of document.querySelectorAll('[data-tot]')) td.textContent = bTot(td.dataset.tot);
+    const s = $('#bchk-score'); if (s) s.innerHTML = bScoreChk();
+    for (const t of ['A', 'B']) { const x = $('#bchk-' + t); if (x) x.innerHTML = bTeamChk(t); }
+  }
+  function boxEditor() {
+    const g = game(); const D = S.bDraft; const fin = g.status === 'final';
+    for (const t of ['A', 'B']) for (const p of roster(t)) if (!D.players[p.id]) D.players[p.id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, '']));
+    const scoreRow = (t) => `<tr><td><span class="dot" style="--tc:${tcol(t)};width:9px;height:9px"></span> <b>${esc(tname(t))}</b></td><td>${numIn(`data-b="final" data-t="${t}"`, D.score[t].final, tname(t) + ' final score', 3, 'fin')}</td>${C.QUARTERS.map((q) => `<td>${numIn(`data-b="q" data-t="${t}" data-q="${q}"`, D.score[t].q[q], tname(t) + ' ' + C.qLabel(q))}</td>`).join('')}</tr>`;
+    const opts = ['A', 'B'].map((t) => `<optgroup label="${esc(tname(t))}">${roster(t).map((p) => `<option value="${esc(p.id)}" ${D.firstTD === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</optgroup>`).join('');
+    const ghead = `<tr><th></th>${BOXCOLS.map(([gn, cs]) => `<th class="g" colspan="${cs.length}">${gn}</th>`).join('')}<th></th></tr>`;
+    const chead = `<tr><th>Player</th>${BOXCOLS.flatMap(([, cs]) => cs).map(([k, l]) => `<th title="${esc(C.STATS[k])}">${l}</th>`).join('')}<th>TDs</th></tr>`;
+    const prow = (p) => `<tr><td><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '—')}</span></td>${C.BOX_STATS.map((k) => `<td>${numIn(`data-b="p" data-pid="${esc(p.id)}" data-k="${k}"`, D.players[p.id][k], p.name + ' ' + C.STATS[k])}</td>`).join('')}<td class="out" data-tot="${esc(p.id)}">${bTot(p.id)}</td></tr>`;
+    return `<h2 class="sec">Box score entry <span class="sub">Blank counts as 0. Bets settle from these numbers once the game is final.</span></h2>
+      <div class="panel"><h3>Score</h3><div class="scroll-x"><table class="t ed"><tr><th></th><th></th><th class="g" colspan="${C.QUARTERS.length}">By quarter (optional)</th></tr><tr><th>Team</th><th>Final</th>${C.QUARTERS.map((q) => `<th>${C.qLabel(q)}</th>`).join('')}</tr>${scoreRow('A')}${scoreRow('B')}</table></div>
+        <div class="tiny muted" id="bchk-score" style="margin-top:8px">${bScoreChk()}</div>
+        <label class="fl" style="margin-top:12px;max-width:340px">First TD scored by<select data-change="b-ftd" style="font-size:16px"><option value="">Pick a player</option>${opts}<option value="none" ${D.firstTD === 'none' ? 'selected' : ''}>No one scored a TD</option></select></label></div>
+      ${['A', 'B'].map((t) => `<div class="tpanel" style="--tc:${tcol(t)};margin-top:14px"><div class="thead"><span class="dot"></span><span class="tn">${esc(tname(t))}</span></div><div class="scroll-x"><table class="t ed">${ghead}${chead}${roster(t).map(prow).join('') || '<tr><td class="muted">No roster yet</td></tr>'}</table></div><div class="chk" id="bchk-${t}">${bTeamChk(t)}</div></div>`).join('')}
+      <div class="tiny muted" style="margin-top:10px">Passing INT = interceptions thrown. Defense INT = picks caught, Defense TD = pick-six or fumble return, SACK = QB's flag pulled behind the line, PAT = extra points scored. TDs adds up receiving, rushing and defense TDs.</div>
+      ${savebar(fin ? 'Game is final: saving re-settles every bet.' : 'Saving locks betting. Go final when the numbers are right.', `<button class="btn ghost" data-act="box-cancel">Cancel</button>${fin ? '<button class="btn pri" data-act="box-save">Save</button>' : '<button class="btn" data-act="box-save">Save</button><button class="btn pri" data-act="box-final">Save &amp; go final</button>'}`)}`;
+  }
+  function boxFromDraft() {
+    const D = S.bDraft; const out = { ts: Date.now(), firstTD: D.firstTD || '', score: {}, players: {} };
+    for (const t of ['A', 'B']) out.score[t] = { final: digits(D.score[t].final) === '' ? '' : n0(D.score[t].final), q: Object.fromEntries(C.QUARTERS.filter((q) => digits(D.score[t].q[q]) !== '').map((q) => [q, n0(D.score[t].q[q])])) };
+    for (const [id, m] of Object.entries(D.players)) out.players[id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, n0(m[k])]));
+    return out;
+  }
+  async function saveBox(el, goFinal) {
+    const g = game(); const box = boxFromDraft();
+    const pts = (t) => { const s = box.score[t]; const qs = Object.values(s.q); return s.final !== '' ? s.final : qs.length ? qs.reduce((a, b) => a + b, 0) : null; };
+    if (goFinal) {
+      if (pts('A') === null || pts('B') === null) return toast('Enter both final scores first', 'err');
+      const ftd = (S.snap.bets || []).some((b) => b.market === 'ftd' && !(S.snap.voids || []).includes(b.id));
+      if (ftd && !box.firstTD) return toast('Pick who scored the first TD so those bets can settle', 'err');
+      if (!(await ask(`${tname('A')} ${pts('A')}, ${tname('B')} ${pts('B')}. Save the box score, make it final and settle every bet?`, 'Go final'))) return;
+    }
+    const ok = await act(el, async () => {
+      await saveConfig((c) => { c.box = box; });
+      if (goFinal) await setGame({ status: 'final', betsLocked: true });
+      else if (g.status === 'pre' && !g.betsLocked) await setGame({ betsLocked: true });
+      return true;
+    });
+    if (ok) { S.bDraft = null; render(); window.scrollTo(0, 0); toast(goFinal ? 'Final. Bets settled.' : 'Box score saved. Betting is locked.', 'ok'); }
+  }
+
+  // ---------- actions ----------
+  const A = {
+    tab(el) { S.tab = el.dataset.tab; LS.set('tb-tab', S.tab); S.dirty = false; render(); window.scrollTo(0, 0); },
+    'pb-side'(el) { S.pb.side = el.dataset.v; LS.set('tb-pb', S.pb); render(); },
+    'pb-cat'(el) { S.pb.cat = el.dataset.v; LS.set('tb-pb', S.pb); render(); },
+    'pb-n'(el) { S.pb.n = Number(el.dataset.v); LS.set('tb-pb', S.pb); render(); },
+    'pb-n-modal'(el) { S.pb.n = Number(el.dataset.v); LS.set('tb-pb', S.pb); render(); playModal(el.dataset.id); },
+    'open-play'(el) { playModal(el.dataset.id); },
+    'open-cov'(el) { covModal(el.dataset.id); },
+    filter(el) { S.filter = el.dataset.f; render(); },
+    'open-player'(el) { playerModal(el.dataset.id); },
+    noop() {},
+    'edit-player'(el) { playerModal(el.dataset.id, true); },
+    'close-modal'() { closeModal(); },
+    'close-modal-bg'(el, e) { if (e.target === el) closeModal(); },
+    async 'save-player'(el) {
+      const m = $('.modal'); const f = (k) => m.querySelector(`[data-f="${k}"]`)?.value ?? '';
+      const ratings = {}; for (const a of C.ATTRS) { const v = Math.round(Number(f('r-' + a))); if (!(v >= 1 && v <= 99)) return toast(`${C.ATTR_NAMES[a]} must be 1 to 99`, 'err'); ratings[a] = v; }
+      const ov = f('ovr').trim(); if (ov && !(Number(ov) >= 1 && Number(ov) <= 99)) return toast('OVR override must be 1 to 99', 'err');
+      if (!f('name').trim()) return toast('Enter a name', 'err');
+      if (await act(el, () => saveConfig((c) => { const p = c.players.find((x) => x.id === el.dataset.id); Object.assign(p, { name: f('name').trim(), num: f('num').trim(), pos: f('pos'), ovrOverride: ov ? Math.round(Number(ov)) : null, ratings, comps: Object.fromEntries(['worst', 'base', 'best'].map((k) => [k, { name: f(`comp-${k}-name`).trim(), note: f(`comp-${k}-note`).trim() }])) }); }, 'Saved'))) playerModal(el.dataset.id);
+    },
+    async 'delete-player'(el) {
+      const p = C.player(cfg(), el.dataset.id); if (!(await ask(`Remove ${p.name}? This also removes them from the draft.`, 'Remove', false, true))) return;
+      if (await act(el, () => saveConfig((c) => { c.players = c.players.filter((x) => x.id !== p.id); c.draft.picks = c.draft.picks.filter((k) => k.playerId !== p.id); for (const t of ['A', 'B']) if (c.teams[t].captainId === p.id) c.teams[t].captainId = null; }, 'Removed'))) closeModal();
+    },
+    async 'add-player'(el) {
+      const name = await ask('New player name', 'Add player', true); if (!name || !name.trim()) return;
+      const id = C.slug(name) + (cfg().players.some((p) => p.id === C.slug(name)) ? '-' + Date.now().toString(36).slice(-3) : '');
+      if (await act(null, () => saveConfig((c) => { c.players.push({ id, name: name.trim(), num: '', pos: '', ratings: Object.fromEntries(C.ATTRS.map((a) => [a, 70])), ovrOverride: null, comps: { worst: { name: '', note: '' }, base: { name: '', note: '' }, best: { name: '', note: '' } } }); }, 'Added'))) playerModal(id, true);
+    },
+    // post-game editors
+    'rate-open'() { S.rDraft = Object.fromEntries(cfg().players.map((p) => [p.id, { ...p.ratings }])); render(); window.scrollTo(0, 0); },
+    async 'rate-cancel'() { if (rChanged().length && !(await ask('Discard your rating changes?', 'Discard', false, true))) return; S.rDraft = null; render(); window.scrollTo(0, 0); },
+    async 'rate-save'(el) {
+      const c = cfg(); const D = S.rDraft;
+      for (const p of c.players) for (const a of C.ATTRS) if (D[p.id] && !rOk(D[p.id][a])) return toast(`${p.name}: ${C.ATTR_NAMES[a]} must be 1 to 99`, 'err');
+      const n = rChanged().length; if (!n) { S.rDraft = null; render(); return toast('No rating changes to save'); }
+      const ok = await act(el, () => saveConfig((x) => {
+        if (!x.pregame) x.pregame = { ts: Date.now(), players: Object.fromEntries(x.players.map((p) => [p.id, { ratings: { ...p.ratings }, ovr: C.ovr(p), def: C.def(p) }])) };
+        for (const p of x.players) if (D[p.id]) for (const a of C.ATTRS) p.ratings[a] = Number(digits(D[p.id][a]));
+      }, `Ratings saved for ${n} player${n > 1 ? 's' : ''}`));
+      if (ok) { S.rDraft = null; render(); window.scrollTo(0, 0); }
+    },
+    async 'rate-clear-base'(el) { if (!(await ask('Clear the ▲▼ arrows from every player card?', 'Clear arrows', false, true))) return; await act(el, () => saveConfig((c) => { delete c.pregame; }, 'Arrows cleared')); },
+    'box-open'() { S.bDraft = boxDraft(); S.bDraft0 = JSON.stringify(S.bDraft); render(); window.scrollTo(0, 0); },
+    async 'box-cancel'() { if (JSON.stringify(S.bDraft) !== S.bDraft0 && !(await ask('Discard your box score changes?', 'Discard', false, true))) return; S.bDraft = null; render(); window.scrollTo(0, 0); },
+    async 'box-save'(el) { await saveBox(el, false); },
+    async 'box-final'(el) { await saveBox(el, true); },
+    async 'box-clear'(el) { if (!(await ask('Clear the box score? The score and stats go back to the logged plays.', 'Clear box score', false, true))) return; await act(el, () => saveConfig((c) => { delete c.box; }, 'Box score cleared')); },
+    commish() { pinModal(); },
+    'commish-menu'() {
+      openModal(`<h3 style="font-size:20px">Commissioner</h3><div class="small muted" style="margin:6px 0 14px">You're signed in as commissioner on this device.</div><div class="row"><button class="btn" data-act="commish-out">Sign out on this device</button></div>`, true);
+    },
+    'commish-out'() { S.pin = null; S.rDraft = null; S.bDraft = null; LS.del('tb-pin'); closeModal(); render(); toast('Signed out'); },
+    async 'pin-submit'(el) {
+      const pin = $('#pin-in').value.trim(); if (!/^\d{4}$/.test(pin)) return toast('PIN must be 4 digits', 'err');
+      await act(el, async () => { await call('POST', S.hasCommish ? '/commish/check' : '/commish/claim', { pin }); S.pin = pin; LS.set('tb-pin', pin); S.hasCommish = true; closeModal(); render(); toast('Commissioner tools unlocked', 'ok'); });
+    },
+    'draft-player'(el) { draftConfirm(el.dataset.id); },
+    'draft-team-pick'(el) { S.draftTeam = el.dataset.team; draftConfirm(el.dataset.id); },
+    async 'confirm-pick'(el) {
+      const c = cfg(); const t = el.dataset.team; const p = C.player(c, el.dataset.id);
+      if (p.pos === 'QB' && C.teamQB(c, t)) return toast(`${tname(t)} already has a QB`, 'err');
+      if (await act(el, () => saveConfig((x) => { x.draft.picks.push({ team: t, playerId: p.id, ts: Date.now() }); }, `${p.name} to ${tname(t)}`))) { S.draftTeam = null; closeModal(); }
+    },
+    'switch-team'() { S.draftTeam = C.other(S.draftTeam || C.nextPickTeam(cfg())); render(); },
+    async 'undo-pick'(el) { await act(el, () => saveConfig((c) => { c.draft.picks.pop(); }, 'Pick undone')); S.draftTeam = null; },
+    async 'reset-draft'(el) { if (!(await ask('Clear every draft pick?', 'Reset draft', false, true))) return; await act(el, () => saveConfig((c) => { c.draft.picks = []; }, 'Draft reset')); S.draftTeam = null; },
+    // book
+    'pick-bet'(el) {
+      const key = { market: el.dataset.market, sel: el.dataset.sel, propId: el.dataset.prop || null };
+      if (S.slip && S.slip.market === key.market && S.slip.sel === key.sel && S.slip.propId === key.propId) S.slip = null; else S.slip = { ...key, stake: S.slip?.stake || '' };
+      render();
+    },
+    'clear-slip'() { S.slip = null; render(); },
+    stake(el) { const me = ledger[S.me?.id]; S.slip.stake = el.dataset.v === 'max' ? Math.floor((me?.available || 0) * 100) / 100 : el.dataset.v; renderSlip(); },
+    async 'place-bet'(el) {
+      const c = cfg(); const q = C.quote(c, S.slip.market, S.slip.sel, S.slip.propId); if (typeof q === 'string') return toast(q, 'err');
+      const stake = Number(S.slip.stake); if (!(stake >= 1)) return toast('Enter a stake of at least $1', 'err');
+      await act(el, async () => { await call('POST', '/bet', { bettorId: S.me.id, pin: S.me.pin, market: S.slip.market, sel: S.slip.sel, propId: S.slip.propId, line: q.line, odds: q.odds, stake }); S.slip = null; await refresh(true); toast('Bet placed', 'ok'); });
+    },
+    async join(el) {
+      const who = $('#join-who').value; const p = who && C.player(cfg(), who); const name = p ? p.name : $('#join-name').value.trim(); const pin = $('#join-pin').value.trim();
+      if (!name) return toast('Enter your name', 'err'); if (!/^\d{4}$/.test(pin)) return toast('PIN must be 4 digits', 'err');
+      await act(el, async () => { const r = await call('POST', '/join', { name, pin, playerId: p ? p.id : null }); S.me = { ...r.bettor, pin }; LS.set('tb-me', S.me); await refresh(true); toast(`Welcome, ${name}. You have ${money(cfg().settings?.bankroll ?? 100)}.`, 'ok'); });
+    },
+    async login(el) {
+      const name = $('#login-who').value; const pin = $('#login-pin').value.trim(); if (!name) return;
+      await act(el, async () => { const r = await call('POST', '/login', { name, pin }); S.me = { ...r.bettor, pin }; LS.set('tb-me', S.me); render(); toast('Logged in', 'ok'); });
+    },
+    logout() { S.me = null; LS.del('tb-me'); S.slip = null; render(); },
+    'suggest-lines'() { S.linesDraft = C.suggestLines(cfg()); render(); toast('Suggested lines loaded. Review, then save.'); },
+    async 'save-lines'(el) { const D = structuredClone(S.linesDraft); await act(el, () => saveConfig((c) => { c.lines = D; }, 'Lines saved')); S.linesDraft = null; render(); },
+    'add-prop'() { const c = cfg(); S.linesDraft.props.push({ id: 'c-' + Date.now().toString(36), playerId: c.players[0].id, stat: 'rec', line: 0.5, odds: 100 }); render(); },
+    'del-prop'(el) { S.linesDraft.props.splice(Number(el.dataset.i), 1); render(); },
+    async 'post-lines'(el) { await act(el, () => setGame({ linesPosted: true }, 'Lines posted. Betting is open.')); },
+    async 'unpost-lines'(el) { await act(el, () => setGame({ linesPosted: false }, 'Lines hidden')); },
+    async 'lock-bets'(el) { if (!(await ask('Lock all betting? No new bets until you unlock.', 'Lock bets', false, true))) return; await act(el, () => setGame({ betsLocked: true }, 'Bets locked')); },
+    async 'unlock-bets'(el) { await act(el, () => setGame({ betsLocked: false }, 'Betting reopened')); },
+    async 'void-bet'(el) { if (!(await ask('Void this bet and refund the stake?', 'Void bet', false, true))) return; await act(el, async () => { await call('POST', '/bet/void', { pin: S.pin, betId: el.dataset.id }); await refresh(true); toast('Bet voided', 'ok'); }); },
+    async 'reset-book'(el) { if (!(await ask('Delete every bet and betting account? This cannot be undone.', 'Reset sportsbook', false, true))) return; await act(el, async () => { await call('POST', '/reset', { pin: S.pin, what: 'book' }); S.me = null; LS.del('tb-me'); await refresh(true); toast('Sportsbook reset', 'ok'); }); },
+    // game
+    async 'game-status'(el) {
+      const s = el.dataset.s; if (s === 'final' && !(await ask('Mark the game final and settle every bet?', 'Go final'))) return;
+      await act(el, () => setGame({ status: s, ...(s === 'live' ? { quarter: S.evq } : {}), ...(s !== 'pre' ? { betsLocked: true } : {}) }, s === 'final' ? 'Final. Bets settled.' : s === 'live' ? 'Game is live. Betting is locked.' : 'Back to pregame'));
+    },
+    async 'add-event'(el) {
+      const ev = S.ev; const def = C.EVENTS[ev.type];
+      if (def.needs === 'player' && !ev.playerId) return toast('Pick a player', 'err');
+      if (ev.type === 'points' && !Number(ev.pts)) return toast('Enter points, like 6 or -1', 'err');
+      await act(el, async () => { await call('POST', '/event', { pin: S.pin, event: { type: ev.type, q: S.evq, playerId: def.needs === 'player' || ['pat1', 'pat2'].includes(ev.type) ? ev.playerId || null : null, team: ev.team, pts: ev.pts } }); S.ev = { ...S.ev, playerId: def.needs === 'player' ? '' : S.ev.playerId, pts: '' }; await refresh(true); toast(def.label + ' added', 'ok'); });
+    },
+    async 'del-event'(el) { await act(el, async () => { await call('POST', '/event/delete', { pin: S.pin, id: el.dataset.id }); await refresh(true); toast('Play deleted'); }); },
+    async 'reset-game'(el) { if (!(await ask('Delete every play and the box score, and reset the game to pregame?', 'Reset game', false, true))) return; await act(el, async () => { await call('POST', '/reset', { pin: S.pin, what: 'game' }); await refresh(true); if (cfg().box) await saveConfig((c) => { delete c.box; }); toast('Game reset', 'ok'); }); },
+  };
+  const CH = {
+    sort(el) { S.sort = el.value; S.dirty = false; el.blur(); render(); },
+    async captain(el) {
+      const t = el.dataset.team; const id = el.value || null;
+      await act(el, () => saveConfig((c) => { c.teams[t].captainId = id; if (id) { if (c.teams[C.other(t)].captainId === id) c.teams[C.other(t)].captainId = null; c.draft.picks = c.draft.picks.filter((k) => k.playerId !== id); } }, id ? 'Captain set' : 'Captain cleared'));
+    },
+    async 'draft-order'(el) { await act(el, () => saveConfig((c) => { c.draft.order = el.value; })); },
+    async 'draft-first'(el) { await act(el, () => saveConfig((c) => { c.draft.first = el.value; })); },
+    async 'team-name'(el) { await act(el, () => saveConfig((c) => { c.teams[el.dataset.team].name = el.value.trim().slice(0, 30); }, 'Team name saved')); },
+    async 'team-color'(el) { await act(el, () => saveConfig((c) => { c.teams[el.dataset.team].color = el.value; })); },
+    'b-ftd'(el) { if (S.bDraft) S.bDraft.firstTD = el.value; },
+    'join-who'(el) { $('#join-name').classList.toggle('hide', !!el.value); },
+    async evq(el) { S.evq = Number(el.value); LS.set('tb-evq', S.evq); el.blur(); render(); if (game().status === 'live') await act(null, () => setGame({ quarter: S.evq })); },
+    evtype(el) { S.ev.type = el.value; S.ev.playerId = ''; el.blur(); render(); },
+    evplayer(el) { S.ev.playerId = el.value; },
+    evteam(el) { S.ev.team = el.value; S.ev.playerId = ''; el.blur(); render(); },
+  };
+  function pinModal() {
+    openModal(`<h3 style="font-size:20px">${S.hasCommish ? 'Commissioner sign-in' : 'Set the commissioner PIN'}</h3>
+      <div class="small muted" style="margin:6px 0 14px">${S.hasCommish ? 'Enter the 4-digit PIN to unlock editing, the draft, lines and stats.' : 'Pick a 4-digit PIN. Whoever sets it first is the commissioner, so do this right after you deploy.'}</div>
+      <div class="row"><input id="pin-in" type="password" inputmode="numeric" maxlength="4" placeholder="PIN" style="width:120px"><button class="btn pri" data-act="pin-submit">${S.hasCommish ? 'Unlock' : 'Set PIN'}</button></div>`, true);
+    setTimeout(() => $('#pin-in')?.focus(), 30);
+  }
+
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+    const fn = A[el.dataset.act]; if (fn) { fn(el, e); }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && $('#modal-root').innerHTML) closeModal();
+    if (e.key === 'Enter' && e.target.id === 'pin-in') A['pin-submit']($('[data-act="pin-submit"]'));
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role=button][data-act]')) { e.preventDefault(); e.target.click(); }
+  });
+  document.addEventListener('change', (e) => { const el = e.target.closest('[data-change]'); if (el && CH[el.dataset.change]) CH[el.dataset.change](el); });
+  document.addEventListener('input', (e) => {
+    const el = e.target;
+    if (el.dataset.input === 'stake' && S.slip) { S.slip.stake = el.value; const q = C.quote(cfg(), S.slip.market, S.slip.sel, S.slip.propId); const me = ledger[S.me?.id]; const t = $('#towin'); if (t && typeof q !== 'string') t.textContent = `To win ${money(C.profit(Number(el.value) || 0, q.odds))} · available ${money(me?.available || 0)}`; }
+    if (el.dataset.input === 'evpts') S.ev.pts = el.value;
+    if (el.dataset.r && S.rDraft) {
+      const v = digits(el.value).slice(0, 2); if (v !== el.value) el.value = v;
+      const p = C.player(cfg(), el.dataset.r);
+      if (p && S.rDraft[p.id]) {
+        S.rDraft[p.id][el.dataset.a] = v; el.className = rCls(p, el.dataset.a);
+        const tr = el.closest('tr'); const pv = rPreview(p);
+        tr.querySelector('.rovr').textContent = pv.ovr + (p.ovrOverride ? '*' : ''); tr.querySelector('.rdl').innerHTML = arrow(pv.d); tr.querySelector('.rdef').textContent = pv.def;
+        const info = $('#sb-info'); if (info) info.innerHTML = rInfo();
+      }
+    }
+    if (el.dataset.b && S.bDraft) {
+      const v = digits(el.value).slice(0, el.dataset.b === 'final' ? 3 : 2); if (v !== el.value) el.value = v;
+      const D = S.bDraft; const t = el.dataset.t;
+      if (el.dataset.b === 'final') D.score[t].final = v;
+      else if (el.dataset.b === 'q') D.score[t].q[el.dataset.q] = v;
+      else if (D.players[el.dataset.pid]) D.players[el.dataset.pid][el.dataset.k] = v;
+      bRefresh();
+    }
+    if (el.dataset.lines && S.linesDraft) {
+      const parts = el.dataset.lines.split('.'); let o = S.linesDraft; for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
+      const k = parts[parts.length - 1]; o[k] = el.tagName === 'SELECT' ? el.value : Number(el.value);
+    }
+  });
+  document.addEventListener('focusout', () => setTimeout(() => { const ae = document.activeElement; if (S.dirty && !(ae && ae.closest && ae.closest('#app, #slip-root') && /INPUT|SELECT|TEXTAREA/.test(ae.tagName))) render(); }, 60));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+
+  refresh(true);
+  setInterval(() => { if (!document.hidden) refresh(); }, 4000);
+})();
+</script>
+</body>
+</html>
