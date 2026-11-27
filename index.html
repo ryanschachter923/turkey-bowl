@@ -195,6 +195,12 @@ table.ed input.bad{border-color:var(--red);background:rgba(240,100,100,.14)}
 .chk{font-size:12.5px;line-height:1.5;padding:9px 14px;border-top:1px solid var(--line);color:var(--muted)}
 .warn{color:#f8d98a}.chk .ok{color:var(--green)}
 .savebar{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:40;width:min(640px,calc(100% - 20px));background:#1b2438;border:1px solid var(--accent);border-radius:16px;padding:12px 14px;box-shadow:0 18px 50px rgba(0,0,0,.6);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mygrid{display:flex;flex-wrap:wrap;gap:8px}
+.mygrp{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:7px 9px 9px}
+.mygrp .g{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.mygrp .fl{font-size:11px;gap:3px}
+.mygrp input{width:48px;padding:7px 2px;text-align:center;font-size:16px}
+.mygrp input:disabled{opacity:.55}
 </style>
 </head>
 <body>
@@ -381,16 +387,19 @@ const Core = (() => {
       if (scoringTeam) add(scoringTeam, e.q, pts);
       log.push({ ...e, team: scoringTeam, pts });
     }
-    // A box score typed in by the commish (config.box) replaces the play-by-play totals.
-    // Only the page's copy of core needs this: the Function only checks bankrolls while betting is open.
-    const box = cfg.box;
+    // Typed-in stat lines replace play-by-play totals for those players: a player's own report or the commish's
+    // fix ('stats/' blobs), or a line saved inside config.box by the first box-score version (newest wins).
+    // The commish's box score (config.box) also sets the team score and the first TD scorer.
+    const box = cfg.box; const src = {}; const lines = {};
+    const n = (v) => (v === '' || v == null || !Number.isFinite(Number(v)) ? null : Math.max(0, Math.round(Number(v))));
+    for (const [id, m] of Object.entries(box?.players || {})) lines[id] = { stats: m, by: 'Commish', self: false, ts: box.ts || 0, legacy: true };
+    for (const L of snap.stats || []) if (L?.pid && (!lines[L.pid] || (L.ts || 0) >= lines[L.pid].ts)) lines[L.pid] = L;
+    for (const [id, L] of Object.entries(lines)) {
+      if (!pl[id]) continue;
+      const s = blank(); for (const k of BOX_STATS) s[k] = n(L.stats?.[k]) || 0;
+      s.totalTD = s.recTD + s.rushTD + s.defTD; pl[id] = s; src[id] = { by: L.by || '', self: !!L.self, ts: L.ts || 0, legacy: !!L.legacy };
+    }
     if (box) {
-      const n = (v) => (v === '' || v == null || !Number.isFinite(Number(v)) ? null : Math.max(0, Math.round(Number(v))));
-      for (const [id, m] of Object.entries(box.players || {})) {
-        if (!pl[id]) continue;
-        const s = blank(); for (const k of BOX_STATS) s[k] = n(m?.[k]) || 0;
-        s.totalTD = s.recTD + s.rushTD + s.defTD; pl[id] = s;
-      }
       for (const t of ['A', 'B']) {
         const sc = box.score?.[t]; if (!sc) continue;
         const byQ = {}; for (const q of QUARTERS) { const v = n(sc.q?.[q]); if (v !== null) byQ[q] = v; }
@@ -400,7 +409,7 @@ const Core = (() => {
       }
       if (box.firstTD) firstTD = box.firstTD === 'none' ? null : box.firstTD;
     }
-    return { players: pl, teams, firstTD, log, manual: !!box };
+    return { players: pl, teams, firstTD, log, src, manual: !!box || Object.keys(src).length > 0 };
   }
   function lineFor(bet) { return bet.line; }
   function settle(bet, snap, st) {
@@ -481,6 +490,12 @@ const Core = (() => {
   const err = (msg, status = 400) => json({ error: msg }, status);
   const validPin = (p) => /^\d{4}$/.test(String(p || ''));
 
+  // A stat line from a form: every BOX_STATS key as a whole number from 0 to 99 (blank = 0). Null if anything is off.
+  function cleanLine(m) {
+    const out = {};
+    for (const k of BOX_STATS) { const v = m?.[k]; const x = v === '' || v == null ? 0 : Number(v); if (!Number.isInteger(x) || x < 0 || x > 99) return null; out[k] = x; }
+    return out;
+  }
   async function loadAll(store, prefix) {
     const { blobs } = await store.list({ prefix });
     const out = []; const keys = blobs.map((b) => b.key);
@@ -498,13 +513,13 @@ const Core = (() => {
   async function rebuild(store) {
     for (let attempt = 0; attempt < 6; attempt++) {
       const cur = await store.getWithMetadata('snapshot', { type: 'json' });
-      const [cfg, game, bettors, bets, voids, events] = await Promise.all([
-        getConfig(store), store.get('game', { type: 'json' }), loadAll(store, 'bettors/'), loadAll(store, 'bets/'), loadAll(store, 'voids/'), loadAll(store, 'events/'),
+      const [cfg, game, bettors, bets, voids, events, stats] = await Promise.all([
+        getConfig(store), store.get('game', { type: 'json' }), loadAll(store, 'bettors/'), loadAll(store, 'bets/'), loadAll(store, 'voids/'), loadAll(store, 'events/'), loadAll(store, 'stats/'),
       ]);
       const snap = {
         builtAt: Date.now(), config: cfg.data, configEtag: cfg.etag, game: game || { status: 'pre', linesPosted: false, betsLocked: false },
         bettors: bettors.map((b) => ({ id: b.id, name: b.name, playerId: b.playerId || null, ts: b.ts })),
-        bets, voids: voids.map((v) => v.betId), events,
+        bets, voids: voids.map((v) => v.betId), events, stats,
       };
       const res = await store.setJSON('snapshot', snap, cur ? { onlyIfMatch: cur.etag } : { onlyIfNew: true });
       if (res.modified) return snap;
@@ -609,11 +624,32 @@ const Core = (() => {
         const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
         await store.setJSON('voids/' + body.betId, { betId: body.betId, ts: Date.now() }); return ok();
       }
+      if (path === '/stats/me') { // a player saves his own stat line (sportsbook login), until the game is final
+        const b = await store.get('bettors/' + slug(body.bettorId || ''), { type: 'json' });
+        if (!b || !(await checkPin(body.pin, b.pin))) return err('Log in again', 403);
+        const snap = await readSnap(store);
+        if (!b.playerId || !player(snap.config, b.playerId)) return err("Your account isn't linked to a player");
+        const g = (await store.get('game', { type: 'json' })) || { status: 'pre', linesPosted: false, betsLocked: false };
+        if (g.status === 'final') return err('The game is final. Ask the commish to fix your stats.', 409);
+        const stats = cleanLine(body.stats); if (!stats) return err('Stats must be whole numbers from 0 to 99');
+        await store.setJSON('stats/' + b.playerId, { pid: b.playerId, stats, by: b.name, self: true, ts: Date.now() });
+        if (!g.betsLocked) await store.setJSON('game', { ...g, betsLocked: true }); // stats are coming in, so the game's been played
+        return ok();
+      }
+      if (path === '/stats/set') { // the commish fixes any players' lines
+        const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
+        const snap = await readSnap(store); const lines = Object.entries(body.lines || {}); const clean = [];
+        if (lines.length > 60) return err('Too many players');
+        for (const [pid, m] of lines) { if (!player(snap.config, pid)) return err('Unknown player'); const s = cleanLine(m); if (!s) return err('Stats must be whole numbers from 0 to 99'); clean.push([pid, s]); }
+        const ts = Date.now();
+        for (const [pid, s] of clean) await store.setJSON('stats/' + pid, { pid, stats: s, by: 'Commish', self: false, ts });
+        return ok();
+      }
       if (path === '/reset') {
         const e = await requireCommish(store, body.pin); if (e) return err(e, 403);
         const what = body.what;
         const wipe = async (prefix) => { const { blobs } = await store.list({ prefix }); for (const x of blobs) await store.delete(x.key); };
-        if (what === 'game') { await wipe('events/'); await store.setJSON('game', { status: 'pre', linesPosted: false, betsLocked: false }); }
+        if (what === 'game') { await wipe('events/'); await wipe('stats/'); await store.setJSON('game', { status: 'pre', linesPosted: false, betsLocked: false }); }
         else if (what === 'book') { await wipe('bets/'); await wipe('voids/'); await wipe('bettors/'); }
         else return err('Unknown reset');
         return ok();
@@ -1138,7 +1174,7 @@ if (typeof module !== 'undefined') module.exports = PB;
   const S = {
     snap: null, etag: null, hasCommish: false, offline: false, tab: LS.get('tb-tab') || 'players', pb: Object.assign({ side: 'off', cat: 'all', n: 6 }, LS.get('tb-pb') || {}), pin: LS.get('tb-pin'), me: LS.get('tb-me'),
     filter: 'All', sort: 'ovr', slip: null, modal: null, evq: LS.get('tb-evq') || 1, ev: { type: 'catchTD', playerId: '', team: 'A', pts: '' },
-    draftTeam: null, linesDraft: null, rDraft: null, bDraft: null, bDraft0: null, dirty: false, booted: false,
+    draftTeam: null, linesDraft: null, rDraft: null, bDraft: null, bDraft0: null, myDraft: null, meWho: null, dirty: false, booted: false,
   };
   let stats = null, ledger = {};
   function derive() {
@@ -1487,6 +1523,7 @@ if (typeof module !== 'undefined') module.exports = PB;
       <div class="side" style="--tc:${tcol('B')}"><span class="dot" style="width:14px;height:14px"></span><div class="nm">${esc(tname('B'))}</div><div class="pts">${B.pts}</div></div></div>
       <div class="panel scroll-x" style="margin-top:10px"><table class="t"><tr><th>Team</th>${qs.map((q) => `<th class="n">${C.qLabel(q)}</th>`).join('')}<th class="n">T</th></tr>
       ${['A', 'B'].map((t) => `<tr><td><span class="dot" style="--tc:${tcol(t)};width:9px;height:9px"></span> <b>${esc(tname(t))}</b></td>${qs.map((q) => `<td class="n">${st.teams[t].byQ[q] ?? '–'}</td>`).join('')}<td class="n"><b>${st.teams[t].pts}</b></td></tr>`).join('')}</table>${st.firstTD && C.player(c, st.firstTD) ? `<div class="small muted" style="margin:8px 0 2px">First TD: <b style="color:var(--text)">${esc(C.player(c, st.firstTD).name)}</b></div>` : ''}</div>`;
+    h += myStats();
     if (isCommish()) h += statEntry();
     const log = [...st.log].sort((x, y) => (y.q - x.q) || (y.ts - x.ts));
     let ra = 0, rb = 0; const running = {}; for (const e of [...st.log]) { if (e.team === 'A') ra += e.pts || 0; if (e.team === 'B') rb += e.pts || 0; running[e.id] = ra + '-' + rb; }
@@ -1504,7 +1541,7 @@ if (typeof module !== 'undefined') module.exports = PB;
     const c = cfg(); const g = game(); const ev = S.ev; const def = C.EVENTS[ev.type]; const R = C.rosters(c);
     const popts = ['A', 'B'].map((t) => `<optgroup label="${esc(tname(t))}">${R[t].map((id) => { const p = C.player(c, id); return `<option value="${esc(id)}" ${ev.playerId === id ? 'selected' : ''}>${esc(p.name)} (${esc(p.pos || '—')})</option>`; }).join('')}</optgroup>`).join('');
     return `<h2 class="sec">Commissioner: game and stats</h2><div class="panel">
-      <div class="row" style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)"><button class="btn gold" data-act="box-open">${c.box ? 'Edit box score' : 'Enter box score'}</button><span class="small muted grow">${c.box ? `The score and box score come from the stats you typed in, not logged plays.` : `Game already played? Type the final score and everyone's stats on one screen instead of logging plays.`}</span></div>
+      <div class="row" style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)"><button class="btn gold" data-act="box-open">${c.box ? 'Edit box score' : 'Enter box score'}</button><span class="small muted grow">${c.box ? `The final score and first TD come from your box score. You can fix anyone's stats there too.` : `Set the final score and first TD here, and fix anyone's stats. Players enter their own under Your stats.`}</span></div>
       <div class="row"><span class="small muted">Game status</span><div class="pills">${[['pre', 'Pregame'], ['live', 'Live'], ['final', 'Final']].map(([k, l]) => `<button class="pill ${g.status === k ? 'on' : ''}" data-act="game-status" data-s="${k}">${l}</button>`).join('')}</div>
       <span class="grow"></span><span class="tiny muted">Final settles every bet. Switch back to Live to fix a stat and bets re-settle when you go Final again.</span></div>
       <div class="row" style="margin-top:14px;align-items:flex-end">
@@ -1513,7 +1550,7 @@ if (typeof module !== 'undefined') module.exports = PB;
         ${def.needs === 'player' ? `<label class="fl grow">${['int', 'pick6', 'sack'].includes(ev.type) ? 'Defender' : ev.type === 'rushTD' ? 'Runner' : 'Receiver'}<select data-change="evplayer"><option value="">Pick a player</option>${popts}</select></label>` : `<label class="fl">Team<select data-change="evteam">${['A', 'B'].map((t) => `<option value="${t}" ${ev.team === t ? 'selected' : ''}>${esc(tname(t))}</option>`).join('')}</select></label>${['pat1', 'pat2'].includes(ev.type) ? `<label class="fl grow">Scored by (optional)<select data-change="evplayer"><option value="">—</option>${R[ev.team].map((id) => `<option value="${esc(id)}" ${ev.playerId === id ? 'selected' : ''}>${esc(C.player(c, id).name)}</option>`).join('')}</select></label>` : ''}${ev.type === 'points' ? `<label class="fl">Points (+/-)<input data-input="evpts" type="number" step="1" value="${esc(ev.pts)}" style="width:90px"></label>` : ''}`}
         <button class="btn pri" data-act="add-event">Add play</button></div>
       <div class="tiny muted" style="margin-top:8px">Catches and TD catches credit the team's QB with a completion and pass TD. INTs and pick-sixes charge the other team's QB. Plays can be logged live or after the game; set the quarter first.${c.box ? ` <b class="warn">A box score is entered, so logged plays won't change the totals.</b>` : ''}</div>
-      <div class="row" style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px"><span class="small muted grow">Danger zone</span>${c.box ? '<button class="btn sm danger" data-act="box-clear">Clear box score</button>' : ''}<button class="btn sm danger" data-act="reset-game">Clear all plays and reset game</button></div></div>`;
+      <div class="row" style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px"><span class="small muted grow">Danger zone</span>${c.box ? '<button class="btn sm danger" data-act="box-clear">Clear typed-in score</button>' : ''}<button class="btn sm danger" data-act="reset-game">Clear all plays and reset game</button></div></div>`;
   }
 
   // ----- post-game: ratings editor and box score entry (commish only) -----
@@ -1561,7 +1598,7 @@ if (typeof module !== 'undefined') module.exports = PB;
       const sc = bx?.score?.[t]; const byQ = sc ? sc.q || {} : st.teams[t].byQ;
       const fin = sc ? sc.final : (st.teams[t].pts || Object.keys(byQ).length ? st.teams[t].pts : '');
       D.score[t] = { final: fin === '' || fin == null ? '' : String(fin), q: Object.fromEntries(C.QUARTERS.map((q) => [q, byQ[q] == null ? '' : String(byQ[q])])) };
-      for (const p of roster(t)) { const m = bx?.players?.[p.id] || st.players[p.id] || {}; D.players[p.id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, s(m[k])])); }
+      for (const p of roster(t)) { const m = st.players[p.id] || {}; D.players[p.id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, s(m[k])])); }
     }
     return D;
   }
@@ -1592,7 +1629,8 @@ if (typeof module !== 'undefined') module.exports = PB;
     const opts = ['A', 'B'].map((t) => `<optgroup label="${esc(tname(t))}">${roster(t).map((p) => `<option value="${esc(p.id)}" ${D.firstTD === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</optgroup>`).join('');
     const ghead = `<tr><th></th>${BOXCOLS.map(([gn, cs]) => `<th class="g" colspan="${cs.length}">${gn}</th>`).join('')}<th></th></tr>`;
     const chead = `<tr><th>Player</th>${BOXCOLS.flatMap(([, cs]) => cs).map(([k, l]) => `<th title="${esc(C.STATS[k])}">${l}</th>`).join('')}<th>TDs</th></tr>`;
-    const prow = (p) => `<tr><td><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '—')}</span></td>${C.BOX_STATS.map((k) => `<td>${numIn(`data-b="p" data-pid="${esc(p.id)}" data-k="${k}"`, D.players[p.id][k], p.name + ' ' + C.STATS[k])}</td>`).join('')}<td class="out" data-tot="${esc(p.id)}">${bTot(p.id)}</td></tr>`;
+    const who = (id) => { const sr = stats.src?.[id]; return sr ? (sr.self ? 'by ' + esc(sr.by) : 'by commish') : '<span class="warn">not in yet</span>'; };
+    const prow = (p) => `<tr><td><div><b>${esc(p.name)}</b> <span class="tiny muted">${esc(p.pos || '—')}</span></div><div class="rsub">${who(p.id)}</div></td>${C.BOX_STATS.map((k) => `<td>${numIn(`data-b="p" data-pid="${esc(p.id)}" data-k="${k}"`, D.players[p.id][k], p.name + ' ' + C.STATS[k])}</td>`).join('')}<td class="out" data-tot="${esc(p.id)}">${bTot(p.id)}</td></tr>`;
     return `<h2 class="sec">Box score entry <span class="sub">Blank counts as 0. Bets settle from these numbers once the game is final.</span></h2>
       <div class="panel"><h3>Score</h3><div class="scroll-x"><table class="t ed"><tr><th></th><th></th><th class="g" colspan="${C.QUARTERS.length}">By quarter (optional)</th></tr><tr><th>Team</th><th>Final</th>${C.QUARTERS.map((q) => `<th>${C.qLabel(q)}</th>`).join('')}</tr>${scoreRow('A')}${scoreRow('B')}</table></div>
         <div class="tiny muted" id="bchk-score" style="margin-top:8px">${bScoreChk()}</div>
@@ -1601,14 +1639,16 @@ if (typeof module !== 'undefined') module.exports = PB;
       <div class="tiny muted" style="margin-top:10px">Passing INT = interceptions thrown. Defense INT = picks caught, Defense TD = pick-six or fumble return, SACK = QB's flag pulled behind the line, PAT = extra points scored. TDs adds up receiving, rushing and defense TDs.</div>
       ${savebar(fin ? 'Game is final: saving re-settles every bet.' : 'Saving locks betting. Go final when the numbers are right.', `<button class="btn ghost" data-act="box-cancel">Cancel</button>${fin ? '<button class="btn pri" data-act="box-save">Save</button>' : '<button class="btn" data-act="box-save">Save</button><button class="btn pri" data-act="box-final">Save &amp; go final</button>'}`)}`;
   }
+  // Score and first TD go in config.box. Only the stat lines the commish changed get written, so a player's
+  // report that lands while this screen is open isn't overwritten.
   function boxFromDraft() {
-    const D = S.bDraft; const out = { ts: Date.now(), firstTD: D.firstTD || '', score: {}, players: {} };
-    for (const t of ['A', 'B']) out.score[t] = { final: digits(D.score[t].final) === '' ? '' : n0(D.score[t].final), q: Object.fromEntries(C.QUARTERS.filter((q) => digits(D.score[t].q[q]) !== '').map((q) => [q, n0(D.score[t].q[q])])) };
-    for (const [id, m] of Object.entries(D.players)) out.players[id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, n0(m[k])]));
-    return out;
+    const D = S.bDraft; const D0 = JSON.parse(S.bDraft0 || '{}'); const box = { ts: Date.now(), firstTD: D.firstTD || '', score: {} }; const lines = {};
+    for (const t of ['A', 'B']) box.score[t] = { final: digits(D.score[t].final) === '' ? '' : n0(D.score[t].final), q: Object.fromEntries(C.QUARTERS.filter((q) => digits(D.score[t].q[q]) !== '').map((q) => [q, n0(D.score[t].q[q])])) };
+    for (const [id, m] of Object.entries(D.players)) if (JSON.stringify(m) !== JSON.stringify(D0.players?.[id]) || stats.src?.[id]?.legacy) lines[id] = Object.fromEntries(C.BOX_STATS.map((k) => [k, n0(m[k])]));
+    return { box, lines };
   }
   async function saveBox(el, goFinal) {
-    const g = game(); const box = boxFromDraft();
+    const g = game(); const { box, lines } = boxFromDraft();
     const pts = (t) => { const s = box.score[t]; const qs = Object.values(s.q); return s.final !== '' ? s.final : qs.length ? qs.reduce((a, b) => a + b, 0) : null; };
     if (goFinal) {
       if (pts('A') === null || pts('B') === null) return toast('Enter both final scores first', 'err');
@@ -1617,12 +1657,40 @@ if (typeof module !== 'undefined') module.exports = PB;
       if (!(await ask(`${tname('A')} ${pts('A')}, ${tname('B')} ${pts('B')}. Save the box score, make it final and settle every bet?`, 'Go final'))) return;
     }
     const ok = await act(el, async () => {
+      if (Object.keys(lines).length) await call('POST', '/stats/set', { pin: S.pin, lines });
       await saveConfig((c) => { c.box = box; });
       if (goFinal) await setGame({ status: 'final', betsLocked: true });
       else if (g.status === 'pre' && !g.betsLocked) await setGame({ betsLocked: true });
       return true;
     });
     if (ok) { S.bDraft = null; render(); window.scrollTo(0, 0); toast(goFinal ? 'Final. Bets settled.' : 'Box score saved. Betting is locked.', 'ok'); }
+  }
+
+  // ----- everyone: enter your own stats -----
+  function myStats() {
+    const c = cfg(); const g = game(); const R = C.rosters(c); const ids = [...R.A, ...R.B].filter((id) => C.player(c, id));
+    if (!ids.length) return '';
+    const waiting = ids.filter((id) => !stats.src?.[id]).map((id) => C.player(c, id).name);
+    const progress = `<div class="tiny muted" style="margin-top:12px">${ids.length - waiting.length} of ${ids.length} players have stats in${waiting.length ? ` · waiting on ${esc(waiting.join(', '))}` : ' · everyone is in'}</div>`;
+    const me = S.me; const p = me?.playerId ? C.player(c, me.playerId) : null; const t = p ? C.teamOf(c, p.id) : null;
+    let body;
+    if (!me) {
+      const opts = ids.map((id) => C.player(c, id)).sort((a, b) => a.name.localeCompare(b.name));
+      const has = S.meWho && (S.snap.bettors || []).some((b) => b.playerId === S.meWho);
+      body = `<div class="row"><select id="me-who" data-change="me-who" class="grow" style="font-size:16px"><option value="">Who are you?</option>${opts.map((x) => `<option value="${esc(x.id)}" ${S.meWho === x.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select><input id="me-pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="${has ? 'Your PIN' : S.meWho ? 'Pick a 4-digit PIN' : 'PIN'}" style="width:160px;font-size:16px"><button class="btn pri" data-act="me-go">Go</button></div>
+        <div class="tiny muted" style="margin-top:6px">Already in the sportsbook? Use the same PIN. First time? Pick any 4 digits and remember them.</div>`;
+    } else if (!p || !t) {
+      body = `<div class="row"><span class="small grow">You're logged in as ${esc(me.name)}, who isn't on a team, so there are no stats to enter.</span><button class="btn sm ghost" data-act="logout">Log out</button></div>`;
+    } else {
+      if (!S.myDraft || S.myDraft.pid !== p.id) S.myDraft = { pid: p.id, v: Object.fromEntries(C.BOX_STATS.map((k) => [k, stats.players[p.id]?.[k] ? String(stats.players[p.id][k]) : ''])) };
+      const D = S.myDraft; const sr = stats.src?.[p.id]; const locked = g.status === 'final';
+      const status = sr ? (sr.self ? 'Saved ' + new Date(sr.ts).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : 'Set by the commish') : 'Not entered yet';
+      body = `<div class="row" style="margin-bottom:10px"><span class="posb">${esc(p.pos || '—')}</span><b style="font-size:17px">${esc(p.name)}</b><span class="dot" style="--tc:${tcol(t)};width:9px;height:9px"></span><span class="small muted">${esc(tname(t))}</span><span class="grow"></span><span class="tiny ${sr ? 'muted' : 'warn'}">${status}</span><button class="btn sm ghost" data-act="logout">Not you?</button></div>
+        <div class="mygrid">${BOXCOLS.map(([gn, cs]) => `<div class="mygrp"><div class="g">${gn || 'Extra pts'}</div><div class="row" style="gap:6px;flex-wrap:nowrap">${cs.map(([k, l]) => `<label class="fl" style="align-items:center">${l}${numIn(`data-m="${k}"${locked ? ' disabled' : ''}`, D.v[k], C.STATS[k])}</label>`).join('')}</div></div>`).join('')}</div>
+        ${locked ? '<div class="small muted" style="margin-top:10px">The game is final, so stats are locked. Ask the commish if something needs fixing.</div>' : `<div class="tiny muted" style="margin-top:8px">Passing INT = picks you threw. Defense INT = picks you caught. Defense TD = pick-six or fumble return. SACK = you pulled the QB's flag behind the line. PAT = extra points you scored.</div>
+        <div class="row" style="margin-top:12px"><button class="btn pri" data-act="me-save">Save my stats</button><span class="tiny muted grow">Blank counts as 0. You can change these until the commish makes the game final.</span></div>`}`;
+    }
+    return `<h2 class="sec">Your stats <span class="sub">Everyone enters their own numbers</span></h2><div class="panel">${body}${progress}</div>`;
   }
 
   // ---------- actions ----------
@@ -1670,11 +1738,26 @@ if (typeof module !== 'undefined') module.exports = PB;
       if (ok) { S.rDraft = null; render(); window.scrollTo(0, 0); }
     },
     async 'rate-clear-base'(el) { if (!(await ask('Clear the ▲▼ arrows from every player card?', 'Clear arrows', false, true))) return; await act(el, () => saveConfig((c) => { delete c.pregame; }, 'Arrows cleared')); },
-    'box-open'() { S.bDraft = boxDraft(); S.bDraft0 = JSON.stringify(S.bDraft); render(); window.scrollTo(0, 0); },
+    async 'box-open'(el) { await act(el, () => refresh(true)); S.bDraft = boxDraft(); S.bDraft0 = JSON.stringify(S.bDraft); render(); window.scrollTo(0, 0); },
     async 'box-cancel'() { if (JSON.stringify(S.bDraft) !== S.bDraft0 && !(await ask('Discard your box score changes?', 'Discard', false, true))) return; S.bDraft = null; render(); window.scrollTo(0, 0); },
     async 'box-save'(el) { await saveBox(el, false); },
     async 'box-final'(el) { await saveBox(el, true); },
-    async 'box-clear'(el) { if (!(await ask('Clear the box score? The score and stats go back to the logged plays.', 'Clear box score', false, true))) return; await act(el, () => saveConfig((c) => { delete c.box; }, 'Box score cleared')); },
+    async 'box-clear'(el) { if (!(await ask('Clear the typed-in final score and first TD? Player stats stay as they are.', 'Clear score', false, true))) return; await act(el, () => saveConfig((c) => { delete c.box; }, 'Box score cleared')); },
+    // everyone: own stats
+    async 'me-go'(el) {
+      const pid = $('#me-who').value; const pin = $('#me-pin').value.trim(); const p = C.player(cfg(), pid);
+      if (!p) return toast('Pick your name first', 'err'); if (!/^\d{4}$/.test(pin)) return toast('PIN must be 4 digits', 'err');
+      const b = (S.snap.bettors || []).find((x) => x.playerId === pid);
+      await act(el, async () => {
+        const r = b ? await call('POST', '/login', { name: b.name, pin }) : await call('POST', '/join', { name: p.name, pin, playerId: pid });
+        S.me = { ...r.bettor, pin }; LS.set('tb-me', S.me); S.myDraft = null; S.meWho = null; document.activeElement?.blur?.(); await refresh(true); render(); toast(`You're in, ${p.name}. Enter your stats.`, 'ok');
+      });
+    },
+    async 'me-save'(el) {
+      const D = S.myDraft; if (!D || !S.me) return;
+      const line = Object.fromEntries(C.BOX_STATS.map((k) => [k, n0(D.v[k])]));
+      await act(el, async () => { await call('POST', '/stats/me', { bettorId: S.me.id, pin: S.me.pin, stats: line }); S.myDraft = null; document.activeElement?.blur?.(); await refresh(true); render(); toast('Stats saved. Thanks!', 'ok'); });
+    },
     commish() { pinModal(); },
     'commish-menu'() {
       openModal(`<h3 style="font-size:20px">Commissioner</h3><div class="small muted" style="margin:6px 0 14px">You're signed in as commissioner on this device.</div><div class="row"><button class="btn" data-act="commish-out">Sign out on this device</button></div>`, true);
@@ -1716,7 +1799,7 @@ if (typeof module !== 'undefined') module.exports = PB;
       const name = $('#login-who').value; const pin = $('#login-pin').value.trim(); if (!name) return;
       await act(el, async () => { const r = await call('POST', '/login', { name, pin }); S.me = { ...r.bettor, pin }; LS.set('tb-me', S.me); render(); toast('Logged in', 'ok'); });
     },
-    logout() { S.me = null; LS.del('tb-me'); S.slip = null; render(); },
+    logout() { S.me = null; S.myDraft = null; LS.del('tb-me'); S.slip = null; render(); },
     'suggest-lines'() { S.linesDraft = C.suggestLines(cfg()); render(); toast('Suggested lines loaded. Review, then save.'); },
     async 'save-lines'(el) { const D = structuredClone(S.linesDraft); await act(el, () => saveConfig((c) => { c.lines = D; }, 'Lines saved')); S.linesDraft = null; render(); },
     'add-prop'() { const c = cfg(); S.linesDraft.props.push({ id: 'c-' + Date.now().toString(36), playerId: c.players[0].id, stat: 'rec', line: 0.5, odds: 100 }); render(); },
@@ -1739,7 +1822,7 @@ if (typeof module !== 'undefined') module.exports = PB;
       await act(el, async () => { await call('POST', '/event', { pin: S.pin, event: { type: ev.type, q: S.evq, playerId: def.needs === 'player' || ['pat1', 'pat2'].includes(ev.type) ? ev.playerId || null : null, team: ev.team, pts: ev.pts } }); S.ev = { ...S.ev, playerId: def.needs === 'player' ? '' : S.ev.playerId, pts: '' }; await refresh(true); toast(def.label + ' added', 'ok'); });
     },
     async 'del-event'(el) { await act(el, async () => { await call('POST', '/event/delete', { pin: S.pin, id: el.dataset.id }); await refresh(true); toast('Play deleted'); }); },
-    async 'reset-game'(el) { if (!(await ask('Delete every play and the box score, and reset the game to pregame?', 'Reset game', false, true))) return; await act(el, async () => { await call('POST', '/reset', { pin: S.pin, what: 'game' }); await refresh(true); if (cfg().box) await saveConfig((c) => { delete c.box; }); toast('Game reset', 'ok'); }); },
+    async 'reset-game'(el) { if (!(await ask('Delete every play, every stat line and the box score, and reset the game to pregame?', 'Reset game', false, true))) return; await act(el, async () => { await call('POST', '/reset', { pin: S.pin, what: 'game' }); await refresh(true); if (cfg().box) await saveConfig((c) => { delete c.box; }); toast('Game reset', 'ok'); }); },
   };
   const CH = {
     sort(el) { S.sort = el.value; S.dirty = false; el.blur(); render(); },
@@ -1752,6 +1835,7 @@ if (typeof module !== 'undefined') module.exports = PB;
     async 'team-name'(el) { await act(el, () => saveConfig((c) => { c.teams[el.dataset.team].name = el.value.trim().slice(0, 30); }, 'Team name saved')); },
     async 'team-color'(el) { await act(el, () => saveConfig((c) => { c.teams[el.dataset.team].color = el.value; })); },
     'b-ftd'(el) { if (S.bDraft) S.bDraft.firstTD = el.value; },
+    'me-who'(el) { S.meWho = el.value; const has = (S.snap.bettors || []).some((b) => b.playerId === el.value); const pin = $('#me-pin'); if (pin) pin.placeholder = has ? 'Your PIN' : el.value ? 'Pick a 4-digit PIN' : 'PIN'; },
     'join-who'(el) { $('#join-name').classList.toggle('hide', !!el.value); },
     async evq(el) { S.evq = Number(el.value); LS.set('tb-evq', S.evq); el.blur(); render(); if (game().status === 'live') await act(null, () => setGame({ quarter: S.evq })); },
     evtype(el) { S.ev.type = el.value; S.ev.playerId = ''; el.blur(); render(); },
@@ -1772,6 +1856,7 @@ if (typeof module !== 'undefined') module.exports = PB;
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && $('#modal-root').innerHTML) closeModal();
     if (e.key === 'Enter' && e.target.id === 'pin-in') A['pin-submit']($('[data-act="pin-submit"]'));
+    if (e.key === 'Enter' && e.target.id === 'me-pin') A['me-go']($('[data-act="me-go"]'));
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role=button][data-act]')) { e.preventDefault(); e.target.click(); }
   });
   document.addEventListener('change', (e) => { const el = e.target.closest('[data-change]'); if (el && CH[el.dataset.change]) CH[el.dataset.change](el); });
@@ -1797,6 +1882,7 @@ if (typeof module !== 'undefined') module.exports = PB;
       else if (D.players[el.dataset.pid]) D.players[el.dataset.pid][el.dataset.k] = v;
       bRefresh();
     }
+    if (el.dataset.m && S.myDraft) { const v = digits(el.value).slice(0, 2); if (v !== el.value) el.value = v; S.myDraft.v[el.dataset.m] = v; }
     if (el.dataset.lines && S.linesDraft) {
       const parts = el.dataset.lines.split('.'); let o = S.linesDraft; for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
       const k = parts[parts.length - 1]; o[k] = el.tagName === 'SELECT' ? el.value : Number(el.value);
